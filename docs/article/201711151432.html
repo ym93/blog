@@ -1,0 +1,938 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Nginx,SSL,HTTPS,Let's Encrypt,ACME," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/common/favicon.png?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="为了启用网站的 HTTPS 功能，需要向证书颁发机构（CA）申请证书。Let’s Encrypt 是一家 CA，同时也是一个由公益组织运营的项目，致力于普及安全链接。其颁发的免费 SSL 证书有三个月的有效期（不限次数免费续期），目前已得到包括 Chrome、Firefox 在内的所有主流浏览器的信任。">
+<meta name="keywords" content="Nginx,SSL,HTTPS,Let&#39;s Encrypt,ACME">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Let&#39;s Encrypt：免费 SSL 证书申请与部署">
+<meta property="og:url" content="https://www.caiyiming.com/article/201711151432.html">
+<meta property="og:site_name" content="蔡一鸣的前端小事">
+<meta property="og:description" content="为了启用网站的 HTTPS 功能，需要向证书颁发机构（CA）申请证书。Let’s Encrypt 是一家 CA，同时也是一个由公益组织运营的项目，致力于普及安全链接。其颁发的免费 SSL 证书有三个月的有效期（不限次数免费续期），目前已得到包括 Chrome、Firefox 在内的所有主流浏览器的信任。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.caiyiming.com/images/posts/2017/2017-11-15@backend-lets-encrypt.png">
+<meta property="og:updated_time" content="2017-12-22T03:12:15.600Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Let&#39;s Encrypt：免费 SSL 证书申请与部署">
+<meta name="twitter:description" content="为了启用网站的 HTTPS 功能，需要向证书颁发机构（CA）申请证书。Let’s Encrypt 是一家 CA，同时也是一个由公益组织运营的项目，致力于普及安全链接。其颁发的免费 SSL 证书有三个月的有效期（不限次数免费续期），目前已得到包括 Chrome、Firefox 在内的所有主流浏览器的信任。">
+<meta name="twitter:image" content="https://www.caiyiming.com/images/posts/2017/2017-11-15@backend-lets-encrypt.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.caiyiming.com/article/201711151432.html"/>
+
+
+<link rel="apple-touch-icon" href="/images/common/icon.png">
+
+  <title> Let's Encrypt：免费 SSL 证书申请与部署 | 蔡一鸣的前端小事 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  <script>
+  // WeChat Share Image
+  var ua = window.navigator.userAgent.toLowerCase();
+  if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+    document.write('<div style="position:fixed;top:0;left:-300px;width:0;height:0;overflow:hidden;"><img src="/images/global/icon.png" width="300" height="300"></div>');
+  }
+  </script>
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?cac5a4afd00b98be186e72bf89c2a7b2";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">蔡一鸣的前端小事</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocapitalize="off" autocomplete="off" autocorrect="off"
+             placeholder="搜索 ..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result">
+    <div id="no-result"><i class="fa fa-search fa-5x"></i></div>
+  </div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://www.caiyiming.com/article/201711151432.html">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="蔡一鸣">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/common/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="蔡一鸣的前端小事">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Let's Encrypt：免费 SSL 证书申请与部署
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-15T14:32:17+08:00">
+                2017-11-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/后端/" itemprop="url" rel="index">
+                    <span itemprop="name">后端</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>为了启用网站的 HTTPS 功能，需要向证书颁发机构（CA）申请证书。<a href="https://letsencrypt.org/" target="_blank" rel="noopener">Let’s Encrypt</a> 是一家 CA，同时也是一个由公益组织运营的项目，致力于普及安全链接。其颁发的免费 SSL 证书有三个月的有效期（不限次数免费续期），目前已得到包括 Chrome、Firefox 在内的所有主流浏览器的信任。</p>
+<a id="more"></a>
+<img src="/images/posts/2017/2017-11-15@backend-lets-encrypt.png" width="360">
+<p>Let’s Encrypt 基于 ACME 协议验证你对一个域名的控制权。以 GetSSL （Let’s Encrypt 的客户端程序）为例，假设你的域名为 <code>yourdomain.com</code>，GetSSL 将随机生成一个页面，然后由 CA 服务器访问这个页面，我们假设这个页面的链接为 <code>https://yourdomain.com/token</code> 。如果可以访问，CA 服务器就会颁发该域名的 SSL 证书。</p>
+<h3 id="获取-GetSSL"><a href="#获取-GetSSL" class="headerlink" title="获取 GetSSL"></a>获取 GetSSL</h3><p>Let’s Encrypt 官网介绍了超过 50 种客户端程序，全部由第三方开发，都可以用于申请证书。而我选择的是上文提到的 GetSSL 。注：官方推荐 <a href="https://certbot.eff.org/" target="_blank" rel="noopener">Certbot</a>，我试用的时候发现出错的几率蛮高的，感兴趣的话可以自行尝试。 </p>
+<p>获取 GetSSL ： </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd ~</span><br><span class="line">git clone https://github.com/srvrco/getssl.git</span><br><span class="line">cd getssl</span><br></pre></td></tr></table></figure>
+<h3 id="配置-GetSSL"><a href="#配置-GetSSL" class="headerlink" title="配置 GetSSL"></a>配置 GetSSL</h3><p>执行命令生成配置文件，注意把 <code>yourdomain.com</code> 替换成你的域名。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./getssl -c yourdomain.com</span><br></pre></td></tr></table></figure>
+<p>执行后将生成 GetSSL 的全局配置文件 <code>~/.getssl/getssl.cfg</code> ，及当前域名的配置文件 <code>~/.getssl/yourdomain.com/getssl.cfg</code> 。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 日志</span></span><br><span class="line"><span class="comment"># 创建全局配置文件</span></span><br><span class="line">creating main config file /root/.getssl/getssl.cfg</span><br><span class="line"><span class="comment"># 创建域名配置文件</span></span><br><span class="line">Making domain directory - /root/.getssl/yourdomain.com</span><br><span class="line">creating domain config file <span class="keyword">in</span> /root/.getssl/yourdomain.com/getssl.cfg</span><br></pre></td></tr></table></figure>
+<p>编辑全局配置文件。由于默认的 CA 服务器仅用于测试，颁发的证书是不受浏览器信任的，需要修改成颁发完整证书的服务器。<code>RELOAD_CMD</code> 用于在证书颁发后自动重载 Web 服务器，使证书生效，非必填项。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 证书服务器地址</span></span><br><span class="line">CA=<span class="string">"https://acme-v01.api.letsencrypt.org"</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 服务器重载命令</span></span><br><span class="line">RELOAD_CMD=<span class="string">"service nginx reload"</span></span><br></pre></td></tr></table></figure>
+<p>编辑当前域名的配置文件。<code>ACL(Acme Challenge Location)</code> 是用于产生随机校验文件的路径，将 <code>/path/to/your/website/folder/</code> 改成你的网站根目录的绝对路径。接着配置文件的保存路径。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 校验路径</span></span><br><span class="line">ACL=(<span class="string">'/path/to/your/website/folder/.well-known/acme-challenge'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存路径</span></span><br><span class="line">DOMAIN_PEM_LOCATION=<span class="string">"/etc/ssl/yourdomain.com.pem"</span> <span class="comment"># 证书文件路径</span></span><br><span class="line">DOMAIN_KEY_LOCATION=<span class="string">"/etc/ssl/yourdomain.com.key"</span> <span class="comment"># 私钥文件路径</span></span><br></pre></td></tr></table></figure>
+<p>Tips: <code>DOMAIN_CERT_LOCATION</code> 和  <code>DOMAIN_PEM_LOCATION</code> 都可以配置证书文件路径，后者保存的证书包含证书链。如果不慎删除，可以在 <code>~/.getssl/yourdomain.com/archive</code> 找到每次签发的文件存档。</p>
+<h3 id="配置-Nginx"><a href="#配置-Nginx" class="headerlink" title="配置 Nginx"></a>配置 Nginx</h3><p>配置你的 Web 引擎。这是在 Nginx 上启用并强制使用 HTTPS 访问的配置参考，<code>ssl_certificate</code> 和 <code>ssl_certificate_key</code> 指向上面配置的文件保存路径。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">  listen 80;</span><br><span class="line">  listen 443 ssl http2;</span><br><span class="line">  ssl_certificate /etc/ssl/yourdomain.com.pem;</span><br><span class="line">  ssl_certificate_key /etc/ssl/yourdomain.com.key;</span><br><span class="line">  ssl_session_timeout 5m;</span><br><span class="line">  ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;</span><br><span class="line">  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">  ssl_prefer_server_ciphers on;</span><br><span class="line">  if ($ssl_protocol = &quot;&quot;) &#123; return 301 https://$host$request_uri; &#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="申请证书"><a href="#申请证书" class="headerlink" title="申请证书"></a>申请证书</h3><p>执行命令申请 SSL 证书。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd ~/getssl</span><br><span class="line">./getssl yourdomain.com</span><br></pre></td></tr></table></figure>
+<p>若所有配置正确，网站的 HTTPS 应该已经生效。别忘了在你的 Web 服务器（Apache、Nginx 或 Lighttpd）上启用 SSL ，并指向刚刚申请的证书路径。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 日志</span></span><br><span class="line"><span class="comment"># 创建随机校验文件</span></span><br><span class="line">copying challenge token to /path/to/your/website/folder/.well-known/acme-challenge/2ALrFFPercPe1i9-jA-_DBEJqlrPevCIf0Fzdk3HjWI</span><br><span class="line">Pending</span><br><span class="line"><span class="comment"># 验证是否可以访问</span></span><br><span class="line">Verified yourdomain.com</span><br><span class="line"><span class="comment"># 获取并保存证书</span></span><br><span class="line">Verification completed, obtaining certificate.</span><br><span class="line">Certificate saved <span class="keyword">in</span> /root/.getssl/yourdomain.com/yourdomain.com.crt</span><br><span class="line">The intermediate CA cert is <span class="keyword">in</span> /root/.getssl/yourdomain.com/chain.crt</span><br><span class="line">copying domain certificate to /etc/ssl/yourdomain.com.crt</span><br><span class="line">copying private key to /etc/ssl/yourdomain.com.key</span><br><span class="line">copying CA certificate to /etc/ssl/chain.crt</span><br><span class="line"><span class="comment"># 重启 Web 服务器</span></span><br><span class="line">reloading SSL services</span><br><span class="line">Reloading nginx configuration (via systemctl):             [  OK  ]</span><br><span class="line">yourdomain.com - certificate installed OK on server</span><br><span class="line">certificate obtained <span class="keyword">for</span> yourdomain.com</span><br></pre></td></tr></table></figure>
+<p>Tips: 如遇到 <code>getssl: this script requires one of: nslookup drill dig host</code> 错误，尝试安装依赖包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install bind-utils</span><br></pre></td></tr></table></figure>
+<h3 id="撤销证书"><a href="#撤销证书" class="headerlink" title="撤销证书"></a>撤销证书</h3><p>执行 <code>getssl -r path/to/cert path/to/key [CA_server]</code> 命令可以申请撤销已颁发的证书。需要指定证书和私钥文件的路径。<code>CA_server</code> 用于指定 CA 服务器，一般不需要填写。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./getssl -r /etc/ssl/yourdomain.com.crt /etc/ssl/yourdomain.com.key</span><br></pre></td></tr></table></figure>
+<h3 id="自动续期"><a href="#自动续期" class="headerlink" title="自动续期"></a>自动续期</h3><p>执行 <code>crontab -e</code> 编辑任务调度文件。添加一个任务。这样，GetSSL 将在每天凌晨检查一次，自动续期或更新证书版本。注意，不要删除 GetSSL 脚本文件。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">23 5 * * * /root/getssl -u -a -q</span><br></pre></td></tr></table></figure>
+<p>ENV: Aliyun ECS / CentOS 7 x64 / Nginx 1.12</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Nginx/" rel="tag"># Nginx</a>
+          
+            <a href="/tags/SSL/" rel="tag"># SSL</a>
+          
+            <a href="/tags/HTTPS/" rel="tag"># HTTPS</a>
+          
+            <a href="/tags/Let-s-Encrypt/" rel="tag"># Let's Encrypt</a>
+          
+            <a href="/tags/ACME/" rel="tag"># ACME</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/article/201711032345.html" rel="next" title="JavaScript / Vue.js 实现时分秒倒计时">
+                <i class="fa fa-chevron-left"></i> JavaScript / Vue.js 实现时分秒倒计时
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/article/201712042239.html" rel="prev" title="阻止微信浏览器下拉查看网址">
+                阻止微信浏览器下拉查看网址 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/common/avatar.jpg"
+               alt="蔡一鸣" />
+          <p class="site-author-name" itemprop="name">蔡一鸣</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">100</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">43</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#获取-GetSSL"><span class="nav-number">1.</span> <span class="nav-text">获取 GetSSL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置-GetSSL"><span class="nav-number">2.</span> <span class="nav-text">配置 GetSSL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置-Nginx"><span class="nav-number">3.</span> <span class="nav-text">配置 Nginx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#申请证书"><span class="nav-number">4.</span> <span class="nav-text">申请证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#撤销证书"><span class="nav-number">5.</span> <span class="nav-text">撤销证书</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动续期"><span class="nav-number">6.</span> <span class="nav-text">自动续期</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <!--<span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>-->
+  <span class="author" itemprop="copyrightHolder">蔡一鸣</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+<p>Hosted by <a href="https://pages.coding.me">Coding Pages</a></p>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  <script>
+  // WeChat Share Title
+  var ua = window.navigator.userAgent.toLowerCase();
+  if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+    if (document.title.indexOf(" | ") > 0) document.title = document.title.substring( 0, document.title.lastIndexOf(" | "));
+  }
+  // Baidu Push
+  (function(){
+      var bp = document.createElement('script');
+      var curProtocol = window.location.protocol.split(':')[0];
+      if (curProtocol === 'https') {
+          bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+      }
+      else {
+          bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+      }
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(bp, s);
+  })();
+  </script>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

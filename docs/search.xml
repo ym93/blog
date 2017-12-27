@@ -1,0 +1,1171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[使用 apiDoc 自动生成 API 文档]]></title>
+    <url>%2Farticle%2F201712270023.html</url>
+    <content type="text"><![CDATA[前段时间尝试写 API 服务器，为了方便管理数量可能越来越多的接口（未雨绸缪），必须考虑创建文档的方案。我选择了 apiDoc 作为第一款文档生成工具。apiDoc 是一个通过代码中的注释生成 API 文档的工具，它简单易用，并且支持多种常用编程语言。]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+  </entry>
+  <entry>
+    <title><![CDATA[阻止微信浏览器下拉查看网址]]></title>
+    <url>%2Farticle%2F201712042239.html</url>
+    <content type="text"><![CDATA[用过微信的人几乎都知道，在微信中浏览网页时可以下拉查看网站的网址。这确实是一项实用的功能，使用户能够追溯内容提供者，减少被仿冒、钓鱼网站欺骗的风险。不过有时候它确实也对网页的操作产生了干扰。 举个例子，我想要给页面增加一个下拉刷新的功能，但是用户的手指在屏幕上滑动的时候会同时触发整个页面的下拉（显示网址）。这显然不是我想要的效果，必须想办法禁用或者阻止下拉显示网址这一默认动作。 有人建议这么做： 123document.body.addEventListener('touchmove', (event) =&gt; &#123; event.preventDefault()&#125;) 确实，这样做能够取消 touchmove 事件（手指滑动）的全部默认动作，但页面的滚动也被一并禁用掉了。如果你的页面不需要滚动，当然可以这么做。我的想法是，只需要在页面滚动到最顶部，且用户的触摸操作为下拉时取消默认动作即可。 123456789101112131415161718192021222324252627282930313233// 滑动起始点坐标let coordStart = null// 滑动结束点坐标let coordEnd = null// 滚动的像素数let scrollTop = nullfunction preventWxPullDown () &#123; // 监听 body 的 touchstart 事件 document.body.addEventListener('touchstart', (event) =&gt; &#123; // 触摸屏幕时保存一次起始点坐标和滚动像素数 coordStart = [event.changedTouches[0].pageX, event.changedTouches[0].pageY] scrollTop = window.pageYOffset &#125;) // 监听 body 的 touchmove 事件 document.body.addEventListener('touchmove', (event) =&gt; &#123; // 保存结束点坐标 coordEnd = [event.changedTouches[0].pageX, event.changedTouches[0].pageY] // 计算X轴和Y轴移动的距离 const distance = [coordEnd[0] - coordStart[0], coordEnd[1] - coordStart[1]] // 符合条件时取消默认动作 if (scrollTop == 0 &amp;&amp; Math.abs(distance[0]) &lt; Math.abs(distance[1]) &amp;&amp; distance[1] &gt; 0) &#123; event.preventDefault() &#125; // 更新起始点坐标和滚动像素数 coordStart = [event.changedTouches[0].pageX, event.changedTouches[0].pageY] scrollTop = window.pageYOffset &#125;)&#125;preventWxPullDown () preventWxPullDown 方法尝试在页面滚动到最顶部（即 scrollTop 等于0），且手指向屏幕下方滑动（即 Y 轴移动距离为正数且 Y 轴移动距离大于 X 轴移动距离）时取消默认动作。实测在阻止下拉显示网址的同时确实不会影响到页面的正常滚动，刚好满足我的需要。 Tips: 当手势为先上滑再下拉时无效。 ENV: Windows 7 x64 / WeChat 6.5.16]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>微信</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Let's Encrypt：免费 SSL 证书申请与部署]]></title>
+    <url>%2Farticle%2F201711151432.html</url>
+    <content type="text"><![CDATA[为了启用网站的 HTTPS 功能，需要向证书颁发机构（CA）申请证书。Let’s Encrypt 是一家 CA，同时也是一个由公益组织运营的项目，致力于普及安全链接。其颁发的免费 SSL 证书有三个月的有效期（不限次数免费续期），目前已得到包括 Chrome、Firefox 在内的所有主流浏览器的信任。 Let’s Encrypt 基于 ACME 协议验证你对一个域名的控制权。以 GetSSL （Let’s Encrypt 的客户端程序）为例，假设你的域名为 yourdomain.com，GetSSL 将随机生成一个页面，然后由 CA 服务器访问这个页面，我们假设这个页面的链接为 https://yourdomain.com/token 。如果可以访问，CA 服务器就会颁发该域名的 SSL 证书。 获取 GetSSLLet’s Encrypt 官网介绍了超过 50 种客户端程序，全部由第三方开发，都可以用于申请证书。而我选择的是上文提到的 GetSSL 。注：官方推荐 Certbot，我试用的时候发现出错的几率蛮高的，感兴趣的话可以自行尝试。 获取 GetSSL ： 123cd ~git clone https://github.com/srvrco/getssl.gitcd getssl 配置 GetSSL执行命令生成配置文件，注意把 yourdomain.com 替换成你的域名。 1./getssl -c yourdomain.com 执行后将生成 GetSSL 的全局配置文件 ~/.getssl/getssl.cfg ，及当前域名的配置文件 ~/.getssl/yourdomain.com/getssl.cfg 。 123456# 日志# 创建全局配置文件creating main config file /root/.getssl/getssl.cfg# 创建域名配置文件Making domain directory - /root/.getssl/yourdomain.comcreating domain config file in /root/.getssl/yourdomain.com/getssl.cfg 编辑全局配置文件。由于默认的 CA 服务器仅用于测试，颁发的证书是不受浏览器信任的，需要修改成颁发完整证书的服务器。RELOAD_CMD 用于在证书颁发后自动重载 Web 服务器，使证书生效，非必填项。 12345# 证书服务器地址CA="https://acme-v01.api.letsencrypt.org"# 服务器重载命令RELOAD_CMD="service nginx reload" 编辑当前域名的配置文件。ACL(Acme Challenge Location) 是用于产生随机校验文件的路径，将 /path/to/your/website/folder/ 改成你的网站根目录的绝对路径。接着配置文件的保存路径。 123456# 校验路径ACL=('/path/to/your/website/folder/.well-known/acme-challenge')# 保存路径DOMAIN_PEM_LOCATION="/etc/ssl/yourdomain.com.pem" # 证书文件路径DOMAIN_KEY_LOCATION="/etc/ssl/yourdomain.com.key" # 私钥文件路径 Tips: DOMAIN_CERT_LOCATION 和 DOMAIN_PEM_LOCATION 都可以配置证书文件路径，后者保存的证书包含证书链。如果不慎删除，可以在 ~/.getssl/yourdomain.com/archive 找到每次签发的文件存档。 配置 Nginx配置你的 Web 引擎。这是在 Nginx 上启用并强制使用 HTTPS 访问的配置参考，ssl_certificate 和 ssl_certificate_key 指向上面配置的文件保存路径。 123456789101112server &#123; listen 80; listen 443 ssl http2; ssl_certificate /etc/ssl/yourdomain.com.pem; ssl_certificate_key /etc/ssl/yourdomain.com.key; ssl_session_timeout 5m; ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4; ssl_protocols TLSv1 TLSv1.1 TLSv1.2; ssl_prefer_server_ciphers on; if ($ssl_protocol = &quot;&quot;) &#123; return 301 https://$host$request_uri; &#125; ...&#125; 申请证书执行命令申请 SSL 证书。 12cd ~/getssl./getssl yourdomain.com 若所有配置正确，网站的 HTTPS 应该已经生效。别忘了在你的 Web 服务器（Apache、Nginx 或 Lighttpd）上启用 SSL ，并指向刚刚申请的证书路径。 123456789101112131415161718# 日志# 创建随机校验文件copying challenge token to /path/to/your/website/folder/.well-known/acme-challenge/2ALrFFPercPe1i9-jA-_DBEJqlrPevCIf0Fzdk3HjWIPending# 验证是否可以访问Verified yourdomain.com# 获取并保存证书Verification completed, obtaining certificate.Certificate saved in /root/.getssl/yourdomain.com/yourdomain.com.crtThe intermediate CA cert is in /root/.getssl/yourdomain.com/chain.crtcopying domain certificate to /etc/ssl/yourdomain.com.crtcopying private key to /etc/ssl/yourdomain.com.keycopying CA certificate to /etc/ssl/chain.crt# 重启 Web 服务器reloading SSL servicesReloading nginx configuration (via systemctl): [ OK ]yourdomain.com - certificate installed OK on servercertificate obtained for yourdomain.com Tips: 如遇到 getssl: this script requires one of: nslookup drill dig host 错误，尝试安装依赖包。 1yum install bind-utils 撤销证书执行 getssl -r path/to/cert path/to/key [CA_server] 命令可以申请撤销已颁发的证书。需要指定证书和私钥文件的路径。CA_server 用于指定 CA 服务器，一般不需要填写。 1./getssl -r /etc/ssl/yourdomain.com.crt /etc/ssl/yourdomain.com.key 自动续期执行 crontab -e 编辑任务调度文件。添加一个任务。这样，GetSSL 将在每天凌晨检查一次，自动续期或更新证书版本。注意，不要删除 GetSSL 脚本文件。 123 5 * * * /root/getssl -u -a -q ENV: Aliyun ECS / CentOS 7 x64 / Nginx 1.12]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
+        <tag>SSL</tag>
+        <tag>HTTPS</tag>
+        <tag>Let&#39;s Encrypt</tag>
+        <tag>ACME</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[JavaScript / Vue.js 实现时分秒倒计时]]></title>
+    <url>%2Farticle%2F201711032345.html</url>
+    <content type="text"><![CDATA[我们平常浏览网页的时候，经常见到“距游戏公测1天2小时3分钟4秒”这样的倒计时器。时间如沙漏般一点点的减少，不仅能挑起用户的兴趣，而且让页面提升了一点逼格，还填补掉一些尴尬的空白位置。最近写得越来越多，有用没用都让加个倒计时，干脆记录下来，免得重复造轮子。 实现的方法并不复杂，关键是理解如何计算，尤其对我这种数学不好的人而言。下面两个 demo 将分别用纯 JavaScript 、基于 Vue.js 的 JavaScript 实现。注，代码中可能包含部分 ES6 语法，但相信很容易理解。 JavaScript创建一个 countdown 方法，用于计算并在控制台打印距目标时间的日、时、分、秒数，每隔一秒递归执行一次。 msec 是当前时间距目标时间的毫秒数，由时间戳相减得到，我们将以这个数为基础计算。我们都知道1天等于24小时，1小时等于60分钟，1分钟等于60秒，1秒等于1000毫秒。所以，msec / 1000 / 60 / 60 / 24 保留整数就是天数。如果换用 % 取余数，再保留整数后得到的就是小时数。以此类推就能算出其他所有数。 1234567891011121314151617181920212223function countdown () &#123; // 目标日期时间戳 const end = Date.parse(new Date('2017-12-01')) // 当前时间戳 const now = Date.parse(new Date()) // 相差的毫秒数 const msec = end - now // 计算时分秒数 let day = parseInt(msec / 1000 / 60 / 60 / 24) let hr = parseInt(msec / 1000 / 60 / 60 % 24) let min = parseInt(msec / 1000 / 60 % 60) let sec = parseInt(msec / 1000 % 60) // 个位数前补零 hr = hr &gt; 9 ? hr : '0' + hr min = min &gt; 9 ? min : '0' + min sec = sec &gt; 9 ? sec : '0' + sec // 控制台打印 console.log(`$&#123;day&#125;天 $&#123;hr&#125;小时 $&#123;min&#125;分钟 $&#123;sec&#125;秒`) // 一秒后递归 setTimeout(function () &#123; countdown() &#125;, 1000)&#125; 控制台打印结果： 123427天 07小时 49分钟 10秒27天 07小时 49分钟 09秒27天 07小时 49分钟 08秒... Vue.js如果单纯使用 JavaScript ，我们需要在每次计算后手动更新 DOM 元素（将数据显示给用户），既不方便又难以维护。实际项目中更多的是配合前端框架，将计算结果实时渲染到页面上。 页面结构中的数据来自 Vue 实例的 data 对象。 1&lt;div id="app"&gt;&#123;&#123; `$&#123;day&#125;天 $&#123;hr&#125;小时 $&#123;min&#125;分钟 $&#123;sec&#125;分钟` &#125;&#125;&lt;/div&gt; mounted 是 Vue 的生命周期方法，可以理解为在页面加载完毕后执行 countdown 方法。countdown 方法每隔一秒会执行一次，并将计算结果分别赋予变量 day、hr、min、sec，同时改变的还有页面上显示的内容。 123456789101112131415161718192021222324252627282930new Vue(&#123; el: '#app', data: function () &#123; return &#123; day: 0, hr: 0, min: 0, sec: 0 &#125; &#125;, mounted: function () &#123; this.countdown() &#125;, methods: &#123; countdown: function () &#123; const end = Date.parse(new Date('2017-12-01')) const now = Date.parse(new Date()) const msec = end - now let day = parseInt(msec / 1000 / 60 / 60 / 24) let hr = parseInt(msec / 1000 / 60 / 60 % 24) let min = parseInt(msec / 1000 / 60 % 60) let sec = parseInt(msec / 1000 % 60) this.day = day this.hr = hr &gt; 9 ? hr : '0' + hr this.min = min &gt; 9 ? min : '0' + min this.sec = sec &gt; 9 ? sec : '0' + sec const that = this setTimeout(function () &#123; that.countdown() &#125;, 1000) &#125; &#125;&#125;) ENV: Windows 7 x64 / Vue.js 2.4.4]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>Vue.js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[解决 iOS 下日期对象 Invalid Date 错误]]></title>
+    <url>%2Farticle%2F201709282141.html</url>
+    <content type="text"><![CDATA[JavaScript 中的 Date 对象用于处理日期和时间，对前端开发而言几乎是每天都要打交道的一个东西，但它存在着一个奇葩、不易被注意到的兼容性问题。这是今天在处理产品经理提出的 bug 时偶然发现的。 下面这行简单的代码，仅仅用于定义一个日期对象。它在 iOS 下可能无法正确执行。 1new Date('2017-09-28') // Windows、Android 返回日期对象，iOS 返回 Invalid Date 。 在 iOS 环境下（先后使用 iPhone6、iPhone6 Plus 测试），这行代码始终返回 Invalid Date（无效的日期）。很显然，系统不能正确解析 2017-09-28 这个日期字符串。 解决方法也非常简单，换一种 iOS 能够解析的日期格式即可，使用 / 代替日期字符串中的 - ： 1new Date('2017/09/28') 由于存储在数据库中的日期通常使用 - 分隔年月日，为避免出现兼容问题，前端渲染时应该默认使用 replace 方法批量替换。 12const str = '2017-09-28'new Date(str.replace(/-/g, '/'))]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[CSS 自定义滚动条样式]]></title>
+    <url>%2Farticle%2F201709031318.html</url>
+    <content type="text"><![CDATA[相比 Mac，Win 系统浏览器的默认滚动条比较粗犷，很多时候和页面设计不搭调，给用户体验减分不少。为了改善页面的整体效果，我决定用 CSS 稍微修改一下滚动条的样式。 -webkit-scrollbar 是一个作用于滚动条样式的伪元素。它并非一个通用的 CSS 标准，只作用于部分浏览器（WebKit 内核）。目前市场上六成以上的浏览器为 WebKit 内核，所以这个特性已经足够给大部分用户呈现一致、美观的滚动条了。 首先，使用 -webkit-scrollbar 伪元素自定义滚动条整体的宽度和背景色。 12345::-webkit-scrollbar &#123; width: 8px; /* 纵向滚动条宽度 */ height: 8px; /* 横向滚动条宽度 */ background: #fafafa;&#125; 然后，使用 -webkit-scrollbar-track 伪元素自定义滚动条轨道的样式，这里声明了圆角和背景色。 1234::-webkit-scrollbar-track &#123; border-radius: 10px; background: #fafafa;&#125; 最后，使用 -webkit-scrollbar-thumb 伪元素自定义滚动条中间拖动部分的样式。 1234::-webkit-scrollbar-thumb &#123; border-radius: 10px; background: #c1c1c1;&#125; 这样就完成了简单的滚动条样式修改，页面也变得美观不少。 如果不希望修改作用于全局，也可以单独定义某个元素的滚动条样式。 123.element::-webkit-scrollbar &#123; display: none; /* 隐藏滚动条 */&#125; 对于大部分需求来说，这些东西已然够用了。当然，还存在 -webkit-scrollbar-button、-webkit-scrollbar-track-piece、-webkit-scrollbar-corner 等相关伪元素，感兴趣的话可以自行了解。 ENV: Windows 7 x64 / Chrome 60]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 Shadowsocks 搭建私有 VPN]]></title>
+    <url>%2Farticle%2F201708072309.html</url>
+    <content type="text"><![CDATA[Shadowsocks 是一种基于 SOCKS5 协议的代理工具，可以帮助我们实现科学上网。虽然 Shadowsocks 的本质并不是 VPN ，但是在移动端它工作在 VPN 模式下，我们可以使用它搭建自己的 VPN 服务器。 Shadowsocks 包含服务端和客户端。服务端运行在你的服务器上（位于海外），客户端运行在你的电脑或手机上。简单地说，当你要访问 Google 的时候，实际上由服务端访问 Google 并将其得到的内容返回到客户端。 我试用一天后发现，无论是连通率还是速度，Shadowsocks 的效果都比收费 VPN 软件好太多了。使用自己的服务器还可以独享带宽、随时更换节点，可以说是相当灵活了。 准备首先，需要准备一台位于海外的云主机作为代理服务器，它将作为我们与墙外世界沟通的桥梁。 我在 Vultr 上仅花费 $5（约合人民币 35 元）购买了一台位于东京的云主机（一个月），感觉速度一般，后来换成了洛杉矶节点。节点的选择是因人而异的，只能说在我的网络环境下，使用洛杉矶的服务器速度更快。 然后，你需要具备基本的远程登录和操作 Linux 系统的能力，这就够了。 安装安装 vim 编辑器。 1yum install -y vim Shadowsocks 服务端基于 Python ，检查本机是否已安装 Python 环境（2.6/2.7）。 1python --version 下载并安装 Python 包管理工具 pip 。 12wget https://bootstrap.pypa.io/get-pip.pypython get-pip.py 使用 pip 安装 Shadowsocks 服务端。 1pip install shadowsocks 使用前台启动 Shadowsocks 服务器。-p 443 表示服务使用 443 端口，-k password 表示登录密码为 password ，-m rc4-md5 表示使用 rc4-md5 加密（一种低安全性、高性能的加密方式）。 1ssserver -p 443 -k password -m rc4-md5 后台启动 Shadowsocks 服务器，参数含义与前台启动的命令相同。后台启动的好处是不会在命令行打印访问日志，也不影响我们进行其他操作。 1ssserver -p 443 -k password -m rc4-md5 --user nobody -d start 检查防火墙是否已开放相应的端口。 1firewall-cmd --list-ports 若端口未开放，执行以下命令开放端口。--add-port=443/tcp 表示开放 443 端口，--permanent 表示永久有效，否则设置将在服务器重启后失效。 1firewall-cmd --zone=public --add-port=443/tcp --permanent 重启防火墙使设置生效。 1firewall-cmd --reload 按 Ctrl+C 可以停止前台服务器，执行以下命令可以停止后台服务器。 1ssserver -d stop 多用户Shadowsocks 支持不同用户使用不同的端口、密码登录。 首先，创建或编辑配置文件。 1vim /etc/shadowsocks.json 插入以下配置内容后保存。注意，server 的值应该填写主机的外网 IP 。port_password 的值是一个 JSON 对象，每一组键值分别填写端口号和密码。timeout 填写超时时间。method 填写加密方式，这里使用默认的 aes-256-cfb 加密。 1234567891011&#123; "server": "0.0.0.0", "port_password": &#123; "8381": "foobar1", "8382": "foobar2", "8383": "foobar3", "8384": "foobar4" &#125;, "timeout": 300, "method": "aes-256-cfb"&#125; 别忘了让防火墙开放上述的 4 个端口。 前台启动加载配置文件的 Shadowsocks 服务器。 1ssserver -c /etc/shadowsocks.json 后台启动加载配置文件的 Shadowsocks 服务器。 1ssserver -c /etc/shadowsocks.json -d start 停止后台服务器。 1ssserver -c /etc/shadowsocks.json -d stop 客户端服务端已经准备完毕，接下来需要在我们的设备上用客户端连接服务器。 在 Github 上下载 Shadowsocks 客户端的 Windows 版本和 Android 版本，iOS 版本可以通过 AppStore 安装。需要其他平台的客户端，可以在科学上网后访问 官网 下载。 Shadowsocks 客户端的使用非常简单。在客户端中“添加服务器”，正确填写服务器的地址、端口、密码和加密方式，然后就可以连接服务端了。 ENV: Vultr Cloud Compute / CentOS 7 x64 / Python 2.7.5]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>Shadowsocks</tag>
+        <tag>Proxy</tag>
+        <tag>VPN</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[移动端实现0.5像素细边框]]></title>
+    <url>%2Farticle%2F201706270002.html</url>
+    <content type="text"><![CDATA[在移动端，1px 的直线在物理屏幕上通常会显示成 2px（甚至更粗）。这是因为手机屏幕的物理分辨率（硬件支持的）通常是其逻辑分辨率（软件支持的）的数倍。 以 iPhone 6 为例，其逻辑分辨率为 667×375 ，物理分辨率为 1334x750 。这意味着物理屏幕使用 2x2 个像素点显示 1 像素的内容。换言之，如果我们希望在物理屏幕上显示 1 像素的边框，就必须在逻辑上实现 0.5 像素的边框。 除了 iPhone（iOS8以上），目前绝大多数的移动设备并不支持直接渲染 0.5px 的边框。 12/* 兼容性差 */border: 0.5px solid #e6e6e6; 事实上，存在不止一种方法用于在移动端实现 0.5px 的细边框。思路基本上还是先渲染 1px 边框，然后设法将线条的宽度减少或隐藏 50% 。下面推荐两种我在移动端 Web 和小程序中常用、兼容性较优的方法。 缩放法假设存在一个列表，其中的每一条项目都要有一个灰色下边框。 我们使用 after 选择器在每个 item 后面插入一个宽度 100% ，高度 1px ，灰色背景的伪元素，先在视觉上实现 1 像素的下边框。然后使用 transform 属性的 scale 缩放，将伪元素的高度缩放到原来的 50% ，就可以在视觉上得到 0.5 像素的下边框。 123456789101112131415161718/* 项目 */.item &#123; height: 50px; line-height: 50px; position: relative;&#125;/* 下边框 */.item::after &#123; position: absolute; content: ''; width: 100%; left: 0; bottom: 0; height: 1px; background: #e6e6e6; transform: scaleY(0.5);&#125; 渐变法类似的，先使用伪元素实现 1 像素的下边框。然后使用 linear-gradient 声明一个渐变色背景，由透明色（transparent）以及灰色组成。由于灰色只占这条 1 像素的下边框的一半，在视觉上也就得到了 0.5 像素的下边框。 1234567891011121314151617/* 项目 */.item &#123; height: 50px; line-height: 50px; position: relative;&#125;/* 下边框 */.item::after &#123; position: absolute; content: ''; width: 100%; left: 0; bottom: 0; height: 1px; background: linear-gradient(transparent 0%, #e6e6e6 50%);&#125; ENV: Windows 7 x64 / WeChat Web DevTools 0.18 / WeChat 6.5.8]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+        <tag>小程序</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Laravel 使用 JWT 实现用户认证]]></title>
+    <url>%2Farticle%2F201706111300.html</url>
+    <content type="text"><![CDATA[JWT（JSON Web Token）是一个用于安全信息传输的开放标准。基于 JWT 的用户认证，用户只需登录一次，服务端生成 Token（令牌）并发送给客户端，客户端则在每次发送请求时携带该 Token ，服务端根据 Token 识别用户身份。 一个 JSON Web Token 是用 base64 编码的长字符串，包含了验证用户身份所需的必要信息。 123eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaXNzIjoiaHR0cDpcL1wvbG9jYWxob3N0OjgwMDFcL2F1dGhcL2xvZ2luIiwiaWF0IjoxNDUxODg4MTE5LCJleHAiOjE0NTQ1MTYxMTksIm5iZiI6MTQ1MTg4ODExOSwianRpIjoiMzdjMTA3ZTQ2MDlkZGJjYzljMDk2ZWE1ZWU3NmM2NjcifQ.wyoQ95RjAyQ2FF3aj8EvCSaUmeP0KUqcCJDENNfnaT4 这里对 JWT 规范不加赘述，只讨论如何快速实现基于 JWT 的用户认证。如果想进一步了解 JWT 规范，建议阅读 官方文档 。 安装使用 Composer 安装 jwt-auth 依赖包。 1composer require tymon/jwt-auth 0.5.* 配置在 config\app.php 配置文件中，注册服务提供者和门面。 1234'providers' =&gt; [ ... Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class], 12345'aliases' =&gt; [ ... 'JWTAuth' =&gt; Tymon\JWTAuth\Facades\JWTAuth::class, 'JWTFactory' =&gt; Tymon\JWTAuth\Facades\JWTFactory::class], 执行以下命令发布 JWT 配置文件。该命令将在 config 目录下生成 jwt.php ，通常使用默认配置即可。 1php artisan vendor:publish --provider=&quot;Tymon\JWTAuth\Providers\JWTAuthServiceProvider&quot; 生成用于加密数据的密钥。 1php artisan jwt:generate 创建引用 JWTAuth 门面和异常处理类。 12use JWTAuth;use Tymon\JWTAuth\Exceptions\JWTException; 使用请求中的登录凭据（通常是邮箱和密码）创建 Token 。 12345678910111213141516171819public function authenticate(Request $request)&#123; // 获取请求中的登录凭据 $credentials = $request-&gt;only('email', 'password'); try &#123; // 验证登录凭据并创建 Token if (! $token = JWTAuth::attempt($credentials)) &#123; // 登录凭据无效时返回错误 return response()-&gt;json(['error' =&gt; 'invalid_credentials'], 401); &#125; &#125; catch (JWTException $e) &#123; // 无法正常生成 Token 时返回错误 return response()-&gt;json(['error' =&gt; 'could_not_create_token'], 500); &#125; // 返回创建的 Token return response()-&gt;json(compact('token'));&#125; 登录凭据也可以是任何用户表里存在的字段，譬如手机号和密码。 1$credentials = $request-&gt;only('mobile', 'password'); 我们还可以直接基于用户模型对象创建 Token ，满足更为个性化的认证需求。 123$user = User::first();$token = JWTAuth::fromUser($user);return $token; 认证在 app\Http\Kernel.php 中注册 JWT 提供的认证中间件。 1234protected $routeMiddleware = [ ... 'jwt.auth' =&gt; \Tymon\JWTAuth\Middleware\GetUserFromToken::class]; 对需要认证才能访问的路由启用该中间件。 123Route::group(['middleware' =&gt; 'jwt.auth'], function () &#123; ...&#125;); jwt.auth 中间件将会解析请求中携带的 Token 。如果找不到 Token ，则返回“token_not_provided”错误；如果 Token 已过期，则返回“token_expired”错误。 客户端在请求的头部信息或 URL 中携带有效的 Token 即可通过认证。 1Authorization: Bearer &#123; Token &#125; 1https://api.example.com/example?token=&#123; Token &#125; 服务端可以从 Token 中获得用户对象。 1$user = JWTAuth::parseToken()-&gt;authenticate(); ENV: Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.4]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Laravel</tag>
+        <tag>JWT</tag>
+        <tag>API</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[gulp 小教程]]></title>
+    <url>%2Farticle%2F201705201637.html</url>
+    <content type="text"><![CDATA[gulp 是一个前端代码 自动化 构建工具，帮助我们从令人痛苦或耗时的重复工作中解脱出来。用通俗易懂的话来说，gulp 能够帮你：拷贝资源文件、合并与压缩 JavaScript / CSS 文件、编译 CSS 预处理语言（Sass / Less）、监视文件的变化。 友情提示：gulp [ɡʌlp] 的读音应该是“尬噗”，而不是“顾噗”。 前言这玩意儿有用么？刚接触 gulp 的时候我也感到十分费解，觉得它能做的事我动动手指也搞得定。 虽然这些功能看似简单，但当你管理的文件越来越多，项目越来越多的时候，你就会不时忘记做这些“简单的小事”，甚至被它们干扰思路、影响心情。所以，该由机器做的事就交给机器吧，你只需敲一行命令，琐碎的工作就能完成。 使用 gulp 或类似的工具之后，变化或许是这样的： 至于省下的时间用来干嘛，自己看着办咯。 : ) 安装确认电脑上已安装 Node.js 。在命令行工具中执行以下命令，全局安装 gulp-cli（gulp 命令行接口）。 1npm install --global gulp-cli 然后在项目中安装 gulp （作为开发环境的依赖模块）。当然，也可以在新建的目录中安装，gulp 将正常工作。 1npm install --save-dev gulp 注意，目录下必须存在 package.json 文件，否则 npm 安装时可能出错。若不存在就新建一个，内容为空对象即可。 1&#123;&#125; 创建第一个任务在项目的根目录下新建 gulpfile.js 文件。它是 gulp 的配置文件，任何你希望 gulp 完成的工作都写在这份文档中。 123456// gulpfile.jsvar gulp = require('gulp');gulp.task('default', function() &#123; // 任务内容...&#125;); task 方法声明了一个名为 default 的空任务。在命令行中运行这个任务： 1gulp default 通过输出的日志能够知道，default 任务已运行完毕。 123[23:39:25] Using gulpfile E:\Code\gulp-test\gulpfile.js[23:39:25] Starting 'default'...[23:39:25] Finished 'default' after 78 μs 拷贝文件假设项目中存在以下2个存放图片的目录。为了用户能够正常加载图片，需要将第一个目录下的图片拷贝到第二个目录下。 12resources\assets\img # 用户不可访问（开发环境使用）public\assets\img # 用户可以访问（生产环境使用） 编辑任务，实现简单的文件拷贝。src 方法用于指定文件来源，pipe 方法用于输送文件，dest 方法用于写文件。dest 方法的参数为输出目录。显而易见，这段代码的作用是将第一个目录中的 example.jpg 拷贝到第二个目录下。 12345gulp.task('default', function() &#123; // 仅拷贝图片 example.jpg gulp.src('resources/assets/img/example.jpg') .pipe(gulp.dest('public/assets/img/'));&#125;); 运行任务，在 public\assets\img 目录下可以看见刚拷贝过来的 example.jpg 。 如果要拷贝的图片非常多呢？使用 ** 或 *.jpg 匹配目录下的全部或一整批图片。 1234567// 拷贝全部文件gulp.src('resources/assets/img/**') .pipe(gulp.dest('public/assets/img/'));// 拷贝所有 jpg 文件gulp.src('resources/assets/img/*.jpg') .pipe(gulp.dest('public/assets/img/')); 监视文件你可能会发出这样的疑问：总不能每次修改过图片都要 gulp default 一次吧？当然不能，gulp 存在的意义就是让我们省去简单重复的劳动。 使用 watch 方法监视目录的变化，当目录中的图片发生改变时运行 default 任务（拷贝图片）。 1234567891011gulp.task('default', function() &#123; ...&#125;);// 监视目录var watcher = gulp.watch('resources/assets/img/**');watcher.on('change', function(event) &#123; // 在发生变化时做一些事... gulp.start('default');&#125;); 然后运行 gulp 命令（执行配置文件的全部内容），gulp 会在运行一次 default 任务后开始监视目录，直到用 Ctrl+C 停止它。 通常应该单独创建监视任务，然后执行 gulp watch 运行它。 123456gulp.task('watch', function() &#123; var watcher = gulp.watch('resources/assets/img/**'); watcher.on('change', function(event) &#123; gulp.start('default'); &#125;);&#125;); 压缩 JavaScript假设项目中存在以下2个存放脚本的目录。为了节约用户的流量和时间，我们希望在第二个目录中生成压缩过的 js 文件。 12resources\assets\js # 用户不可访问（开发环境使用）public\assets\js # 用户可以访问（生产环境使用） 安装 gulp-uglify 模块，用于压缩 JavaScript 文件。 1npm install --save-dev gulp-uglify 使用 uglify 方法压缩 js 文件。 12345678// 加载 gulp-uglify 模块var uglify = require('gulp-uglify');gulp.task('default', function() &#123; gulp.src('resources/assets/js/**') .pipe(uglify()) // 压缩 JavaScript .pipe(gulp.dest('public/assets/js/'));&#125;); 压缩 CSS假设项目中存在以下2个存放样式的目录。同样的，我们要在第二个目录中生成压缩过的 css 文件。 12resources\assets\css # 用户不可访问（开发环境使用）public\assets\css # 用户可以访问（生产环境使用） 安装 gulp-clean-css 模块，用于压缩 CSS 文件。 1npm install gulp-clean-css --save-dev 使用 cleanCSS 方法压缩 css 文件。 12345678// 加载 gulp-clean-css 模块var cleanCSS = require('gulp-clean-css');gulp.task('default', function() &#123; gulp.src('resources/assets/css/**') .pipe(cleanCSS()) // 压缩 CSS .pipe(gulp.dest('public/assets/css/'));&#125;); 编译 Sass安装 gulp-sass 模块，用于将 scss 文件编译成 css 文件。 1npm install gulp-sass --save-dev 使用 sass 方法编译 scss 文件。 123456789// 加载 gulp-sass 模块var sass = require('gulp-sass');gulp.task('default', function() &#123; gulp.src('resources/assets/scss/**') .pipe(sass()) // 编译 Sass .pipe(gulp.dest('public/assets/css/'));&#125;); 编译 Less安装 gulp-less 模块，用于将 less 文件编译成 css 文件。 1npm install gulp-less 使用 less 方法编译 scss 文件。 12345678// 加载 gulp-less 模块var less = require('gulp-less');gulp.task('default', function() &#123; gulp.src('resources/assets/less/**') .pipe(less()) // 编译 less .pipe(gulp.dest('public/assets/css/'));&#125;); 合并文件安装 gulp-concat 模块，用于合并 JavaScript/CSS 文件。 1npm install --save-dev gulp-concat 使用 concat 方法合并文件，唯一的参数用于设置合并后的文件名。 12345678// 加载 gulp-concat 模块var concat = require('gulp-concat');gulp.task('default', function() &#123; gulp.src('resources/assets/js/**') .pipe(concat('main.js')) // 合并 js .pipe(gulp.dest('public/assets/js/'));&#125;); ENV: Windows 7 x64 / Node.js 6.10.1 / npm 3.10.10 / gulp 3.9.1]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>Gulp</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[JavaScript 实现回到顶部]]></title>
+    <url>%2Farticle%2F201705181334.html</url>
+    <content type="text"><![CDATA[过去，我一般用 jQuery 的 scrollTop 和 animate 方法实现回到顶部（back to top）按钮。现在基本不在项目里引入 jQuery ，只能试着用原生写了。实际上，原生 JavaScript 实现起来也很容易。 滚动 body 到顶部： 1document.body.scrollTop = 0 平滑地滚动 body 到顶部： 123456789101112btt: function() &#123; // 判断当前位置距离顶部的距离 if (window.scrollY) &#123; let that = this // 每10毫秒向上滚动30像素 setTimeout(function() &#123; document.body.scrollTop = (window.scrollY - 30) // 递归 that.scrollToTop() &#125;, 10) &#125;&#125; window.scrollY 返回文档在垂直方向已滚动的像素值。如果返回值不等于0，就在10毫秒后向上滚动30像素，然后递归调用 btt 方法。如果返回值等于0，说明当前位置已位于顶部，不执行任何操作。 ENV: Windows 7 x64 / Chrome 60]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 Hexo 搭建静态博客]]></title>
+    <url>%2Farticle%2F201705141050.html</url>
+    <content type="text"><![CDATA[Hexo 是一个开源博客框架，更准确地说，它是一个静态博客生成工具。你用 Markdown 写文章，然后交给 Hexo 生成纯静态的网页文件、自动部署到服务器。过程优雅，体验惬意。 安装Hexo 使用 JavaScript（Node.js） 编译文件，需要安装 Node.js 。 Hexo 使用 Git Bash 执行命令，需要安装 Git 。 确保已安装 Node.js 和 Git ，在 Git Bash 中执行以下命令，全局安装 Hexo 。 1npm install -g hexo-cli 初始化指定一个文件夹并初始化 Hexo ，该命令将在 my-hexo 文件夹下生成一个 Hexo 项目必要的文件。 1hexo init my-hexo 切换到 my-hexo 目录，然后安装依赖包。 12cd my-hexonpm install 得到的目录结构如下： 12345678.├── _config.yml # 配置文件├── package.json├── scaffolds├── source # 源文件| ├── _drafts # 草稿| └── _posts # 文章└── themes # 主题 _config.yml 是站点的配置文件。source 目录用于存放文章、图片等生成静态页面的原料。themes 目录用于存放主题，默认提供了 landscape 主题。 Hexo 将使用 source 目录下的资源文件，以及 themes 目录下的主题文件，混合生成静态页面文件，存放在 public 目录下。 配置编辑站点配置文件 _config.yml ，添加一些基础信息。 1234567title: # 标题subtitle: # 副标题description: # 描述author: # 作者language: # 语言timezone: # 时区url: # 链接 写文章Hexo 提供 new 命令用于新建文章或页面。 1hexo new [布局] &lt;标题&gt; 使用 new 命令新建一篇文章。执行后将在 source\_posts 目录下生成一个 .md 文件。 1hexo new post &apos;Hello World&apos; 编辑 Hello-World.md ，使用 Markdown 语法撰写文章内容。 如果不希望文章直接发布，可以使用 draft 布局新建为草稿。 1hexo new draft &apos;Hello World&apos; 将指定的草稿发布为文章。 1hexo publish post Hello-World.md 除了 Markdown 语法，Hexo 还提供了从 Octopress（另一个博客框架）移植而来的标签插件，用于在文章中添加引述、图片、代码、视频、超链接等内容。（详见 Tag Plugins） 123&#123;% codeblock lang:js %&#125;alert(&apos;Hello World!&apos;);&#123;% endcodeblock %&#125; 手动部署执行以下命令在 public 目录下生成静态页面。 1hexo generate 直接将静态页面上传到服务器即可。 Git 部署Hexo 同时提供了其他较为优雅的部署方式，支持使用 Git、FTP 等方式自动部署到服务器。（详见 Deployment） 以 Git 方式为例，执行以下命令安装 deployer-git 模块。 1npm install hexo-deployer-git --save 编辑配置文件，设置代码仓库。 12345deploy: type: git repo: &lt;repository url&gt; # 仓库链接 branch: [branch] # 目标分支 message: [message] 执行以下命令部署代码。 1hexo deploy FTP 部署以 FTP 方式为例，执行以下命令安装 deployer-ftpsync 模块。 1npm install hexo-deployer-ftpsync --save 编辑配置文件，设置 FTP 服务器。 12345678910deploy: type: ftpsync host: &lt;host&gt; # 主机地址 user: &lt;user&gt; # 用户名 pass: &lt;password&gt; # 密码 remote: [remote] # 网站根目录 port: [port] # 端口 ignore: [ignore] connections: [connections] verbose: [true|false] 注意，该部署方式会删除服务器上的所有文件，再上传新的文件。部署配置中的 ignore 字段用于声明不希望被删除的文件。 1ignore: [ .htaccess, .conf ] 执行以下命令部署代码。 1hexo deploy 服务器我们可以在本地启动一个 Web 服务器，实时预览文章的修改。 执行以下命令安装 server 模块。 1npm install hexo-server --save 使用 server 命令启动 Web 服务器。 1hexo server 在浏览器中使用 http://localhost:4000 访问。]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[PHP 使用 Guzzle 发送 http 请求]]></title>
+    <url>%2Farticle%2F201705031841.html</url>
+    <content type="text"><![CDATA[Guzzle 是一个开源的 PHP HTTP 客户端，同时支持同步和异步方法。使用它可以轻松发送 GET、POST 请求，实现和第三方服务器的通信。 安装使用 Composer 安装依赖包。 1composer require guzzlehttp/guzzle 使用在控制器中新建一个 Client （HTTP 客户端）对象。 1$client = new \GuzzleHttp\Client(); 调用 Client 对象的 request 方法发送 HTTP 请求。 1$res = $client-&gt;request('get', 'http://www.example.com'); 使用 getBody 等方法可以获取响应的内容。 12345678// 获取状态码$res-&gt;getStatusCode();// 获取头部信息$res-&gt;getHeaderLine('content-type');// 获取打印内容$res-&gt;getBody(); 参数要在 GET 请求时传递参数，除了把参数直接写进链接，还可以把参数放到 query 数组中。 12345$client-&gt;request('GET', 'http://www.example.com', [ 'query' =&gt; [ 'email' =&gt; 'hi@caiyiming.com' ]]); form_params 数组用于设置 POST 请求的参数。 12345$client-&gt;request('POST', 'http://www.example.com', [ 'form_params' =&gt; [ 'email' =&gt; 'hi@caiyiming.com' ]]); 头部header 数组用于设置 HTTP 请求的头部信息。 12345$client-&gt;request('GET', 'http://www.example.com', [ 'headers' =&gt; [ 'User-Agent' =&gt; 'Mozilla/5.0' ]]); 异步sendAsync 方法用于发送异步请求，then 方法用于设置回调函数。 123456$request = new \GuzzleHttp\Psr7\Request('GET', 'http://www.example.com');$promise = $client-&gt;sendAsync($request)-&gt;then(function ($response) &#123; // 请求完成后的操作 $response-&gt;getBody();&#125;);$promise-&gt;wait(); ENV: Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Lumen 5.3]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>PHP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 JavaScript 清空上传控件的值]]></title>
+    <url>%2Farticle%2F201704280003.html</url>
+    <content type="text"><![CDATA[有时候我们可能希望在某个时间点帮用户清空上传控件（即 file 类型的 input 元素）的值，让交互更加友好。不过，上传控件本身并未提供一个简单的方法用于清除已选中的文件。 1&lt;input type="file"&gt; 网上普遍存在两种方案：用 JavaScript 拷贝一个相同的 input 元素替换掉原来的元素，或者用 jQuery 的 val() 方法将元素的值设为空字符串。 前者对我的页面没有奏效，后者似乎在 IE 下不能正常工作。更何况我也不想为解决一个小问题而引用 jQuery 库。其实，使用表单的 reset 方法可以很容易地清空上传控件的内容。 首先，在 input 标签外包一个 form 标签。 123&lt;form id="my-form"&gt; &lt;input type="file"&gt;&lt;/form&gt; 然后，获得 form 元素并调用 reset 方法，该方法将清除表单中已输入的全部内容，当然也包括上传控件中已选中的文件。 12let form = document.getElementById('my-form')form.reset()]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Git 使用命令方式实现免密码操作]]></title>
+    <url>%2Farticle%2F201704231552.html</url>
+    <content type="text"><![CDATA[每次用 Git 操作远程仓库时都需要验证身份，反复提交账号密码不但繁琐，而且容易忙中出错、影响心情。除了用 SSH 方式访问仓库，我们还可以用命令将密码保存在本地，从频繁输入密码中解脱出来。这种方式在只能用 https 方式使用 Git 的场景下简直救命。 在需要保存登录信息的项目目录下执行以下命令： 1git config --global credential.helper store 该命令将用户名和密码以明文的形式保存在 ~/.git-credentials 文件中。 注意，是以 明文形式 保存的密码。所以这种方式是极不安全的，只建议在少数情况下使用，并且要注意保管好 .git-credentials 文件。]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[BAE 实现 WordPress 固定链接]]></title>
+    <url>%2Farticle%2F201704170054.html</url>
+    <content type="text"><![CDATA[最近试用百度应用引擎（BAE）部署站点。BAE 优势非常明显，便宜、按需升降配、支持 Git ，很适合部署小项目。我试着在上面安装了 WordPress ，发现无法正常使用伪静态功能，开启固定链接后大部分页面都报404错误。 BAE 使用的 Web 引擎是 lighttpd ，站点配置文件为应用根目录下的 app.conf 文件。 编辑 app.conf 文件增加适用于 WordPress 的配置： 1234567891011121314151617handlers: # 静态资源路由 - url : /(assets)/(.*) static_files : assets/$2 # 基本路由规则 - url : / script: index.php - regex_url : ^/(wp-.+).*/? script : $0 - regex_url : ^/(sitemap.xml) script : $0 - regex_url : ^/(xmlrpc.php) script : $0 - regex_url : ^/(.+)/?$ script : index.php/$1 部署代码后到 WordPress 后台，重新设置一次固定链接即可生效。 ENV: Baidu App Engine / PHP 5.5 / WordPress 4.7]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>WordPress</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[手把手教你开发一个微信小程序]]></title>
+    <url>%2Farticle%2F201703281144.html</url>
+    <content type="text"><![CDATA[由于工作需要，我最近开始学习微信小程序，看过几天文档后决定写一个简单的小程序练手，就做一个 To-do List 工具。为了日后温故，也为让有需要的朋友参考，我把开发的过程记录了下来。 先看一下完成后的效果： 准备工作你应该具备一些基础的 Web 知识储备（HTML、CSS、JavaScript），用过 React、Vue 等前端框架更佳。访问 官网 下载微信 Web 开发者工具，接下来的开发只需要在这一个工具上进行。 创建应用使用你的微信号登录微信 Web 开发者工具，选择“本地小程序项目”，然后添加一个新项目。虽然不填写 AppID 也可以继续，但功能受到限制，建议开发者先注册小程序并获取 AppID 。 勾选“在当前目录中创建 quick start 项目”的情况下，微信默认将创建一个 demo 程序。通过这些自动创建的文件，可以一窥小程序的目录结构： 12345678910111213141516171819To-do List│ app.js # 全局脚本│ app.json # 全局配置│ app.wxss # 全局样式│ ├─pages│ ├─index # 页面│ │ index.js # 页面脚本│ │ index.wxml # 页面结构│ │ index.wxss # 页面样式│ │ │ └─logs│ logs.js│ logs.json│ logs.wxml│ logs.wxss│ └─utils util.js 一个小程序主要由 wxml 结构文件、wxss 样式文件、js 脚本文件构成，和网页的构成非常相似。页面存放在 pages 目录下，该目录下的每一个目录等价于一个页面。注意，一个小程序至少应该有一个页面。 本例的小程序保留全局文件和一个页面就够了，多余的目录和文件可以删除。 得到如下目录结构： 12345678910To-do List│ app.js│ app.json│ app.wxss│ └─pages └─index index.js index.wxml index.wxss 全局配置app.json 是小程序的全局配置文件，用于声明小程序包含的页面、修改导航栏样式等。 我们要开发的小程序包含一个 index 页面，所以应该在 pages 中注册该页面的路径。然后在 window 中设置导航栏的背景色为紫色，标题就叫 To-do List 吧，标题的颜色设为白色。（更多配置项参考 配置 ） 12345678"pages": [ "pages/index/index"],"window": &#123; "navigationBarBackgroundColor": "#512da8", "navigationBarTitleText": "To-do List", "navigationBarTextStyle": "white"&#125; 框架语法在继续开发之前，你需要了解小程序框架的一些基础用法。 在 wxml 文档中可以用双大括号引用 js 文档中的变量。（参考 数据绑定 ） 12&lt;!-- wxml --&gt;&lt;view&gt; &#123;&#123; message &#125;&#125; &lt;/view&gt; 123456// jsPage(&#123; data: &#123; message: 'Hello World!' &#125;&#125;) 12&lt;!-- 结果 --&gt;&lt;view&gt; Hello World! &lt;/view&gt; 在 wxml 文档中可以用 wx:if 判断是否要渲染该代码块 。以下面这段代码为例，当 condition 的值为 false、0 或空时，该代码块不会被渲染，页面中不会出现“Hello World!”。（参考 条件渲染） 12&lt;!-- wxml --&gt;&lt;view wx:if="&#123;&#123; condition &#125;&#125;"&gt; Hello World! &lt;/view&gt; 在 wxml 文档中可以用 wx:for 使用数组中的各项重复渲染，一般用于渲染列表。（参考 列表渲染 ） 12&lt;!-- wxml --&gt;&lt;view wx:for="&#123;&#123; array &#125;&#125;"&gt; &#123;&#123; index &#125;&#125; - &#123;&#123; item &#125;&#125; &lt;/view&gt; 123456// jsPage(&#123; data: &#123; array: [ 'Hello', 'World' ] &#125;&#125;) 123&lt;!-- 结果 --&gt;&lt;view&gt; 0 - Hello &lt;/view&gt;&lt;view&gt; 1 - World &lt;/view&gt; 页面结构我用视图组件将页面分成了 head、body、foot 三个部分。head 提供一个输入框，用于添加新任务。body 用于显示待处理项目列表。foot 用于显示已完成项目列表。 1234&lt;!-- index.wxml --&gt;&lt;view class="head"&gt; ... &lt;/view&gt;&lt;view class="body"&gt; ... &lt;/view&gt;&lt;view class="foot"&gt; ... &lt;/view&gt; 在 head 中添加一个 input 组件。类名 class 和输入框的值 value 分别与变量绑定。placeholder 和 placeholder-style 属性设置了提示文本的内容和样式。bindfocus 、bindblur、bindconfirm 分别是输入框的聚焦、失焦和提交事件。12345678910&lt;view class="head"&gt; &lt;input class="&#123;&#123; input.class &#125;&#125;" value="&#123;&#123; input.value &#125;&#125;" placeholder="需要做什么？" placeholder-style="color:#fff" bindfocus="focus" bindblur="blur" bindconfirm="confirm"/&gt;&lt;/view&gt; body 视图添加一个复选框 checkbox-group 组件并渲染一个待处理项目列表。bindchange 事件用于监听子组件 checkbox 的变化，当用户勾选 checkbox 时做一些事。 12345678910111213141516171819&lt;view class="body"&gt; &lt;!-- 项目被勾选时调用 check 方法。 --&gt; &lt;checkbox-group bindchange="check"&gt; &lt;!-- 渲染未完成项目列表。 --&gt; &lt;view class="item" wx:for="&#123;&#123; items &#125;&#125;" wx:key="&#123;&#123; index &#125;&#125;" wx:if="&#123;&#123; !item.status &#125;&#125;"&gt; &lt;!-- 复选框的值为项目的索引（以便知道哪个复选框的状态发生改变），默认不选中。 --&gt; &lt;checkbox value="&#123;&#123; index &#125;&#125;" checked="&#123;&#123; false &#125;&#125;"/&gt; &lt;!-- 输出项目名称 --&gt; &lt;text&gt;&#123;&#123; item.name &#125;&#125;&lt;/text&gt; &lt;!-- 删除图标，点击时调用 remove 方法，参数 index 为项目索引。 --&gt; &lt;icon type="cancel" size="30" color="#EF5350" bindtap="remove" data-index="&#123;&#123; index &#125;&#125;"/&gt; &lt;/view&gt; &lt;/checkbox-group&gt; &lt;!-- 当 items 中没有元素时的提示。 --&gt; &lt;view class="empty" wx:if="&#123;&#123; items.length == 0 &#125;&#125;"&gt; &lt;icon type="success" size="20" color="&#123;&#123; item &#125;&#125;"/&gt; &lt;text&gt;无待办事项&lt;/text&gt; &lt;/view&gt;&lt;/view&gt; foot 视图的结构和 body 视图基本一致，渲染一个已完成项目列表。已完成项目一定是打了钩的，所以其中的 checkbox 默认选中。checkbox-group 组件的 bindchange 事件用于监听用户取消勾选。 123456789101112&lt;view class="foot"&gt; &lt;!-- 项目被取消勾选时调用 uncheck 方法。 --&gt; &lt;checkbox-group bindchange="uncheck"&gt; &lt;!-- 渲染已完成项目列表。 --&gt; &lt;view class="item" wx:for="&#123;&#123; items &#125;&#125;" wx:key="&#123;&#123; index &#125;&#125;" wx:if="&#123;&#123; item.status &#125;&#125;"&gt; &lt;!-- 复选框默认选中。 --&gt; &lt;checkbox value="&#123;&#123; index &#125;&#125;" checked="&#123;&#123; true &#125;&#125;"/&gt; &lt;text&gt;&#123;&#123; item.name &#125;&#125;&lt;/text&gt; &lt;icon type="cancel" size="30" color="#EF5350" bindtap="remove" data-index="&#123;&#123; index &#125;&#125;"/&gt; &lt;/view&gt; &lt;/checkbox-group&gt;&lt;/view&gt; 页面脚本首先是数据部分。渲染页面使用的数据来自 data ，换言之在 data 中声明的变量可以在 wxml 中使用（打印出来）。本例声明的数据包括输入框类名 input.class ，用于动态修改输入框的样式，输入框的值 input.value 以及存储待办事项的数组 items 。 123456789Page(&#123; data: &#123; input: &#123; class: '', value: '' &#125;, items: [] &#125;&#125; items 中的待办事项以对象形式存在。name 属性是待办事项的名称，status 属性是待办事项的状态（0=待处理 1=已完成）。页面中通过 status 的值控制待处理项目列表、已完成项目列表的内容。 1234items: [ &#123; name: '阅读官方文档', status: 1 &#125;, &#123; name: '写一个小程序', status: 0 &#125;] focus 方法和 blur 方法分别在输入框获取和失去焦点时调用，通过改变 input.class 的值修改输入框的样式。 注：在小程序中，修改数据必须使用 setData 方法才能使变化应用到页面上。 123456789// 输入框获取焦点事件focus: function () &#123; this.setData(&#123; 'input.class': 'focused' &#125;)&#125;,// 输入框失去焦点事件blur: function () &#123; this.setData(&#123; 'input.class': '' &#125;)&#125;, confirm 方法在用户提交内容时调用，新增一个待办事项并清空输入框。通过参数中的 event.detail.value 可以取到输入框的值。 123456789101112// 输入框内容提交事件confirm: function (event) &#123; // 判断是否有值 if (event.detail.value) &#123; // 新增一个待处理项目 this.data.items.push(&#123; name: event.detail.value, status: 0 &#125;) // 更新页面 this.setData(&#123; 'items' : this.data.items &#125;) // 清空输入框 this.setData(&#123; 'input.value' : '' &#125;) &#125;&#125;, check 方法和 uncheck 方法分别在用户勾选待处理项目、取消勾选已完成项目时调用，用于修改数据并更新页面。通过参数中的 event.detail.value 获取到的是 checkbox-group 中所有已选 checkbox 的索引组成的数组。 1234567891011121314151617181920212223// 复选框选中事件check: function (event) &#123; // 获得已勾选项目索引 let index = event.detail.value[0] // 将被勾选项目的状态设为 1 this.data.items[index].status = 1 // 更新页面 this.setData(&#123; 'items' : this.data.items &#125;)&#125;,// 复选框取消选中事件uncheck: function (event) &#123; // 将所有项目的状态设为 0 for (let i = 0; i &lt; this.data.items.length; i++) &#123; this.data.items[i].status = 0 &#125; // 将被勾选项目的状态设为 1 for (let i = 0; i &lt; event.detail.value.length; i++) &#123; let index = event.detail.value[i] this.data.items[index].status = 1 &#125; // 更新页面 this.setData(&#123; 'items' : this.data.items &#125;)&#125;, remove 方法在用户点击项目的“删除”图标时调用，它将移除相应的元素并更新页面。 可能有人会问：为什么 event.target.dataset.index 是项目索引呢？这是因为事先在 icon 组件上使用了自定义属性 data-index 向事件传参。 123456789// 删除按钮点击事件remove: function (event) &#123; // 获得待删除项目索引 let index = event.target.dataset.index // 移除元素 this.data.items.splice(index, 1) // 更新页面 this.setData(&#123; 'items' : this.data.items &#125;)&#125; 页面样式小程序的样式表与 CSS 并无二致。扩展了根据屏幕宽度进行自适应的 rpx 单位。（参考 WXSS ） 12345678910111213141516171819202122232425262728293031323334353637383940414243text &#123; margin-left: 20rpx;&#125;checkbox, text, icon &#123; vertical-align:middle;&#125;icon &#123; float: right;&#125;view.head &#123; background: #3F51B5; padding: 120rpx 50rpx;&#125;view.head input &#123; color: #fff; height: 30pt; font-size: 20pt; -webkit-transition: all 0.5s; transition: all 0.5s;&#125;view.head input.focused &#123; font-size: 28pt;&#125;view.body .item, .foot .item &#123; font-size: 14pt; color: #333; padding: 40rpx 50rpx; border-bottom: 1px solid #eeeeee;&#125;view.foot .item text &#123; color: #bbbbbb;&#125;view.empty &#123; font-size: 12pt; padding: 50rpx; text-align: center;&#125;view.empty text &#123; margin-left: 10rpx;&#125;view.empty icon &#123; float: none;&#125; 现在你可以在开发者工具的“项目”选项卡中预览或上传这个小程序了。如果想体验一下这个小程序的运行效果，可以在微信中搜索已上线的版本“小待办”。 ENV: Windows 10 x64 / WeChat Web DevTools 0.15 / WeChat 6.5.6]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>微信</tag>
+        <tag>小程序</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Sass 快速入门]]></title>
+    <url>%2Farticle%2F201703161308.html</url>
+    <content type="text"><![CDATA[第一次听说 Sass/Less 是在刚毕业时的面试，当时全然不知存在 CSS 预处理器这种东西，感到很羞愧。后来学了一点，发现确实蛮有意思，有不少特性可以提高效率或者让代码显得更优雅。 安装 Sass由于 Sass 使用 Ruby 语言开发，在安装 Sass 之前，需要先安装 Ruby 。Win 系统可以下载 RubyInstaller 安装，安装时勾选 Add Ruby executable to your PATH 添加环境变量。 安装后执行 Ruby 的命令行工具 Start Command Prompt with Ruby ，执行以下代码安装 Sass 。 1gem install sass 默认情况下 Sass 编译到中文会报错，解决该问题需要在配置文件中增加一句代码，指定编码为 utf-8 。 123# 配置文件参考路径# C:\Ruby23-x64\lib\ruby\gems\2.3.0\gems\sass-3.4.23\lib\sass.rbEncoding.default_external = Encoding.find('utf-8') 编译文件编译当前目录下的 style.scss 文件并输出 style.css 。 1sass style.scss style.css 编译 sass 目录下的文件并在 css 目录下输出 css 文件。 1sass sass/:css/ 监听文件的修改并自动编译为 css 文件。 1sass –watch style.scss style.css 代码风格Sass 允许以指定的代码风格输出样式，只需在输出时带上 --style 参数。如果没有指定代码风格，默认使用嵌套（nested）风格输出。 1234sass style.scss style.css --style nestedsass style.scss style.css --style expandedsass style.scss style.css --style compactsass style.scss style.css --style compressed 1234567891011121314/* 嵌套 nested */div &#123; width: 100%; &#125;/* 膨胀 expanded */div &#123; width: 100%;&#125;/* 紧凑 compact */div &#123; width: 100%; &#125;/* 压缩 compressed */div&#123;width:100%&#125; 变量使用 $ 符号声明和调用变量。全局变量可在任何位置调用，局部变量只能在它的作用域内调用。 1234567891011/* 全局变量 */$small: 14px;div &#123; font-size: $small;&#125;/* 局部变量 */div &#123; $black: #000; color: $black;&#125; 相同类型的变量可以进行运算。需要注意的是，除法运算必须加括号才会被编译，这是因为 / 符号本身在 css 中已有其他含义。 1234567div &#123; content: '一段' + '文字'; width: 100px + 100px; height: 100px - 50px; padding: 5px * 2; margin: (20px / 2);&#125; 嵌套使用嵌套可以更直观地描述选择器的层级关系，提高代码可读性。 12345678910/* 编译前 */div &#123; img &#123; width: 100; &#125;&#125;/* 编译后 */div img &#123; width: 100; &#125; 使用嵌套可以更直观地描述具有相同前缀的属性。个人认为这项特性的意义不大，既不能有效减少代码，又不利于阅读代码。 123456789101112/* 编译前 */div &#123; padding: &#123; left: 10px; right: 15px; &#125;&#125;/* 编译后 */div &#123; padding-left: 10px; padding-right: 15px; &#125; 在嵌套中使用 &amp; 可以引用上一级选择器，一般用于处理伪类。 12345678910/* 编译前 */div &#123; &amp;:before &#123; content: "example"; &#125;&#125;/* 编译后 */div:before &#123; content: "example"; &#125; 混合使用 Mixin（混合）可以声明一个带参数的代码块，它很像一个方法，调用时将输出其中的声明。Mixin 的参数可以设置默认值。 12345678910111213/* 声明一个Mixin */@mixin my-mixin ($color: #000, $fontSize: 14px) &#123; color: $color; font-size: $fontSize;&#125;/* 不传参数调用 */div &#123; @include my-mixin;&#125;/* 传参数调用 */span &#123; @include my-mixin(#fff, 18px);&#125; 1234567/* 编译后 */div &#123; color: #000; font-size: 14px; &#125;span &#123; color: #fff; font-size: 18px; &#125; 在 Mixin 中可以使用 if 语句控制逻辑。 12345678@mixin my-mixin ($fontSize) &#123; @if ($fontSize == 'large') &#123; font-size: 30px; &#125; @else &#123; font-size: 16px; &#125;&#125; 继承使用 @extend 可以让一个选择器继承另一个选择器的所有声明。 12345678910111213141516171819/* 编译前 */.btn &#123; width: 100%; padding: 10px; font-size: 14px;&#125;.btn-success &#123; color: #009688; @extend .btn;&#125;/* 编译后 */.btn, .btn-success &#123; width: 100%; padding: 10px; font-size: 14px; &#125;.btn-success &#123; color: #009688; &#125; 一个包含 % 前缀的选择器被称为占位符选择器，这类选择器除非被继承，否则不会输出。 12345%btn &#123; width: 100%; padding: 10px; font-size: 14px;&#125;&lt; 插值使用 #{} 可以在选择器或属性的名称中调用变量。 12345678910/* 编译前 */$type: success;$side: right;.btn-#&#123;$type&#125; &#123; margin-#&#123;$side&#125;: 10px;&#125;/* 编译后 */.btn-success &#123; margin-right: 10px; &#125; 注释Sass 中有两种注释，双斜杠开头的注释不会被输出到 css 文件中。 12// 这段注释不会输出/* 这段注释将会输出 */ ENV: Windows 10 x64 / Ruby 2.3 / Sass 3.4]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+        <tag>Sass</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[将 WordPress 移动到子目录]]></title>
+    <url>%2Farticle%2F201703131746.html</url>
+    <content type="text"><![CDATA[WordPress 默认安装在网站的根目录，这无疑会使目录结构看起来很混乱。查阅文档后发现 WordPress 本身允许用户将其文件移动到子目录。 首先，在根目录下创建用于存放 WordPress 文件的文件夹。例如： wordpress 。 然后，在后台修改常规选项，将“WordPress地址”修改为指向子目录的链接。保存，不需要理会错误提示。 1http://example.com/wordpress 注意，“站点地址”不需要修改。 最后，将 index.php 拷贝到根目录下。编辑 index.php ，修改其引用的文件路径。如果存在 .htaccess 等 Web 引擎配置文件，也要拷贝到根目录下。 1require('./wordpress/wp-blog-header.php'); 若设置过固定链接，需要到后台重新保存一次固定链接设置。若无法正常访问站点，检查 Rewrite 规则或目录权限。 记得使用新链接登录后台。 1http://example.com/wordpress/wp-admin/]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>WordPress</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[解决移动端 ES6 兼容问题]]></title>
+    <url>%2Farticle%2F201703031619.html</url>
+    <content type="text"><![CDATA[昨天完成了一个移动端页面，开始在不同设备上测试。结果在两部华为测试机（荣耀6、荣耀7）上出现了画面错乱的情况。开始还以为是浏览器内核太旧，不兼容部分 CSS3 特性，在增加了用于提高兼容性的语句后，问题仍未解决。 排查后发现 JavaScript 代码执行中断 了，但控制台未有任何警告或报错。 原来，是因为我们现在写 JavaScript 时或多或少地用到了 ES6 语法。ES6 是2015年6月发布的 JavaScript 标准。而华为手机，至少在之前测试的两个机型上，由于无法理解新语法，索性 直接停止执行 了。 值得一提的是，同事的 iPhone5s（2013年发布）竟然正确理解了新语法，可见苹果的系统更新还算良心。 导致这两部设备“罢工”的 ES6 语法： 1234567891011// 对象内的方法可以简写var object = &#123; method() &#123; return 'Hello!'; &#125;&#125;;// 用箭头方式定义函数var a = 1;var b = 2;var sum = (a, b) =&gt; a + b; 要解决这一问题，可以使用 Google 的 Traceur 转码器，它会将新语法转成旧语法，再交给浏览器执行。 12345678&lt;!-- 在头部引入Traceur --&gt;&lt;script src="https://google.github.io/traceur-compiler/bin/traceur.js"&gt;&lt;/script&gt;&lt;script src="https://google.github.io/traceur-compiler/bin/BrowserSystem.js"&gt;&lt;/script&gt;&lt;script src="https://google.github.io/traceur-compiler/src/bootstrap.js"&gt;&lt;/script&gt;&lt;script type="module"&gt; // 这里的代码将被处理&lt;/script&gt; 实际使用下来发现，虽然两部设备已经可以正常访问，但 Traceur 的体积并不小。引用这个库将使用户多耗费 2.8mb 流量，也意味着增加1秒以上的加载时间。 所以，在代码量不多，且并不迫切需要使用新语法的情况下，最佳的解决方案还是把用到 ES6 语法的语句，全部改回去！ 1234567891011// 传统方式声明对象的方法var object = &#123; method: function() &#123; return 'Hello!'; &#125;&#125;;// 传统方式定义函数var a = 1;var b = 2;var sum = function()&#123; return a + b &#125;; ENV: Windows 10 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>ES6</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[不用 JSSDK 自定义微信分享标题和缩略图]]></title>
+    <url>%2Farticle%2F201702231619.html</url>
+    <content type="text"><![CDATA[微信向网页开发者提供了 JSSDK ，通常我们要自定义“分享到朋友圈”以及“发送给朋友”时显示的标题和缩略图，都是通过调用其接口实现。 微信分享接口的权限仅对已认证的公众号开放 。对于手头没有认证公众号的开发者，还有其他办法可以自定义微信分享标题和缩略图吗？答案是肯定的，效果是低配的。 自定义分享标题如果未使用 JSSDK 设置过标题，微信默认抓取网页标题，也就是 title 标签中的内容作为分享标题。这是显而易见的。 1&lt;title&gt;我是页面标题&lt;/title&gt; 既然如此，我们可以判断当前访问的浏览器是不是微信浏览器，若是微信浏览器，就动态修改页面标题。 以 PHP 为例： 123if (strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false )&#123; echo '&lt;script type="text/javascript"&gt; document.title = '我是新标题'; &lt;/script&gt;';&#125; 以 JavaScript 为例：1234var ua = window.navigator.userAgent.toLowerCase();if (ua.match(/MicroMessenger/i) == 'micromessenger') &#123; document.title = '我是新标题';&#125; 这样，用户使用微信浏览时的页面标题就是“我是新标题”，分享时自然也会以此作为分享标题，也就间接达到了自定义微信分享标题的目的。 自定义分享缩略图如果未使用 JSSDK 设置过缩略图，微信默认抓取页面中尺寸大于300*300像素的第一张图片作为缩略图。 既然如此，我们可以把要作为缩略图的图片放在 body 的最前面，然后隐藏它。 很有人说可以给图片包一个隐藏的 div： 123&lt;div style="display: none"&gt; &lt;img src="/wechat.png" width="300" height="300"&gt;&lt;/div&gt; 这是错误的，至少在新版微信里面没有起到任何作用。 我的办法是把图片移动到浏览器的可视区域之外： 123&lt;div class="wechat-icon"&gt; &lt;img src="/wechat.png" width="300" height="300"&gt;&lt;/div&gt; 12345.wechat-icon &#123; position: fixed; top: 0; left: -300px;&#125; 注：2017年3月29日，微信宣布未接入 JSSDK 的网站将统一显示默认缩略图，上述方法在新版微信中或已失效，建议接入 JSSDK 或继续使用微信 6.5.4 版本。 ENV: Aliyun ECS / CentOS 7 x64 / Nginx 1.8 / PHP 5.6 / WeChat 6.5.4]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>微信</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[为你的网站开启 HTTPS]]></title>
+    <url>%2Farticle%2F201702172359.html</url>
+    <content type="text"><![CDATA[HTTPS 是一种网络协议，是在 HTTP 协议的基础上增加了 SSL 层，用于通信过程中的数据加密。因此我习惯把 https 开头的链接称为安全链接。国内的百度和淘宝早已实现全站开启 HTTPS ，其他大部分知名站点也至少会在用户登录时使用它。 由于众所周知的原因，包括但不限于：现代浏览器暗示用户非 http 链接不安全，电信运营商可能给页面强行植入内容，搜索引擎更愿意收录安全链接。使得为网站开启 HTTPS 显得越来越有必要。当然最主要的原因还是我（处女座）无法容忍自己的站点缺一把小锁，于是我决定在自己的服务器上启用 HTTPS 。 申请SSL证书SSL 证书是由受浏览器信任的机构颁发的数字证书，申请证书的过程即是验证网站所有者身份的过程。该证书分4个等级，等级越高验证越严格、费用越昂贵，同时浏览器越认为你值得信任。申请SSL证书的渠道很多，也有不少机构签发免费证书，可以说各有优缺点，这里不加赘述。 服务器配置SSL确认你的 Web 引擎已经安装过 SSL 模块，并且已将证书和私钥上传到服务端。 以 Nginx 引擎为例，编辑站点的 .conf 配置文件。由于 HTTPS 服务使用443端口，首先需要增加对443端口的监听。然后添加 SSL 的相关配置，包括配置证书及私钥的路径、使用的协议等。具体以证书颁发机构提供的示例为准。完成后重启 Web 引擎。 1234567891011121314151617181920server &#123; listen 80; listen 443; root /web/example; server_name example.com www.example.com; index index.html index.php index.htm; location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ &#123; expires max; log_not_found off; &#125; ... ssl on; ssl_certificate /cert/example.pem; ssl_certificate_key /cert/example.key; ssl_session_timeout 5m; ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4; ssl_protocols TLSv1 TLSv1.1 TLSv1.2; ssl_prefer_server_ciphers on;&#125; 开放443端口如果上一步配置正确的话，你应该已经可以使用 https 链接访问站点了。如果无法正常访问，可能是服务器没有开放相应的端口。 以 CentOS7 为例： 123456# 运行防火墙systemctl start firewalld# 开放80端口firewall-cmd --add-port=80/tcp# 开放443端口firewall-cmd --add-port=443/tcp 强制使用 HTTPS开放端口后，使用 https://example.com 和 http://example.com 都已可以正常访问。 要让用户默认使用安全链接，需要添加重写规则，强制 http 访问重定向到 https 。以 Nginx 为例： 1234567891011server &#123; listen 80; server_name example.com www.example.com; return 301 https://$server_name$request_uri;&#125;server &#123; listen 443; root /web/example; server_name example.com www.example.com; ...&#125; 最后，如果网站中引用的任何资源文件（图片、样式、脚本）使用了 http 链接，都会导致浏览器降低信任等级并打印警告。你需要用 https 或自适应协议写法替换： 1234// 使用https协议&lt;link rel=&quot;icon&quot; href=&quot;https://example.com/favicon.png&quot; sizes=&quot;32x32&quot;&gt;// 自动使用当前页面协议&lt;link rel=&quot;icon&quot; href=&quot;//example.com/favicon.png&quot; sizes=&quot;32x32&quot;&gt; ENV: Aliyun ECS / CentOS 7 x64 / Nginx 1.8 / PHP 5.6 / WordPress 4.7]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Nginx</tag>
+        <tag>SSL</tag>
+        <tag>HTTPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 Laravel Excel 导入导出 Excel & CSV]]></title>
+    <url>%2Farticle%2F201702162332.html</url>
+    <content type="text"><![CDATA[Laravel Excel 是一个开源库，使用它可以很轻易地在 Laravel 项目上实现导入和导出 Excel、CSV 文件。Laravel Excel 基于另一个开源项目 PHPExcel ，所以如果你的应用不是运行在 Laravel 上， 你也可以尝试使用 PHPExcel 。 安装在 composer.json 中添加相应的包。 1"maatwebsite/excel": "~2.1.0" 然后在命令行执行以下代码安装 Laravel Excel 。 1composer update 修改 Laravel 的配置文件 config/app.php ，在 $providers 数组中添加一个服务提供者。 1'Maatwebsite\Excel\ExcelServiceProvider' 接着在 $aliasses 数组中添加一个门面。 1'Excel' =&gt; 'Maatwebsite\Excel\Facades\Excel' 配置如果你想要查看或者修改 Laravel Excel 提供的配置，在命令行执行以下代码，然后你就会在 config 文件夹下得到一个配置文件。 1php artisan vendor:publish 使用在控制器中引用这个包。如果之前已经添加过门面，也可以直接引用门面。 1use Maatwebsite\Excel\Facades\Excel; 1use Excel; 导入1234567891011121314151617181920212223242526272829303132333435363738394041424344// 加载文件Excel::load('file.xls', function($reader) &#123; // 获取数据的集合 $results = $reader-&gt;get(); // 获取第一行数据 $results = $reader-&gt;first(); // 获取前10行数据 $reader-&gt;take(10); // 跳过前10行数据 $reader-&gt;skip(10); // 以数组形式获取数据 $reader-&gt;toArray(); // 打印数据 $reader-&gt;dump(); // 遍历工作表 $reader-&gt;each(function($sheet) &#123; // 遍历行 $sheet-&gt;each(function($row) &#123; &#125;); &#125;); // 获取指定的列 $reader-&gt;select(array('firstname', 'lastname'))-&gt;get(); // 获取指定的列 $reader-&gt;get(array('firstname', 'lastname'));&#125;);// 选择名为sheet1的工作表Excel::selectSheets('sheet1')-&gt;load();// 根据索引选择工作表Excel::selectSheetsByIndex(0)-&gt;load(); 导出1234567891011121314151617181920212223242526272829303132333435363738394041424344// 生成文件Excel::create('Filename', function($excel) &#123; // 设置文档标题和作者 $excel-&gt;setTitle('Our new awesome title'); $excel-&gt;setCreator('Maatwebsite') -&gt;setCompany('Maatwebsite'); // 设置文档描述 $excel-&gt;setDescription('A demonstration to change the file properties'); // 创建工作表 $excel-&gt;sheet('Sheetname', function($sheet) &#123; // 通过数组写入值（二维数组） $sheet-&gt;fromArray($array); // 给第一行写入值（一维数组） $sheet-&gt;row(1, $array); // 设置某一列的宽 $sheet-&gt;setWidth('A', 5); // 批量设置列宽 $sheet-&gt;setWidth([ 'A' =&gt; 5, 'B' =&gt; 10 ]); &#125;);&#125;);// 生成为指定的格式并下载Excel::create()-&gt;export('xls');// 生成为指定的格式并存储在app/storage/exports目录Excel::create()-&gt;store('xls');// 生成为指定的格式并存储在指定的目录Excel::create()-&gt;store('xls', storage_path('excel/exports'));// 存储后返回文件数据（包含路径等）Excel::create()-&gt;store('xls', false, true); Laravel Excel 还提供了很多包含表格样式修改在内的其他 API 。感兴趣的话可以阅读 官方文档 了解。 ENV: Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.3]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>PHP</tag>
+        <tag>Laravel</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 Intervention Image 库处理图片]]></title>
+    <url>%2Farticle%2F201702121305.html</url>
+    <content type="text"><![CDATA[Intervention Image 是一个开源图片处理库。使用它需要 PHP&gt;=5.4、FileInfo 拓展、GD 库或 Imagick 拓展。 安装执行以下命令使用 Composer 安装 Intervention Image 的最新版本。 1composer require intervention/image 使用Intervention Image 并不依赖于 Laravel 或其他框架，使用时只需包含 Composer 的 autoload 文件，然后实例化 Image 对象。 1234567891011// 包含autoload文件require 'vendor/autoload.php';// 导入ImageManager类use Intervention\Image\ImageManager;// 创建ImageManager实例并指定要使用的驱动(默认GD库)$manager = new ImageManager(array('driver' =&gt; 'imagick'));// 创建Image实例然后操作图片$image = $manager-&gt;make('public/foo.jpg')-&gt;resize(300, 200); 也可以在导入类时设置一个别名。 1234567891011// 包含autoload文件require 'vendor/autoload.php';// 导入ImageManager类use Intervention\Image\ImageManagerStatic as Image;// 创建ImageManager实例并指定要使用的驱动(默认GD库)Image::configure(array('driver' =&gt; 'imagick'));// 创建Image实例然后操作图片$image = Image::make('public/foo.jpg')-&gt;resize(300, 200); 在 Laravel 中使用Intervention Image 提供了服务提供者、门面以便快速集成到 Laravel 框架。 打开 Laravel 的配置文件 config\app.php ，在 $providers 数组中添加一个服务提供者。 1Intervention\Image\ImageServiceProvider::class 在 $aliases 数组中添加一个门面。 1'Image' =&gt; Intervention\Image\Facades\Image::class Intervention Image 默认使用 GD 库处理图片，如果需要切换到 Imagick ，执行以下命令创建配置文件。 1php artisan vendor:publish --provider="Intervention\Image\ImageServiceProviderLaravel5" 常用操作123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960// 创建一个Image对象$img = Image::make('public/foo.jpg');// 获取图片文件大小$size = $img-&gt;filesize();// 获取图片尺寸（像素）$width = $img-&gt;width();$height = $img-&gt;height();// 调整图片尺寸$img-&gt;resize(300, 200);// 调整图片的宽或高$img-&gt;resize(300, null);$img-&gt;resize(null, 200);// 调整图片的宽同时保持图片比例$img-&gt;resize(300, null, function ($constraint) &#123; $constraint-&gt;aspectRatio();&#125;);// 调整图片的高同时保持图片比例$img-&gt;resize(null, 200, function ($constraint) &#123; $constraint-&gt;aspectRatio();&#125;);// 避免处理时造成文件大小增加$img-&gt;resize(null, 400, function ($constraint) &#123; $constraint-&gt;aspectRatio(); $constraint-&gt;upsize();&#125;);// 转码为其他格式并压缩图片$img-&gt;encode('jpg', 75);// 转码为 Data URL$img-&gt;encode('data-url');// 裁剪图片$img-&gt;crop(100, 100, 25, 25);// 旋转-45度$img-&gt;rotate(-45);// 垂直翻转及水平翻转$img-&gt;flip('v');$img-&gt;flip('h');// 以最优方案裁剪为600*360$img-&gt;fit(600, 360);// 以最优方案裁剪为200*200$img-&gt;fit(200);// 以默认质量保存图片$img-&gt;save('public/bar.jpg');// 以给定质量保存图片$img-&gt;save('public/bar.png', 60); 我只记录了部分常用的接口，更多 API 及其用法可以 阅读 官方文档了解。 ENV: Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.3]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>PHP</tag>
+        <tag>Laravel</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[生成与管理 SSH Key]]></title>
+    <url>%2Farticle%2F201701232204.html</url>
+    <content type="text"><![CDATA[在使用 Git 的过程中经常需要用到 SSH Key 进行身份验证，即一组公钥、私钥文件，避免每次 Push 代码都需要输入密码。通常将公钥提供给 Github/OSChina 等代码托管平台，之后在使用 Git 提交代码时便会自动将云端的公钥与本地的私钥进行比对。无论是 Windows 还是 Linux 系统，SSH Key 都存放在 ~\.ssh 目录下。 生成一组 SSH Key 只需： 1ssh-keygen -t rsa -C "email@example.com" 系统将提示你设置一个密码，可以直接回车跳过。如果给 SSH Key 设置了密码，通过 SSH 通讯时仍需输入此密码。 现在，~\.ssh 目录下应该已存在 id_rsa 和 id_rsa.pub 两个文件，使用以下命令可以查看公钥。 1cat ~/.ssh/id_rsa.pub 如果你拥有多组 SSH Key ，分别用于不同的代码托管平台，那么需要在 ~/.ssh 录下创建一个名为 config 的配置文件，使Git在通讯时根据服务器域名判断使用哪一个密钥。 123456789Host github.com HostName github.com User your_name IdentityFile ~/.ssh/id_rsa_githubHost git.oschina.net HostName git.oschina.net User your_name IdentityFile ~/.ssh/id_rsa_oschina]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+        <tag>SSH</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使 Nginx 支持 WordPress 固定链接]]></title>
+    <url>%2Farticle%2F201612291329.html</url>
+    <content type="text"><![CDATA[昨天把博客从虚拟主机迁移到了云主机，同时也将引擎由 Apache 更换成了 Nginx 。迁移过程基本顺利，仅出现 WordPress 的“固定链接”功能无法正常使用，导致文章不能正常浏览。 在阅读官方文档后，问题已解决。编辑当前站点的 .conf 文件，在 server 内添加以下内容，然后重启 Web 服务即可。 123location / &#123; try_files $uri $uri/ /index.php?$args;&#125; 附 WordPress 提供的 Nginx 配置示例。 12345678910111213141516171819202122232425262728293031323334353637server &#123; ## Your website name goes here. server_name domain.tld; ## Your only path reference. root /var/www/wordpress; ## This should be in your http block and if it is, it&apos;s not needed here. index index.php; location = /favicon.ico &#123; log_not_found off; access_log off; &#125; location = /robots.txt &#123; allow all; log_not_found off; access_log off; &#125; location / &#123; # This is cool because no php is touched for static content. # include the &quot;?$args&quot; part so non-default permalinks doesn&apos;t break when using query string try_files $uri $uri/ /index.php?$args; &#125; location ~ \.php$ &#123; #NOTE: You should have &quot;cgi.fix_pathinfo = 0;&quot; in php.ini include fastcgi.conf; fastcgi_intercept_errors on; fastcgi_pass php; &#125; location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ &#123; expires max; log_not_found off; &#125;&#125; ENV: Aliyun ECS / CentOS 7 x64 / Nginx 1.8 / PHP 5.6 / WordPress 4.7]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>WordPress</tag>
+        <tag>Nginx</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[解决无法用 localhost 连接 MySQL]]></title>
+    <url>%2Farticle%2F201612230017.html</url>
+    <content type="text"><![CDATA[今天尝试往云主机上迁移博客，遇到不少麻烦，其中就包括无法用 localhost 连接 MySQL 。用了一个晚上才得以解决，记录一下解决过程。 第一步，检查 /etc/hosts 文件。确认 localhost 已映射到 127.0.0.1 ，否则添加正确的映射。经检查，确定 hosts 设置没有问题。 1127.0.0.1 localhost 第二步，尝试直接用 mysql命令登录。登录时指定主机为 localhost 。若无法登录，检查 MySQL 中的用户权限等设置。经测试，命令行可以登录，只是用 PHP 无法连接，基本锁定是 PHP 相关设置问题。 1mysql -uusername -hlocalhost -ppassword 第三步，由于使用 localhost 和 127.0.0.1 连接数据库的机制不同，前者因使用 socket 而需要保证 .sock 文件路径配置正确。我的 php.ini 文件中设置的 socket 文件路径为空，这就是问题所在。编辑 php.ini 文件，根据使用的数据库连接拓展修改相应的设置，指向的 .sock 文件的路径应该和编译安装 MySQL 时设置的一致。 123mysql.default_socket = /usr/local/mysql5.6/mysql.sockmysqli.default_socket = /usr/local/mysql5.6/mysql.sockpdo_mysql.default_socket = /usr/local/mysql5.6/mysql.sock ENV: Aliyun ECS / CentOS 7 x64 / Apache 2.4 / MySQL 5.6 / PHP 7.1]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>PHP</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[编译安装 PHP 拓展]]></title>
+    <url>%2Farticle%2F201612202327.html</url>
+    <content type="text"><![CDATA[在使用 PHP 的过程中可能用到各种拓展，包括 mbstring 等。我们可以按需安装拓展，这里以 mbstring 为例演示如何编译安装拓展。 第一步，确认已安装必要依赖。 1yum install -y m4 autoconf 第二步，编译安装 mbstring 拓展。进入 PHP 源码下的 ext/mbstring 目录，使用 phpize 编译拓展。注意第二行的路径指向的是已安装好的 PHP 目录下的 bin 文件夹中的 phpize 文件。 12345cd ~/php-7.1.0/ext/mbstring/usr/local/php7.1/bin/phpize./configure -with-php-config=/usr/local/php7.1/bin/php-configmakemake install 看到以下提示说明拓展安装成功，Linux 可在拓展目录下找到新增的 mbstring.so 文件。 12Installing shared extensions: /usr/local/php7.1/lib/php/extensions/no-debug-zts-20160303/Installing header files: /usr/local/php7.1/include/php/ 第三步，编辑 php.ini ，启用相应的拓展，重启 Apache 。 ENV: Aliyun ECS / CentOS 7 x64 / Apache 2.4 / PHP 7.1]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>PHP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Apache 禁止使用 IP 访问网站]]></title>
+    <url>%2Farticle%2F201612182314.html</url>
+    <content type="text"><![CDATA[Apache 默认允许使用服务器的 IP 地址访问网站。不过，无论是出于用户体验还是安全性考虑，禁止使用 IP 访问网站都是很有必要的。对我这个处女座来讲，能用 IP 访问自己写的网站是不能忍的。使用 Apache 的虚拟主机配置就可以实现禁止使用 IP 访问网站。 第一步，启用虚拟主机配置文件。编辑 /conf/httpd.conf ，去掉 # Include conf/extra/httpd-vhosts.conf 前面的 # 号。 第二步，禁止使用 IP 访问网站。编辑 /conf/extra/httpd-vhosts.conf ，添加以下内容，注意将 127.0.0.1 修改为你的服务器的 IP 地址。这一步将无条件禁止使用 IP 地址访问。 1234567&lt;VirtualHost *:80&gt; ServerName 127.0.0.1 &lt;Location /&gt; Order Allow,Deny Deny from all &lt;/Location&gt;&lt;/VirtualHost&gt; 第三步，允许用域名访问网站。仍然编辑 httpd-vhosts.conf 文件，添加以下内容，ServerName 填写网站域名，DocumentRoot 填写网站的根目录。 1234&lt;VirtualHost *:80&gt; DocumentRoot &quot;/usr/local/apache/htdocs&quot; ServerName www.example.com&lt;/VirtualHost&gt; 现在，使用 IP 访问将提示 Forbidden，使用域名访问将正常显示根目录下的主页。如果觉得前者不够友好，你也可以将 IP 的访问指向一个目录，显示一个友好的错误页面。 ENV: Aliyun ECS / CentOS 7 x64 / Apache 2.4]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Apache</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Linux 编译安装 PHP7.1]]></title>
+    <url>%2Farticle%2F201612151602.html</url>
+    <content type="text"><![CDATA[第一步，安装相关依赖。 1yum install –y gcc gcc++ libxml2-devel perl 第二步，添加 PHP 支持。如果你使用的是 Apache 引擎，稍后编译 PHP 时需要加一个 --with-apxs2 参数使 Apache 添加 PHP 支持（依赖Perl），编辑 Apache 目录下的 /bin/apxs 文件，找到 #!/replace/with/path/to/perl/interpreter –w 修改成 #!/usr/bin/perl -w ，即 Perl 的安装路径。 第三步，下载并解压 Tar 包。 123wget http://cn2.php.net/get/php-7.1.0.tar.gz/from/this/mirror tar xvf mirrorcd php-7.1.0 第四步，编译安装 PHP7.1 。 123./configure --prefix=/usr/local/php7.1 --enable-fpm --with-apxs2=/usr/local/apache2.4/bin/apxs --enable-mysqlnd --with-pdo-mysql=mysqlnd --disable-fileinfo makemake install -disable-fileinfo 参数并不是必要的。如果服务器内存不大（一般认为小于1G），并且在编译时报错，加上该参数可能会解决问题。 第五步，添加配置文件。拷贝一份 php.ini-production 到 /usr/local/php7.1/lib/ 目录下，并将文件名修改为 php.ini ，该文件将作为 PHP 的配置文件。路径必须与安装时配置的一致，即 PHP 安装目录下的 lib 目录。虽然无需这一步 PHP 也可以正常使用，但考虑后续总会用到配置文件，最好在安装时就拷贝。 ENV: Aliyun ECS / CentOS 7 x64 / Apache 2.4]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>PHP</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Linux 编译安装 MySQL5.6]]></title>
+    <url>%2Farticle%2F201612151531.html</url>
+    <content type="text"><![CDATA[第一步，安装依赖。包括编译工具和需要用到的库。 1yum -y install make gcc-c++ cmake bison-devel ncurses-devel perl-Module-Install.noarch 第二步，从 官网 下载并解压 MySQL 源码（Source Code）的压缩包。 123wget http://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-5.6.35.tar.gztar xvf mysql-5.6.35.tar.gzcd mysql-5.6.35 第三步，简单配置并编译安装 MySQL 。更多配置项可参阅官方文档。 12345678cmake \-DCMAKE_INSTALL_PREFIX=/usr/local/mysql5.6 \-DMYSQL_DATADIR=/usr/local/mysql5.6/data \-DMYSQL_UNIX_ADDR=/usr/local/mysql5.6/mysql.sock \-DDEFAULT_CHARSET=utf8 \-DDEFAULT_COLLATION=utf8_general_cimakemake install 第四步，创建系统账户，然后赋予数据库文件存放目录的使用权限。data 目录的位置可以自行修改，但必须与配置 MySQL 时设置的 DMYSQL_DATADIR 一致。 1234groupadd mysqluseradd -g mysql mysqlchmod 755 /usr/local/mysql5.6/datachown –R mysql:mysql /usr/local/mysql5.6/data 第五步，执行 MySQL 的初始化脚本。这一步将创建一些必要的数据库和数据表。 12cd /usr/local/mysql5.6scripts/mysql_install_db --basedir=/usr/local/mysql5.6 --datadir=/usr/local/mysql5.6/data --user=mysql 第六步，添加服务并设置开机运行，启动 MySQL 。 123cp support-files/mysql.server /etc/init.d/mysqlchkconfig mysql onservice mysql start 第七步，配置环境变量。使用编辑器编辑 /etc/profile ，在末尾添加以下内容，保存，然后执行 source /etc/profile 使设置立即生效。 12# MySQLexport PATH=$PATH:/usr/local/mysql5.6/bin 第八步，执行 mysql 命令登录 MySQL 。 ENV: Aliyun ECS / CentOS 7 x64]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>MySQL</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Linux 编译安装 Apache2.4]]></title>
+    <url>%2Farticle%2F201612131510.html</url>
+    <content type="text"><![CDATA[第一步，确认系统中已安装 C 、C++ 编译器，否则运行 yum 命令安装。 1yum install -y gcc gcc-c++ 第二步，编译安装依赖。包括 APR、APR-Util、PCRE 。 123456wget http://mirrors.ustc.edu.cn/apache/apr/apr-1.5.2.tar.gztar xvf apr-1.5.2.tar.gzcd apr-1.5.2./configure --prefix=/usr/local/aprmakemake install 123456wget http://mirrors.ustc.edu.cn/apache/apr/apr-util-1.5.4.tar.gztar xvf apr-util-1.5.4.tar.gzcd apr-util-1.5.4./configure --prefix=/usr/local/apr-util -with-apr=/usr/local/apr/binmakemake install 123456wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.38.tar.gztar xvf pcre-8.38.tar.gzcd pcre-8.38./configure --prefix=/usr/local/pcremake make install 第三步，编译安装 Apache 。 123456wget http://mirrors.ustc.edu.cn/apache/httpd/httpd-2.4.23.tar.gztar xvf httpd-2.4.23.tar.gzcd httpd-2.4.23./configure --prefix=/usr/local/apache2.4 --with-apr=/usr/local/apr --with-apr-util=/usr/local/apr-util/ --with-pcre=/usr/local/pcremakemake install 第四步，修改配置文件。使用编辑器打开 Apache 的配置文件 httpd.conf ，搜索关键字 #ServerName，添加域名并去除注释。 1vim /usr/local/apache2.4/conf/httpd.conf 1ServerName localhost:80 第五步，测试是否安装成功。执行以下代码，若提示 httpd already running ，表示安装成功。此时使用浏览器访问服务器的 IP 地址，屏幕将输出 It works! 。 1/usr/local/apache2.4/bin/apachectl -k start ENV: Aliyun ECS / CentOS 7 x64]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Apache</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[解决 jQuery 事件重复绑定]]></title>
+    <url>%2Farticle%2F201612131044.html</url>
+    <content type="text"><![CDATA[昨天开发中发现一个 Bug ：前端点击事件正常执行、后端也正常响应，但数据库中的字段没有发生预期的变化。 原来是 jQuery 的点击事件存在重复绑定。若一个按钮多次绑定过点击事件，在点击时会触发其绑定的所有事件，而非最近一次绑定的事件。 解决方法是先解绑事件，再绑定新的点击事件。 1$('#example').unbind('click'); 123$('#example').unbind('click').click(function()&#123; // 你的点击事件&#125;);]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>jQuery</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[SSH 登录 VirtualBox 虚拟机]]></title>
+    <url>%2Farticle%2F201612031812.html</url>
+    <content type="text"><![CDATA[近期通过虚拟机学习服务端，感觉在 VirtualBox 窗口上操作虚拟机并不流畅，同时不能方便地从本机将文本复制到虚拟机。于是，我开始试图在本机 SSH 登录虚拟机，并直接在本机的命令行工具中操作。 查阅资料后发现可以用端口转发的方式实现。 第一步，在 VirtualBox 界面中选中虚拟机，右键打开“设置”，然后切换到“网络”标签页。 第二步，在网卡1的“高级”菜单中打开“端口转发”，点击加号按钮添加新的端口转发规则。将“主机端口”设为2222（本机任一未被占用的端口），“子系统端口”设为22（即默认的 SSH 端口），保存设置。 第三步，打开命令行工具（如 Git Bash ），使用 SSH 命令登录到虚拟机。 1ssh -p 2222 root@127.0.0.1 该命令表示使用 root 账号登录 IP 为127.0.0.1（即本机）的设备，服务端口为2222。由于本机的2222端口已被转发到虚拟机的22端口，所以实际上是登录的设备是虚拟机。此处使用的端口号可以是本机上任一未被占用的端口，只需保证与“端口转发”规则中设置的端口一致即可。 ENV: Windows 7 x64 / VirtualBox 5.1.8 / CentOS 7 / Git Bash]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>SSH</tag>
+        <tag>虚拟机</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[VirtualBox 创建 Linux 虚拟机]]></title>
+    <url>%2Farticle%2F201612031245.html</url>
+    <content type="text"><![CDATA[第一步，下载 CentOS 镜像。访问 CentOS 官方网站，下载 ISO 镜像文件。 第二步，新建虚拟机。在 VittualBox 中点击“新建”，设置名称为“CentOS”。可以看到类型和版本已被 VirtualBox 自动改成了“Linux”和“Red Hat (64-bit)”。一路继续直到创建完成即可。 第三步，安装 CentOS 系统。在 VittualBox 中点击“启动”，选中本地镜像文件并启动，在字符界面中使用方向键选中“Install CentOS 7”后回车。在随后出现的图形界面中，设置语言为简体中文，在安装位置中选择本地标准磁盘，在网络和主机名中开启以太网，然后开始安装。 第四步，完成 CentOS 配置。设置 ROOT 密码并创建用户，然后点击“完成配置”，等待 CentOS 配置完成后重启即可。 ENV: Windows 7 x64 / VirtualBox 5.1.8]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>虚拟机</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 CSS 实现 DIV 垂直居中]]></title>
+    <url>%2Farticle%2F201612022308.html</url>
+    <content type="text"><![CDATA[项目中经常会用到内容相对屏幕完全居中的布局。水平居中通常写一句代码即可实现，而垂直居中就稍微麻烦一些。其实，让 DIV 垂直居中的方法有很多，我个人常用两种 DIV+CSS 的方式实现。 两种方式的 HTML 代码是一样的，类名为 content 的 DIV 是放置居中内容的容器，外层的两个 DIV 则用来辅助实现居中布局。下文使用类名表示三个不同的 DIV 。 123456&lt;div class=&quot;outer-wrap&quot;&gt; &lt;div class=&quot;inner-wrap&quot;&gt; &lt;div class=&quot;content&quot;&gt; &lt;/div&gt; &lt;/div&gt;&lt;/div&gt; 第一种方法，利用 table-cell 实现垂直居中。 12345678910111213141516.outer-wrap &#123; width: 400px; height: 400px; background: #cacaca; display: table;&#125;.inner-wrap &#123; display: table-cell; vertical-align: middle;&#125;.content &#123; width: 100px; height: 100px; background: #000; margin: 0 auto;&#125; 分别将 outer-wrap 和 inner-wrap 类名的 display 属性设为 table 和 table-cell，然后给 inner-wrap 添加 vertical-align: middle ，实现垂直居中。最后给 content 添加 margin: 0 auto ，实现水平居中。 此方法不兼容过时浏览器（&lt;IE8），不过我反而用得比较多，毕竟移动端基本不需要考虑IE6/7/8的兼容问题。 第二种方法，利用绝对布局实现垂直居中。 12345678910111213141516171819202122.outer-wrap &#123; width: 400px; height: 400px; background: #cacaca; position: relative;&#125;.inner-wrap &#123; width: 100px; height: 100px; background: #888; position: absolute; top: 50%; left: 50%;&#125;.content &#123; width: 100%; height: 100%; background: #000; position: absolute; top: -50%; left: -50%;&#125; 首先将 outer-wrap 设为相对布局 position: relative ，同时将 inner-wrap 、content 设为绝对布局 position: absolute 。此时，inner-wrap 将根据 outer-wrap 的位置定位，content 将相对于 inner-wrap 的位置定位。然后为 inner-wrap 添加 top: 50% 、 left: 50% ，使其（左上角）定位到 outer-wrap 的中点位置，实现大致的居中定位。最后为 content 添加 top: -50% 、 left: -50% ，实现精确的居中定位。 此方法仅适用于内容容器 DIV 的宽度、高度固定的情况。]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[解决 iOS 下 click 点击事件失效]]></title>
+    <url>%2Farticle%2F201611282340.html</url>
+    <content type="text"><![CDATA[前段时间在写一个 Web 小游戏，使用了 jQuery 绑定元素的点击事件。测试后发现，在 PC 和 Android 上均正常运行，但是在 iOS 上需要多次触摸才勉强响应一次点击。 搜索后未能找到问题原因及解决方案。于是我尝试更换多种绑定方式，包括但不限于 click() 、mousedown() 、on(&#39;click&#39;, function) 、on(&quot;tap&quot;, function) ，均不见起色。 在不断地尝试后，终于在使用了 on(&#39;touchend&#39;, function) 方法后解决了这个问题。 据说出现这个问题是因为 click 事件在 iOS 上存在延迟，所以需要用 touchstart / touchmove / touchend 事件替代传统的点击事件。当然代价是存在的，PC 端可能不会响应 touch 事件。如果需要同时兼容 PC ，只能判断设备并采用不同的绑定方式。]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>jQuery</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[WampServer 配置虚拟主机]]></title>
+    <url>%2Farticle%2F201611211414.html</url>
+    <content type="text"><![CDATA[WampServer 默认创建一个站点，以 www 目录作为网站的根目录，通过 http://localhost/ 访问。通过修改配置文件可以创建虚拟主机，即实现多站点。 第一步，启用 Apache 的 mod_rewrite 模块。打开配置文件 bin\apache\apache2.4.9\conf\httpd.conf ，找到下行并去掉前面的 # 号。 1LoadModule rewrite_module modules/mod_rewrite.so 第二步，启用虚拟主机配置文件。同样是在 httpd.conf 文件中，找到下行并去掉前面的 # 号。 1Include conf/extra/httpd-vhosts.conf 第三步，修改虚拟主机配置文件。打开 bin\apache\apache2.4.9\conf\extra\httpd-vhosts.conf ，该文件中已包含示例，直接修改即可。 1234&lt;VirtualHost *:80&gt; DocumentRoot &quot;d:/vhosts/example&quot; // 文件目录 ServerName example.com // 绑定域名&lt;/VirtualHost&gt; 第四步，允许访问文件目录。如果虚拟主机的文件目录不在 www 目录下，继续编辑 httpd-vhosts.conf 文件，添加 &lt;Directory&gt; 标签中的内容。 123456789&lt;VirtualHost *:80&gt; DocumentRoot &quot;d:/vhosts/example&quot; ServerName example.com &lt;Directory &quot;d:/vhosts/example&quot;&gt; Options Indexes FollowSymLinks AllowOverride all Require local &lt;/Directory&gt;&lt;/VirtualHost&gt; 第五步，将域名指向本机。编辑 C:\Windows\System32\drivers\etc\hosts 文件，添加以下内容，表示由本机响应对 example.com 的访问。 1127.0.0.1 example.com 最后，重启 WampServer 即可。 ENV: Windows 7 x64 / WampServer 2.5]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>WampServer</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Laravel 使用 SMTP 发送邮件]]></title>
+    <url>%2Farticle%2F201611061601.html</url>
+    <content type="text"><![CDATA[Laravel 基于 SwiftMailer 库提供了一套邮件 API 。我在阅读文档后尝试使用 SMTP 发送邮件，并测试成功，下面简单记录一下过程。 第一步，修改 .env 文件中的邮件设置，包括邮件驱动、服务器地址、端口、用户名、密码。邮件驱动自然是 smtp ，其他选项根据你的邮箱填写。 12345MAIL_DRIVER=smtpMAIL_HOST=smtp.example.comMAIL_PORT=25MAIL_USERNAME=example@example.comMAIL_PASSWORD=example 第二步，创建一个视图文件，作为邮件正文的来源。例如，我新建了 resources/views/emails/content.blade.php 并在里面添加了一些文本。 第三步，在控制器中调用 Mail 门面的 send 方法发送邮件。 12// 导入命名空间use Mail; 123456Mail::send('emails.content', ['data'=&gt;$data], function($m)use($email) &#123; // 设置发件邮箱、发件姓名、收件邮箱 $m-&gt;from('example@example.com','Example'])-&gt;to($email); // 设置邮件标题 $m-&gt;subject('Subject');&#125;); send 方法的第一个参数是要引用的视图，第二个参数是要传给视图的参数，第三个参数是用来设置邮件的匿名函数。send 方法始终返回1，无论 SMTP 服务器最终是否发送成功，这点我是使用一个不可能存在的收件地址测试的，说明其返回值仅表示成功与服务器通信。 对于传给视图的参数，可以这样在视图文件中输出：（参考 Blade 模板引擎用法） 1密码重置链接：&#123;&#123; $data &#125;&#125; 另外，在匿名函数中设置邮件时，你可以使用 env方法引用 .env 文件中的参数。这样，如果以后需要更换 SMTP 账号，只需修改 .env 文件即可。 1$m-&gt;from(env('MAIL_USERNAME'), env('CUS_MAILALIAS')); ENV: Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Laravel</tag>
+        <tag>SMTP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Laravel 框架操作数据库]]></title>
+    <url>%2Farticle%2F201611051552.html</url>
+    <content type="text"><![CDATA[Laravel 提供 DB Facade 、Query Builder 和 Eloquent ORM 三种操作数据库的方式。 原始查找原始查找（DB Facade）直接使用 SQL 语句操作数据库。 12// 引用命名空间use Illuminate\Support\Facades\DB; 12345678// 新增，返回布尔值。$bol = DB::insert('INSERT INTO users(email, password) VALUES(?, ?)', ['example@example.com', '123456']);// 删除，返回影响行数。$row = DB::delete('DELETE FROM users WHERE id = ?', [1]);// 修改，返回影响行数。$row = DB::update('UPDATE users SET password = ? WHERE email = ?', ['654321', 'example@example.com']);// 查询，返回数组。$arr = DB::select('SELECT * FROM users'); 在 SQL 语句中可以用 ? 占位符，引用数组中参数。 查询构建器查询构建器（Query Builder）使用高度封装的接口操作数据库。 12// 引用命名空间use Illuminate\Support\Facades\DB; 12345678// 新增，返回布尔值。$bol = DB::table('users')-&gt;insert( ['email' =&gt; 'example@example.com', 'password' =&gt; '123456']);// 新增，返回该条数据的id。$id = DB::table('users')-&gt;insertGetId( ['email' =&gt; 'example@example.com', 'password' =&gt; '123456']); 12345// 删除，返回影响行数。$row = DB::table('users')-&gt;where('id', 1)-&gt;delete();$row = DB::table('users')-&gt;where('id', '&lt;', 3)-&gt;delete();// 清空数据表，无返回值。DB::table('users')-&gt;truncate(); 123456789101112// 修改，返回影响行数。$row = DB::table('users') -&gt;where('email', 'example@example.com') -&gt;update(['password', '654321']);// 修改，自增并返回影响行数。$row = DB::table('users')-&gt;increment('age');$row = DB::table('users')-&gt;increment('age', 3);// 修改，自减并返回影响行数。$row = DB::table('users')-&gt;decrement('age');$row = DB::table('users')-&gt;decrement('age', 3);// 修改，自增的同时修改字段，返回影响行数。$row = DB::table('users')-&gt;increment('age', 3, ['password' =&gt; '654321']); 12345678910111213141516171819202122232425262728293031// 查询，所有数据，返回数组。$arr = DB::table('users')-&gt;get();// 查询，第一条数据，返回对象。$obj = DB::table('users') -&gt;orderBy('id', 'desc') -&gt;first();// 查询，符合某一条件的所有数据，返回数组。$arr = DB::table('users') -&gt;where('id', '&lt;=', 3) -&gt;get();// 查询，符合多个条件的所有数据，返回数组。$arr = DB::table('users') -&gt;whereRaw('id &lt; ? and age &gt; ?', [10,20]) -&gt;get();// 查询，指定某一字段，返回数组。$arr = DB::table('users')-&gt;pluck('email');// 查询，指定多个字段，返回数组。$arr = DB::table('users') -&gt;select('id', 'email', 'name') -&gt;get();// 查询，指定字段并指定键值，返回数组。$arr = DB::table('users')-&gt;lists('email', 'id');// 查询，返回记录数。$int = DB::table('users')-&gt;count();// 查询，返回某列的最大/最小值。$num = DB::table('users')-&gt;max('age');$num = DB::table('users')-&gt;min('age');// 查询，返回某列的平均值。$num = DB::table('users')-&gt;avg('age');// 查询，返回某列的和。$num = DB::table('users')-&gt;sum('age'); 对象关系模型对象关系模型（Eloquent ORM）是在查询构建器的基础上，使用与数据表一一对应的模型类来操作数据库。 首先，在 app 目录下创建一个 User 模型，命名为 User.php ，它默认对应数据库的 users 表。 1234567891011121314namespace App;use Illuminate\Database\Eloquent\Model;class User extends Model&#123; // 指定表名，不指定默认使用类名的复数。 protected $table = 'users'; // 指定主键。 protected $primaryKey = 'id'; // 允许批量赋值的字段。 protected $fillable = [ 'name', 'email', 'password', ];&#125; 然后在控制器中使用： 12// 引用命名空间use App\User; 1234567891011121314151617// 新增，使用模型。$user = new User();$user-&gt;email = 'example@example.com';$user-&gt;password = '123456';$bol = $user-&gt;save();// 新增，使用模型的create方法。User::create( ['email' =&gt; 'example@example.com', 'password' =&gt; '123456']);// 新增，当查询不到时新增一条记录，返回User对象。User::firstOrCreate( ['email' =&gt; 'example@example.com']);// 新增，当查询不到时创建新的对象，返回User对象。User::firstOrNew( ['email' =&gt; 'example@example.com']); 12345678// 删除，使用模型。$user = User::find(1);$bol = $user-&gt;delete();// 删除，指定主键的数据。$row = User::destory(1);$row = User::destory(1, 2, 3);// 删除，符合条件的数据。$row = User::where('id', '&lt;', 3)-&gt;delete(); 12345678// 修改，使用模型。$user = User::find(1);$user-&gt;password = '654321';$bol = $user-&gt;save();// 修改，使用模型的update方法。$row = User::where('email', 'example@example.com')-&gt;update( ['password' =&gt; '654321']); 12345678910111213141516// 查询，所有数据，返回集合。$col = User::all();$col = User::get();// 查询，指定主键，返回对象。$obj = User::find(1);// 查询，同上，无结果时报错。$obj = User::findOrFail(1);// 查询，指定条件并排序。$obj = User::where('id', '&lt;', 3)-&gt;orderBy('id', 'desc');// 查询，第一条数据。$obj = User::all()-&gt;first();// 查询，返回结果数。$int = User::count();// 查询，某列的最大/最小值。$num = User::where('id', '&lt;', 10)-&gt;max('age');$num = User::where('id', '&lt;', 10)-&gt;min('age'); 实际上，无论使用何种方式操作数据库，最终都是在执行 SQL 语句。相较于 DB Facade ，后两者把构造 SQL 语句的工作交给了 Laravel 。另外，我感觉 Eloquent ORM 和 Query Builder 是很接近的，只不过多了模型的概念，不过后者的代码确实要更加简洁、一目了然。 ENV: Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Laravel</tag>
+        <tag>MySQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 Vue.js 实现模态窗口]]></title>
+    <url>%2Farticle%2F201610301718.html</url>
+    <content type="text"><![CDATA[Vue.js 是一个前端 MVVM 框架。由于公司的项目中有用到这个框架，我也开始接触和学习它。在阅读了官方文档后，我着手尝试用 Vue.js 实现模态窗口。 第一步，将必要的样式表添加到页面中。（代码位于文末） 第二步，添加模态窗口的模板。什么是模板？可以理解为基本、通用的结构代码。每个弹窗的内容可能不同，但结构是一致的，这些一致的部分就是模板。注意模板中的预留的 &lt;slot&gt; 标签，在生成模态窗口时，可以在 &lt;slot&gt; 标签的位置插入不同的内容。下面这个模板把模态窗口分成上中下三个区域。 12345678910111213141516171819202122&lt;!-- 模板 --&gt;&lt;script type=&quot;text/x-template&quot; id=&quot;modal-template&quot;&gt; &lt;transition name=&quot;modal&quot;&gt; &lt;div class=&quot;modal-mask&quot;&gt; &lt;div class=&quot;modal-wrapper&quot;&gt; &lt;div class=&quot;modal-container&quot;&gt; &lt;div class=&quot;modal-header&quot;&gt; &lt;slot name=&quot;header&quot;&gt;default header&lt;/slot&gt; &lt;/div&gt; &lt;div class=&quot;modal-body&quot;&gt; &lt;slot name=&quot;body&quot;&gt;default body&lt;/slot&gt; &lt;/div&gt; &lt;div class=&quot;modal-footer&quot;&gt; &lt;slot name=&quot;footer&quot;&gt;default footer &lt;button class=&quot;modal-default-button&quot; @click=&quot;$emit(&apos;close&apos;)&quot;&gt;OK&lt;/button&gt; &lt;/slot&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;/div&gt; &lt;/transition&gt;&lt;/script&gt; &lt;script&gt; 标签的 id 属性用于定义模板的名称，在同一页面中可以创建多个模态窗口模板，以实现不同需求。 第三步，在模板的基础上添加具体内容。 12345678&lt;!-- 容器 --&gt;&lt;div id="app"&gt; &lt;button id="show-modal" @click="showModal = true"&gt;Show Modal&lt;/button&gt; &lt;modal v-if="showModal" @close="showModal = false"&gt; &lt;!-- 在此覆写模板内容 --&gt; &lt;h3 slot="header"&gt;custom header&lt;/h3&gt; &lt;/modal&gt;&lt;/div&gt; 给任意标签加上 slot 属性，即可用于覆盖模板中对应名称的 &lt;slot&gt; 标签。在上面的代码中，h3 标签的 slot 属性值等于 header ，所以它覆盖了模板中的 &lt;slot name=&quot;header&quot;&gt;default header&lt;/slot&gt; 。 第四步，注册一个模态窗口组件。 123Vue.component(&apos;modal&apos;, &#123; template: &apos;#modal-template&apos;&#125;) Vue.component 方法的第一个参数是该组件在容器中的标签，第二个参数是一个对象，定义了使用的模板 id 为 modal-template 。 如果页面中存在多个模态窗口，并且分别绑定不同的模板，应该定义不同的标签，例如 &lt;modal-dialog&gt; 、&lt;modal-login&gt; 等。 第五步，创建视图模型对象。el 是容器的 id , showModal 是一个布尔值，用于控制窗口的打开和关闭。 123456new Vue(&#123; el: &apos;#app&apos;, data: &#123; showModal: false &#125;&#125;) 好了，现在回头再看一遍之前的代码，尝试理解 Vue.js 的一些逻辑。 v-if=&quot;showModal&quot; 表示监听 showModal 参数，当值为 false 时移除容器 div 中的代码（关闭窗口），当值为 true 时往容器 div 中填充代码（显示窗口）。 @click=&quot;showModal = true&quot; 表示点击该元素时修改 showModal 值为 true ，类似 JavaScript 的 onclick 事件。 @click=&quot;$emit(&#39;close&#39;) 表示点击该元素时当前元素的 @close 中的代码。 本例样式表：12345678910111213141516171819202122232425262728293031323334353637383940414243444546.modal-mask &#123; position: fixed; z-index: 9998; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, .5); display: table; transition: opacity .3s ease;&#125;.modal-wrapper &#123; display: table-cell; vertical-align: middle;&#125;.modal-container &#123; width: 300px; margin: 0px auto; padding: 20px 30px; background-color: #fff; border-radius: 2px; box-shadow: 0 2px 8px rgba(0, 0, 0, .33); transition: all .3s ease; font-family: Helvetica, Arial, sans-serif;&#125;.modal-header h3 &#123; margin-top: 0; color: #42b983;&#125;.modal-body &#123; margin: 20px 0;&#125;.modal-default-button &#123; float: right;&#125;.modal-enter &#123; opacity: 0;&#125;.modal-leave-active &#123; opacity: 0;&#125;.modal-enter .modal-container,.modal-leave-active .modal-container &#123; -webkit-transform: scale(1.1); transform: scale(1.1);&#125; ENV: Windows 10 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>Vue.js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[在 Homestead 上安装 phpMyAdmin]]></title>
+    <url>%2Farticle%2F201610291236.html</url>
+    <content type="text"><![CDATA[近期使用 Homestead 作为开发环境，由于命令行方式操作数据库效率低（学艺不精），于是准备安装一个 GUI 工具来辅助学习/开发，首选已经熟练使用的 phpMyAdmin 。 第一步，下载 最新版本的 phpMyAdmin ，解压到代码目录下。 第二步，修改服务器的配置文件 ~\.homestead\Homestead.yaml ，添加一个新的站点。 1234567folders: - map: ~/Code to: /home/vagrant/Codesites: - map: phpmyadmin.app to: /home/vagrant/Code/phpmyadmin/ ... 第三步，修改 hosts 文件，新增一行内容，注意 ip 需要和 Homestead 配置文件中的一致。 1192.168.10.10 phpmyadmin.app 好了！现在访问 phpmyadmin.app 即可使用 phpMyAdmin 。 ENV: Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Homestead</tag>
+        <tag>phpMyAdmin</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[局域网访问 Homestead 站点]]></title>
+    <url>%2Farticle%2F201610271424.html</url>
+    <content type="text"><![CDATA[设置 Homestead 服务器为可被局域网内的其他设备访问，可以非常方便地测试移动端浏览效果，同时也可以把页面分享给团队的其他成员浏览。 第一步，修改脚本文件 ~\Homestead\scripts\homestead.rb ，允许局域网中的其他设备访问虚拟机。 将 config.vm.network 属性的值修改为 public_network 。 1config.vm.network :public_network, ip: settings[&quot;ip&quot;] ||= &quot;192.168.10.10&quot; 第二步，修改配置文件（~/.homestead/Homestead.yaml），将虚拟机的 ip 修改为当前局域网网段中的 ip 。 1ip: &quot;192.168.1.200&quot; 第三步，新增一个站点，将 ip 的访问指向代码根目录。 123sites: - map: 192.168.1.200 to: /home/vagrant/Code/ 然后使用命令行重启虚拟机。 12vagrant haltvagrant up 同时刷新一下虚拟机的配置。 1vagrant provision 现在你已可以使用同一 WIFI 下（局域网内）的手机、平板等设备通过 ip 地址访问 Homestead 服务器。 ENV: Windows 10 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Homestead</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[手动下载和安装 Homestead]]></title>
+    <url>%2Farticle%2F201610241409.html</url>
+    <content type="text"><![CDATA[在配置 Homestead 开发环境的过程中，执行以下命令将下载1G左右的镜像文件（Vagrant Box），然后安装包含完整 Homestead 环境的虚拟机。由于资源服务器位于海外，经常导致下载速度缓慢、下载失败等问题。 1vagrant box add laravel/homestead 我们可在命令行中找到 box: Downloading 开头的一行，后面就是 Vagrant Box 文件的下载链接。将链接复制到迅雷等工具下载，得到拓展名为 box 的镜像文件。 1234vagrant box add laravel/homestead==&gt; box: Loading metadata for box &apos;laravel/homestead&apos;...box: Downloading: https://atlas.hashicorp.com/laravel/boxes/homestead/versions/0.5.0/providers/virtualbox.box 然后选择以下任意一种方式安装虚拟机。 方法一第一步，执行以下命令通过刚刚下载的镜像文件添加虚拟机。 12345# Linuxvagrant box add laravel/homestead ~/virtualbox.box# Windowsvagrant box add laravel/homestead file:///d:/virtualbox.box 注意，此时通过 vagrant up 命令启动虚拟机时，仍会下载镜像文件。这是因为 Vagrant 认为该虚拟机的版本过低，于是自动下载最新版本的镜像（即使刚刚离线安装的虚拟机已是最新版）。 第二步，解决版本识别错误问题。只需修改 Vagant 的索引文件即可解决，该文件参考路径如下。 1C:\Users\YIMING\\.vagrant.d\data\machine-index\index 12345&quot;box&quot;:&#123; &quot;name&quot;:&quot;laravel/homestead&quot;, &quot;provider&quot;:&quot;virtualbox&quot;, &quot;version&quot;:&quot;0.5.0&quot;&#125;&#125; 该方法需目录下已存在 index 文件可供修改，或者你已经很熟悉这个文件的格式。index 文件以 JSON 格式存储着已（通过Vagrant）安装的虚拟机的信息。将 version 字段修改为可用的版本号即可，然后再次尝试 vagrant up 启动虚拟机。 方法二第一步，执行 vagrant box add laravel/homestead 触发下载镜像文件，然后马上按 Ctrl+C 取消。 第二步，在 ~\.vagrant.d\tmp 目录下找到下载时生成的缓存文件。文件名类似： 1boxb1926d351572dd849646d59563156601f026e2a5 第三步，将之前手动下载的镜像文件重命名为缓存文件的文件名，并覆盖缓存文件。 第四步，执行 vagrant box add laravel/homestead ，下载进度将直接显示为100%，并开始添加虚拟机。 简单总结一下。这两种方法都是我探索后发现的、退而求其次地安装 Homestead 虚拟机的方法。前者直接用命令通过本地镜像安装，但会出现 Vagrant 认错版本的尴尬（或许日后的版本更新可以修复）。后者则用本地镜像文件，替换掉缓存文件，欺骗 Vagrant 下载已完成从而执行安装。后者不需要纠正版本识别错误。 ENV: Windows 10 x64 / VirtualBox 5.1.8 / Laravel Homestead]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Homestead</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Homestead 开发环境配置]]></title>
+    <url>%2Farticle%2F201610231443.html</url>
+    <content type="text"><![CDATA[Laravel Homestead 是一套完整的 PHP 开发环境，类似 WampServer 。不同的是，Homestead 运行于虚拟机之中，而 WampServer 则直接将服务端软件安装在本机上。 Homestead 的安装依赖于虚拟机软件和 Vagrant 。Vagrant 是一个快速搭建开发环境的工具，类似装系统用的 Ghost ，可以直接把别人打包好的开发环境（包括系统和服务端软件），Copy/Paste 到一台设备中，省去逐一安装服务端软件的麻烦。 接下来的实践完全基于官方文档，并且已成功在 Win7 64bit 下安装了 Homestead 。 安装虚拟机软件虚拟机软件可选择 VirtualBox 或 VMware ，虽然官方推荐使用效率更高的 VMware ，但为了节约时间我安装了开源且免费的 VirtualBox ，版本5.1.8。 安装 Vagrant访问官网下载并安装 Vagrant 。 添加 Vagrant BoxVagrant Box 是使用 Vagrant 将一整套开发环境打包成的 .box 镜像文件。在命令行工具中执行以下命令即可添加 Homestead 镜像，等待下载/安装完毕。如果下载失败，可参考解决方案。 1vagrant box add laravel/homestead 安装 Homestead使用 Git 命令拷贝 Homestead 的代码并保存到 Home 目录的 Homestead 文件夹下。命令行中的 ~ 目录即为 Home 目录，如果你不知道 Home 目录的路径，尝试在“计算机”的地址栏输入 %homepath% 访问。 12cd ~git clone https://github.com/laravel/homestead.git Homestead 定位到 Homestead 文件夹，创建 Homestead 配置文件。 12cd ~/Homesteadbash init.sh 配置 Homestead用编辑器打开 Home 目录下的隐藏文件夹 .homestead 中的 Homestead.yaml 文件，该文件为 Homestead 的配置文件。 1234567891011121314151617181920212223242526272829303132# 服务器的局域网 IP 地址ip: &quot;192.168.10.10&quot;# 服务器可用内存memory: 2048# 服务器可用 CPU 核心数cpus: 1# 虚拟机软件provider: virtualbox# SSH 公钥authorize: ~/.ssh/id_rsa.pub# SSH 私钥keys: - ~/.ssh/id_rsa# 本机与虚拟机的路径关联folders: - map: ~/Code to: /home/vagrant/Code# 域名绑定sites: - map: 192.168.10.10 to: /home/vagrant/Code# 默认数据库名称databases: - homestead provider 应该根据本机已安装的虚拟机软件，设为 virtualbox 、 vmware_fusion 或 vmware_workstation 。authorize/keys 必须与 ~/.ssh 下的对应的密钥文件名称一致。folders 用于关联本机与虚拟机目录，即本机 ~/Code 路径下的文件，相当于也存在于虚拟机的代码根目录 /home/vagrant/Code 路径下，map 路径必须存在。sites 关联域名与虚拟机目录，可设置多站点，此处直接关联了 IP 访问根目录。 运行虚拟机 在 ~\Homestead 目录下，执行该命令。 1vagrant up 测试开发环境 写一个 PHP 文件放到 ~\Code 路径下。 1echo 'Hello World!'; 打开浏览器，访问192.168.10.10，看看浏览器是否打印出了 Hello World! 。 ENV: Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Homestead</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Git、Shell、Git Shell、Git Bash]]></title>
+    <url>%2Farticle%2F201610231047.html</url>
+    <content type="text"><![CDATA[由于 Linux 和 Git 知识储备不足，最近被这些名词搞得混乱，有必要理清概念为接下来的学习铺路。 Git：版本控制系统，类似 SVN 。之前也是 Git 和 GitHub 傻傻分不清楚，GitHub 是用 Git 进行版本控制的项目托管平台，本质是一个网站，所以 Git≠GitHub 。 Shell：计算机壳层，是指“提供使用者使用界面”的软件，类似 Windows 中的命令行工具（cmd.exe）。 Bash：Linux 中默认的 Shell ，所以它就是一种 Shell 。 Git Shell：安装了 Git 的 Shell ，即支持 Git 命令的 Shell 。GitHub 的命令行客户端也叫 Git Shell 。 Git Bash：Git 的默认客户端，用于在 Windows 下使用 Git 命令。]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[WordPress 创建子主题]]></title>
+    <url>%2Farticle%2F201610221606.html</url>
+    <content type="text"><![CDATA[Wordpress 的主题总是有许多不尽如人意的地方，经常需要自定义样式、文本。然而直接修改主题源文件的体验并不优雅。使用子主题可以避免修改在主题升级后丢失，总之值得尝试，创建子主题的方式也 非常简单。 接下来以自带主题 Twenty Fifteen 为例演示创建一个子主题。 第一步，在 wp-content/themes/ 下新建一个文件夹，作为子主题的文件夹，该文件夹可以随意命名，我将该文件夹命名为 twentyfifteen-child 。 第二步，在 twentyfifteen-child 文件夹下新建一个 style.css 文件，代码如下。 1234567891011/*Theme Name: Twenty Fifteen ChildTheme URI: http://example.com/Description: Child theme for the Twenty Fifteen theme Author: Your name hereAuthor URI: http://example.com/Template: twentyfifteenVersion: 1.0*/@import url(../twentyfifteen/style.css); Template 后填写父主题的文件夹名称，Theme Name 后填写子主题的名称，其他项目非必填。然后导入父主题的 CSS 文件。 至此，子主题已创建完毕，可以在主题中看到新增了 Twenty Fifteen Child 主题。如果觉得没有预览图片逼死强迫症，可以将父主题文件夹下的 screenshot.png 拷贝到子主题的文件夹里，或自己做一张预览图。 如需修改样式，可以直接写进子主题的style.css文件中覆盖原样式。如需修改页面的 HTML 或 PHP 代码，拷贝相应文件到子主题文件夹下，修改该文件即可。如需修改某个方法，可在子主题文件夹下创建 functions.php 文件，该文件中的方法将覆盖父主题中的同名方法。]]></content>
+      <categories>
+        <category>其他</category>
+      </categories>
+      <tags>
+        <tag>WordPress</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 PHP 设置 Cookie]]></title>
+    <url>%2Farticle%2F201609291442.html</url>
+    <content type="text"><![CDATA[近期使用 Cookie 实现网站的登陆保持功能，期间也遇到一些问题。 1、新建 1setcookie(name,value,expire,path,domain,secure) 使用 setcookie 方法新建 cookie 。必需参数：name ，Cookie 的名称；value ，Cookie值。可选参数：expire ，Cookie 的过期时间；path ，Cookie 的服务器路径；domain ，Cookie 的域名；secure ，是否使用安全链接。 例如，创建一个名称为 email ，值为 exaple@example.com ，两星期后过期的 Cookie ，网上普遍的写法是这样的： 1setcookie('email','exaple@example.com',time()+2*7*24*3600); 但我在本地服务器测试时，出现 Cookie 跨页丢失问题，即同一网站A页面创建的 Cookie 只在A页面有效，在B页面无法读取值。于是我增加了第四个参数，解决了该问题。 1setcookie('email','exaple@example.com',time()+2*7*24*3600,'/'); 2、读取 1$_COOKIE['email']; 没什么好说的，和读取 Session 一样。使用时最好加 isset 方法判断先该 Cookie 存在，否则容易报错。 3、删除 1setcookie(&apos;email&apos;,&apos;&apos;,time()-3600,&apos;/&apos;); 要删除一个 Cookie ，设置其过期时间早于当前时间即可。]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>PHP</tag>
+        <tag>Cookie</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[CSS3 文字阴影效果]]></title>
+    <url>%2Farticle%2F201609191337.html</url>
+    <content type="text"><![CDATA[CSS3 支持使用 text-shadow 属性给文字增加阴影。 1text-shadow: h-shadow v-shadow blur color; h-shadow 和 v-shadow 分别为水平、垂直的阴影偏移值，即阴影相对于文字的位置，可以使用负值。blur 和 color 都是可选参数，blur 是阴影模糊程度，color 则是阴影的颜色。 1text-shadow: 5px 5px 5px #000;]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Textarea 限制字符长度]]></title>
+    <url>%2Farticle%2F201609191328.html</url>
+    <content type="text"><![CDATA[textarea 没有 maxlength 属性，不能像 input 一样直接在标签内设置最大输入字符数，只能通过 JavaScript 间接实现。 用户每次按键输入时调用 checkLength 方法，该方法判断输入的内容是否超出限制的长度，若是则删除超出长度部分的字符。 HTML: 1&lt;textarea onpropertychange="checkLength(this, 8)" oninput="checkLength(this, 8)"&gt;&lt;/textarea&gt; JavaScript: 12345function checkLength(element, maxlength) &#123; if (element.value.length &gt; maxlength) &#123; element.value = element.value.substring(0, maxlength); &#125;&#125;]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>HTML</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[PHP 删除数组中的元素]]></title>
+    <url>%2Farticle%2F201609191314.html</url>
+    <content type="text"><![CDATA[删除数组元素有两种方式，第一种是使用 unset 方法。 1unset($arr[1]); 此方法删除元素后，$arr[1] 为 null ，所有元素的索引值不变，也就是说元素不会重新排列，所以不是很实用。 要使元素删除后重新排列顺序，使用 array_splice 方法即可。 1array_splice(array,start,length,array); array_splice 的四个参数中，array 为要删除元素的数组；start 为要开始删除元素的位置（索引值）；length 为要删除的元素数量；最后一个参数为可选参数，允许用一个新元素替代被删除的元素。 使用 array_splice 删除数组中索引为1的元素： 1array_splice($arr,1,1);]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>PHP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[文字溢出时隐藏并加省略号]]></title>
+    <url>%2Farticle%2F201609130236.html</url>
+    <content type="text"><![CDATA[要使过长文字被隐藏并加上省略号，添加这段 CSS 代码即可。 1234white-space: nowrap;text-overflow: ellipsis;-o-text-overflow: ellipsis;overflow: hidden; white-space: nowrap 表示文本不换行（除非遇到 &lt;br&gt; 标签），若无此需求可忽略该句。text-overflow: ellipsis 表示当文本溢出时显示省略符号来代表被修剪的文本。overflow: hidden 就十分常用了，表示隐藏溢出的内容。-o-text-overflow: ellipsis 用于兼容 Opera 浏览器。]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Rewrite 后 GET 参数丢失的处理]]></title>
+    <url>%2Farticle%2F201609121450.html</url>
+    <content type="text"><![CDATA[在 Apache Rewrite 中，如果定义的规则中包含了自定义 GET 参数，原有的 GET 参数就会消失。 例如，下面这条规则生效后，访问 www.example.com/mike 实际上是访问 www.example.com/index.php?url=mike ，index.php 可以接收到参数 url ，这个 GET 参数实际上是我们在重写时自定义的。 1RewriteRule ^([a-zA-Z\d]+)$ index.php?url=$1 如果访问的时候加上其他参数（如 www.example.com/mike?param=1） ，index.php 仍旧只能接收到参数 url ，无法接收链接中的其他参数。 要解决这个问题，只要在重写规则里加上参数 %{QUERY_STRING} ，处理请求的页面即可收到原有链接中的所有参数，重写规则示例如下。 1RewriteRule ^([a-zA-Z\d]+)$ index.php?url=$1&amp;%&#123;QUERY_STRING&#125;]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Apache</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Rewrite 禁止访问某种文件]]></title>
+    <url>%2Farticle%2F201609120010.html</url>
+    <content type="text"><![CDATA[当我们不希望一些服务端的文件被用户直接浏览、又必须用到这些文件时，可以通过 Apache Rewrite 禁止直接访问某些格式的文件。 首先，在根目录下的 .htaccess 文件（没有则新建）中开启重写引擎。 1RewriteEngine on 然后，添加以下规则。这里禁止了用户访问 XML 格式的文件。 1234&lt;FilesMatch &quot;\.(xml)$&quot;&gt; order deny,allow deny from all&lt;/FilesMatch&gt; 实测 XML 被禁止访问后，仍然可以正常用 PHP 解析文件内部的数据。]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Apache</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[解决 json_encode 中文乱码]]></title>
+    <url>%2Farticle%2F201609101729.html</url>
+    <content type="text"><![CDATA[如果用 json_encode 将一个包含中文的数组转换成 JSON 格式数据，会发现中文部分全部变成了乱码。PHP 5.4+ 可以通过在使用 json_encode 时增加参数 JSON_UNESCAPED_UNICODE 解决。 1json_encode($arr, JSON_UNESCAPED_UNICODE); 这样得到的 JSON 数据就不会出现中文乱码的问题了。]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>JSON</tag>
+        <tag>PHP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Textarea 禁用回车换行]]></title>
+    <url>%2Farticle%2F201609101555.html</url>
+    <content type="text"><![CDATA[在使用 textarea 控件时，某些场景下需要禁止用户使用回车换行。这时可以用 JavaScript 监听用户输入事件，判断按键为回车后返回 false 即可。 HTML: 1&lt;textarea onkeydown="noWrap(event)"&gt;&lt;/textarea&gt; JavaScript: 123function noWrap(event) &#123; if (event.keyCode==13) event.returnValue = false;&#125;]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[PHP中 使用 JSON 数据]]></title>
+    <url>%2Farticle%2F201609091146.html</url>
+    <content type="text"><![CDATA[php5.2+ 提供了 json_encode 和 json_decode 方法进行 JSON 的编码和解码。 json_encode 可将数组或对象转换成 JSON 格式数据，一般用到数组。下面是在数组中编辑好用户信息，然后转换成 JSON 格式数据。 123456$arr = array ('name'=&gt;'mike','age'=&gt;'20','from'=&gt;'USA');$json = json_encode($arr);echo $json;// 输出内容&#123;"name":"mike","age":"20","from":"USA"&#125; json_decode 方法可将 JSON 格式数据转换成对象或数组，进而使用里面的数据。下面是两种方式输出用户名。 1234567// 解析为对象$obj = json_decode($json);echo $obj-&gt;name;// 解析为数组$arr = json_decode($json,true);echo $arr[&apos;name&apos;]; 需要注意的是，如果是自己手写的 JSON 格式的字符串，在使用 json_decode 解析时可能会返回 null ，这基本上是因为 JSON 格式错误导致的，仔细检查字符串的格式即可。]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>JSON</tag>
+        <tag>PHP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[JS 实现重新加载图片]]></title>
+    <url>%2Farticle%2F201609031820.html</url>
+    <content type="text"><![CDATA[在服务器上的图片文件发生改变，但 img 的 src 保持不变的情况下，浏览器会直接读取缓存的图片文件，而不会重新加载图片。 虽然缓存有利于减少页面打开时间，但这在一些场景下是不适用的。比如用户修改了自己的头像，同一用户的头像文件的路径是固定的，由于浏览器使用了缓存，此时用户仍然只能看到之前的头像。那么该如何强制浏览器重新加载图片呢？ 很简单，在图片发生改变时修改 src ，给图片的链接加一个随机参数即可。 1image.src = '/img/example.jpg?t=' + Math.random();]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[判断页面是否在 iFrame 中]]></title>
+    <url>%2Farticle%2F201609011252.html</url>
+    <content type="text"><![CDATA[如果我们不判断某页面是否在 iFrame 中执行，进而对页面做出一些修改，很可能会出现一些用户体验不佳的 BUG 。例如，我们在A页面中的 iFrame 中显示了B页面内容、B页面中存在链接跳转到A页面，当点击B页面中的链接后等于是在 iFrame 中打开了A页面，如此循环就变成了A页面不断嵌套A页面的效果，这显然不会是我们想要呈现给用户的。 解决方法只需要简单的一句 JS 代码，即可判断当前页面是否处于 iFrame 中，然后做相应处理即可。 12345&lt;script type=&quot;text/javascript&quot;&gt;if (self!=top) &#123; // 当前页面处于iFrame中&#125;&lt;/script&gt;]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[CSS3 实现全屏背景图片]]></title>
+    <url>%2Farticle%2F201608301340.html</url>
+    <content type="text"><![CDATA[Web 开发时经常用到背景图片铺满整个屏幕，需要能够自适应各种设备。CSS3 新增的 background-size 可以实现这个效果，在 html 标签上添加 CSS 代码，这里用 fixed 和 center 定位背景图，然后用 background-size 来使图片铺满。具体代码如下，这段代码摘自互联网。 1234567html &#123; background: url(bg.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;&#125; 经过实测自适应效果非常好，但该方案仍然存在 BUG ，在手机端的一些浏览器上会在页面下方出现白边。 经测试发现这是因为背景图铺满的区域是 html 标签，而不是我们实际感知到的屏幕范围。有的浏览器会将 html 标签里的内容的高度作为 html 标签的高度，如果 html 的高度小于设备屏幕的高度，就会出现空白区域。解决方法也很简单，在 CSS 代码中设置 html 的高度始终为100%。 12345678html &#123; background: url(bg.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; height: 100%;&#125;]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[WampServer 局域网访问配置]]></title>
+    <url>%2Farticle%2F201608301211.html</url>
+    <content type="text"><![CDATA[让局域网内的其他设备（如 Pad 、手机）可以访问 WampServer 上的内容，将会非常便于测试不同设备的浏览效果。要做到这点，需要修改 Apache 配置文件，使服务器允许被局域网内的设备访问。 1、如果未在 WampServer 中配置虚拟主机过的情况下，直接在 http.conf 中找以下字段，一般在 &lt;Directory&gt; 标签内。将 Require local 修改为 Require all granted 即可。重启服务器后，局域网内的其他设备通过 IP 地址（如 192.168.1.1 ）访问。由于我的 WampSever 已配置过虚拟主机，未测试实际效果。 12# onlineoffline tag - don&apos;t remove Require all granted 2、如果 WampServer 已经配置了虚拟主机，在 httpd-vhosts.conf 中修改虚拟主机的配置。同样是将 Require local 修改为 Require all granted ，如果没有 &lt;Directory&gt; 标签就自己写一个。另外，修改端口号。重启服务器后，其他设备通过IP+端口号（如 192.168.1.1:8080 ）访问。 123456789&lt;VirtualHost *:8080&gt; ServerName example.com DocumentRoot C:/vhost/example.com &lt;Directory &quot;C:/vhost/example.com&quot;&gt; Options +Indexes +FollowSymLinks +MultiViews AllowOverride All Require all granted &lt;/Directory&gt;&lt;/VirtualHost&gt; 此时局域网内的所有设备都可以通过IP+端口号访问这个项目，但服务器本机反而无法通过 hosts 绑定域名访问了。即使在 hosts 中添加相应端口号也无效。 12// 这是无效的127.0.0.1:8080 example.com 解决方法是在 httpd-vhosts.conf 中添加一个80端口的虚拟主机，仍然指向同一个项目路径。然后在 hosts 中做正常的域名绑定。PC 端就可以正常使用域名访问这个项目了。 1234&lt;VirtualHost *:80&gt; ServerName example.com DocumentRoot C:/vhost/example.com&lt;/VirtualHost&gt; 1127.0.0.1 example.com]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Apache</tag>
+        <tag>WampServer</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Canvas 不支持使用 CSS 设置尺寸]]></title>
+    <url>%2Farticle%2F201608282347.html</url>
+    <content type="text"><![CDATA[如果用 Canvas 画一个图形（我这里生成的是用户头像），生成 DataUrl 后把图片保存到本地，就会发现图形增加了不必要的宽度和高度。如果保存的格式是 jpg ，那么多余的部分就会表现为黑边。如果保存的格式是 png ，那么多余的部分就会表现为透明但仍占用宽高的图像。 通过排查我发现原因在于 Canvas 的默认宽高是300px150px，它并不会因为你在上面 drawImage 而自动调整宽高去适应你的图形。所以你生成的图像总是有多余的部分，总是300px150px的尺寸，显然我不能够这样保存用户的头像。 于是我希望通过修改 Canvas 的尺寸来解决这个问题，使其尺寸固定，和我要生成图像尺寸一致。 但是在通过 CSS 给 Canvas 添加 style=&quot;width:120px; height:120px;&quot; 后，Canvas 只是通过拉伸改变了尺寸，图像被扭曲、黑边仍然存在。 原来，Canvas 并不支持用 CSS 来调整大小。可用的方案有两种，一是直接在标签内设置，二是通过 JS 设置。 直接在标签内设置宽高： 1&lt;canvas id="canvas" width="200" height="100"&gt;&lt;/canvas&gt; 通过 JS 设置宽高： 123var canvas = document.getElementById("canvas");canvas.width = 200;canvas.height = 100;]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>HTML</tag>
+        <tag>Canvas</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Cropper + Canvas 实现用户头像裁剪与上传]]></title>
+    <url>%2Farticle%2F201608282314.html</url>
+    <content type="text"><![CDATA[第一步：使用 Github 上的开源项目 cropper 实现选择被裁剪图片、裁剪操作和不同大小头像的预览，这个项目可以返回（被裁减图片上）需要裁出的部分的坐标和尺寸。 第二步：通过 cropper 直接取到 x、y、w、h 四个值，就是你要裁取的图片相对原图的坐标和尺寸。 第三步：使用 HTML5 的 FileReader 读取文件，然后使用 Canvas 绘制用户的头像。 12345678910111213141516//初始化canvas对象var canvas=document.getElementById('my-canvas');var context = canvas.getContext('2d');//读取被图片源文件var file = input.files[0];var reader = new FileReader(); reader.readAsDataURL(file);reader.onload=function(e)&#123; var img = new Image(); img.src = this.result; if( file!=null )&#123; //生成裁剪后的图片 context.drawImage(img, x, y, w, h, 0, 0, 120, 120); //将图片转换成DataUrl var imageData = canvas.toDataURL('image/jpeg',0.9); &#125;&#125; 这里用到的 drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh) 方法，参数含义如下，sx、sy 是目标矩形的起始（左上端）坐标，sw、sh 是目标矩形的宽高，dx、dy 是目标矩形绘制在 Cavans 画布上的起始位置的坐标（一般取0），dw、dh 是目标矩形绘制后的宽高（可以通过这2个参数标准化头像尺寸）。此外 toDataURL 方法的第1个参数表示要生成的图片格式，默认是 png ，第2个参数是可选的，表示图片压缩等级，可以取0-1之间的值。 第四步：至此已经得到了图片的 DataURL ，通过 POST 方式提交，服务端接收保存图片即可。]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>Canvas</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[检测浏览器是否支持 H5]]></title>
+    <url>%2Farticle%2F201608282310.html</url>
+    <content type="text"><![CDATA[通过全局对象检测： 123456789&lt;script&gt; window.onload = function() &#123; if (window.applicationCache) &#123; document.write("Yes, your browser can use offline web applications."); &#125; else &#123; document.write("No, your browser cannot use offline web applications."); &#125; &#125;&lt;/script&gt;]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Textarea 的换行符处理]]></title>
+    <url>%2Farticle%2F201608211150.html</url>
+    <content type="text"><![CDATA[用户使用 textarea 控件输入的包含回车换行的内容，后端获取后存储到数据库会变成一整段文本，存在换行符丢失的问题。为了保留换行符，需要在前后端通信的过程中做一些必要的处理。 使用 JavaScript 把字符串中的所有换行符替换为 &lt;br/&gt; ，再存到MySQL数据库中，以后前端显示时就可以直接打印这个字符串。 1string = string.replace(/\n/g,"&lt;br/&gt;"); 如果用户要通过 textarea 再次编辑该字符串，使用 PHP 把所有的 &lt;br/&gt; 替换为换行符后再显示给用户。 1$string = str_replace("&lt;br/&gt;","\n",$string);]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>PHP</tag>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[PHP 中实现 URL 跳转]]></title>
+    <url>%2Farticle%2F201608141814.html</url>
+    <content type="text"><![CDATA[JavaScrip 方式： 12$link="target.html";echo "&lt;script type = \"text/javascript\"&gt;window.location.href='".$link."'&lt;/script&gt;";]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>PHP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 jQuery 实现 AJAX 异步请求]]></title>
+    <url>%2Farticle%2F201608112242.html</url>
+    <content type="text"><![CDATA[引用 jQuery 库文件。 1&lt;script type="text/javascript" src="js/jquery-3.1.0.min.js"&gt;&lt;/script&gt; 在脚本中添加 ajax（GET方式）： 12345678910111213141516$.ajax(&#123; url: 'target.php', // 请求路径 type: 'get', // 请求类型 data: &#123; // 参数 username: "caiyiming", password: "123456" &#125;, async : false, // 是否异步执行 success: function(response)&#123; // 成功后调用的代码 &#125;, error: function(result) &#123; // 失败后调用的代码 &#125; &#125;); 使用 POST 方式： 123456789101112$.ajax(&#123; url: 'target.php', type: 'post', data: &#123; username: "caiyiming" &#125;, async : false, success: function(response)&#123; &#125;, error: function(response) &#123; &#125; &#125;);]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>jQuery</tag>
+        <tag>AJAX</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[JS 倒计时代码]]></title>
+    <url>%2Farticle%2F201608112105.html</url>
+    <content type="text"><![CDATA[网站发送验证码后，通常需要有一个倒计时器。在倒计时期间关闭“获取验证码”按钮，以防用户频繁地获取验证码。 我是利用 JS 的 setTimeout 方法实现倒计时的，基本示例如下，加上更新前端的代码即可完成倒数。 12345678var time = 60;document.write(time--+"&lt;br&gt;"); setCountdown(time);function setCountdown(time)&#123; document.write(time--+"&lt;br&gt;"); setTimeout(function()&#123; setCountdown(time) &#125;,1000);&#125;]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[通过 CSS 引用外部字体]]></title>
+    <url>%2Farticle%2F201608101917.html</url>
+    <content type="text"><![CDATA[引用文件： 1234@font-face &#123; font-family: MyFont; /*字体名字*/ src: url(MyFont.ttf); /*文件路径*/ &#125; 使用字体： 123.text &#123; font-family: MyFont; &#125;]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>CSS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[获取浏览器可视区域的尺寸]]></title>
+    <url>%2Farticle%2F201608021503.html</url>
+    <content type="text"><![CDATA[在不同浏览器都实用的 JavaScript 方案： 12var w= document.documentElement.clientWidth || document.body.clientWidth;var h= document.documentElement.clientHeight || document.body.clientHeight;]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[修改 Tomcat 服务器默认字符]]></title>
+    <url>%2Farticle%2F201604072243.html</url>
+    <content type="text"><![CDATA[在 JSP 中使用 get 方式传递中文将产生乱码，且不能用 request 对象指定字符来解决，必须配置 Tomcat 服务器的参数。 1、打开 conf/server.xml 文件。 2、在 Connector 标签下添加属性 URIEncoding=&quot;utf-8&quot; 。 123456&lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot; connectionTimeout=&quot;20000&quot; redirectPort=&quot;8443&quot; URIEncoding=&quot;utf-8&quot;/&gt; 3、重启 Tomcat 服务器。]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>Tomcat</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[全局获取 Context 的两种方法]]></title>
+    <url>%2Farticle%2F201602131217.html</url>
+    <content type="text"><![CDATA[在某些场景下我们无法调用 getBaseContext 和 getContext 方法，但依然需要获得 Context ，怎么办？有两种方法可以实现全局获取 Context 对象。 第一种方法通过自定义 Application 类实现，Application 类是应用每次启动都会初始化的类。 首先，新建一个 App 类，继承自 Application 类。 1234567891011121314public class App extends Application &#123; private static Context context; @Override public void onCreate() &#123; super.onCreate(); context=getApplicationContext(); &#125; public static Context getContext() &#123; return context; &#125;&#125; 在 Manifest 文件中注册该类，使应用每次启动时初始化这个类。 123&lt;application android:name=".App" ... &gt; 当需要获取 Context 的时候，只需： 1Context context = App.getContext(); 第二种方法与第一种类似。 新建一个 MyContext 类作为工具类，同样继承自 Application 。 123456789101112131415public class MyContext extends Application &#123; private static Context instance; @Override public void onCreate() &#123; super.onCreate(); instance = this; &#125; public static Context getInstance() &#123; return instance; &#125;&#125; 当需要获取 Context 的时候，只需： 1Context context = MyContext.getInstance();]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[EditText 光标定位到最后]]></title>
+    <url>%2Farticle%2F201602130101.html</url>
+    <content type="text"><![CDATA[有时候我们需要把 EditText 的光标定位到内容的最末尾。 比如让用户修改某些信息的时候，为了对用户更友好，我们把用户之前设置的内容填充进入。Android 并不会自动把光标移动到内容的末端，需要手动完成。 12edittext.setText("example");edittext.setSelection(edittext.getText().length()); 使用 EditText 的 setSelection 方法，设置光标定位的位置为 EditText 的内容长度，就这么简单。]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 AlertDialog 实现自定义对话框]]></title>
+    <url>%2Farticle%2F201602082011.html</url>
+    <content type="text"><![CDATA[首先创建 AlertDialog 对话框的布局文件： 123456789101112131415&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="300dp" android:layout_height="200dp" android:paddingTop="@dimen/dialog_margin_top" android:paddingBottom="@dimen/dialog_margin_bottom" android:paddingLeft="@dimen/long_margin" android:paddingRight="@dimen/long_margin" android:layout_gravity="center" android:background="#ffffff" &gt; &lt;TextView android:id="@+id/textview" android:layout_width="wrap_content" android:layout_height="wrap_content"/&gt;&lt;/LinearLayout&gt; 构造 AlertDialog ： 12345678// 创建一个AlertDialog对象，AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();alertDialog.show();// 设置AlertDialog的布局alertDialog.getWindow().setContentView(R.layout.dialog);// 子控件的初始化和使用和Activity下类似TextView textview = (TextView)alertDialog.getWindow().findViewById(R.id.textview);title.setText("example"); AlertDialog 的关闭方法： 1alertDialog.dismiss(); 如果想要为 AlertDialog 使用自定义主题，首先在 style.xml 文件内新建一个主题。这里我继承了系统自带的 Theme.AppCompat.Light.Dialog.Alert 主题，然后一项配色，命名为 AppDialogTheme 。 12345&lt;style name="AppDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert"&gt; &lt;item name="colorAccent"&gt;@color/colorRed&lt;/item&gt;&lt;/style&gt; 然后在 AlertDialog 的构造方法中，增加指定主题样式的参数。 123AlertDialog alertDialog = new AlertDialog.Builder( MainActivity.this, R.style.AppDialogTheme).create(); AlertDialog 显示时默认不可以使用输入法。如果需要在弹出的对话框中使用 EditText 、让用户输入内容，需要在执行 show 方法后加入另外两行代码。 123// 允许输入法弹出alertDialog.getWindow().clearFlags( WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM );alertDialog.getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE );]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 shape 实现矢量圆角背景]]></title>
+    <url>%2Farticle%2F201602081955.html</url>
+    <content type="text"><![CDATA[在 drawable 目录下新建 background.xml 资源文件。 123456789&lt;shape xmlns:android="http://schemas.android.com/apk/res/android"&gt; &lt;solid android:color="#fff" /&gt; &lt;corners android:topLeftRadius="5dp" android:topRightRadius="5dp" android:bottomRightRadius="5dp" android:bottomLeftRadius="5dp" /&gt;&lt;/shape&gt; solid 标签定义该矢量图的背景色为白色，corners 定义该矢量图的四个角为半径 5dp 的圆角。 像使用图片背景一样引用即可。 1android:background="@drawable/background"]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[PHP 中正确计算中文字数]]></title>
+    <url>%2Farticle%2F201602081412.html</url>
+    <content type="text"><![CDATA[在使用 PHP 开发网站或服务端的时候，经常需要限制用户输入信息的长度。 PHP 提供了 strlen 方法用于计算字符串的长度。早期一般用这个方法判断字数。 1echo strlen('早上好'); 不过，这个方法计算的是字节数，而不是字符数（字数）。在 utf-8 编码下，一个汉字一般等于3个字节。所以用 strlen 计算“早上好”的长度，结果等于9。换言之，在使用 strlen 限制长度小于12的情况下，用户可以输入12个英文字母，或4个汉字。 以前解决这种问题一般使用更宽容的长度限制，如：预计让用户输入12个中文字符，则限制 strlen($s)&lt;=36 。这又会导致用户能够输入36个英文字符。 最好的解决办法是使用新版 PHP（通过拓展）提供的 mb_strlen 方法，它可以忽略编码造成中英文字节数的差别，计算字符数，也就真正实现了计算字数。 1echo mb_strlen( '早上好', 'utf-8'); 用 mb_strlen 计算“早上好”的长度，结果为3。]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+      <tags>
+        <tag>PHP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android 上传文件到 PHP 服务端]]></title>
+    <url>%2Farticle%2F201602071410.html</url>
+    <content type="text"><![CDATA[最近练习的小项目中用到了文件上传功能，从 Android 客户端向 PHP 服务端上传文件。 查了不少资料，看过很多 demo ，结果照搬过来都以失败告终了。经过阅读、思考和尝试后终于改出了能用的代码。 实际上实现的方法都差不多，客户端发送 POST 请求向服务端上传文件，服务端判断、接收。 先谈一谈几点需要特别注意的地方。 ① SD 卡的路径要用 Environment.getExternalStorageDirectory 获取，因为不同手机默认的 SD 卡路径可能不同。 ② 在每次测试之前，确保本地文件确实存在且可读，用 PC 确定服务端链接可以访问。 ③ 客户端设置的文件键名 name 必须和服务端一致。 客户端： 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364// 文件路径 建议用 Environment.getExternalStorageDirectory 方法获取 SD 卡路径private String filePath = &quot;/sdcard/example/image.jpg&quot;;/** * 上传图片到服务端 * @param targetUrl 服务端链接 */private void uploadFile(final String targetUrl) &#123; Thread thread = new Thread() &#123; @Override public void run() &#123; String end = &quot;\r\n&quot;; String twoHyphens = &quot;--&quot;; String boundary = &quot;******&quot;; try &#123; URL url = new URL(targetUrl); HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection(); // 设置每次传输的流大小 httpURLConnection.setChunkedStreamingMode(128 * 1024); //128K // 允许输入输出流 httpURLConnection.setDoInput(true); httpURLConnection.setDoOutput(true); httpURLConnection.setUseCaches(false); // 使用 POST 方法 httpURLConnection.setRequestMethod(&quot;POST&quot;); httpURLConnection.setRequestProperty(&quot;Connection&quot;, &quot;Keep-Alive&quot;); httpURLConnection.setRequestProperty(&quot;Charset&quot;, &quot;UTF-8&quot;); httpURLConnection.setRequestProperty(&quot;Content-Type&quot;, &quot;multipart/form-data;boundary=&quot; + boundary); DataOutputStream dos = new DataOutputStream(httpURLConnection.getOutputStream()); dos.writeBytes(twoHyphens + boundary + end); // 设置 name 为 file dos.writeBytes(&quot;Content-Disposition: form-data; name=\&quot;file\&quot;; filename=\&quot;&quot; + filePath.substring(filePath.lastIndexOf(&quot;/&quot;) + 1) + &quot;\&quot;&quot; + end); dos.writeBytes(end); FileInputStream fis = new FileInputStream(filePath); byte[] buffer = new byte[8192]; // 8k int count = 0; // 读取文件 while ((count = fis.read(buffer)) != -1) &#123; dos.write(buffer, 0, count); &#125; fis.close(); dos.writeBytes(end); dos.writeBytes(twoHyphens + boundary + twoHyphens + end); dos.flush(); // ResponseCode 可以用来判断错误类型 // int status = httpURLConnection.getResponseCode(); InputStream is = httpURLConnection.getInputStream(); InputStreamReader isr = new InputStreamReader(is, &quot;utf-8&quot;); BufferedReader br = new BufferedReader(isr); // 获取返回内容 String info = br.readLine(); dos.close(); is.close(); &#125; catch (Exception e) &#123; e.printStackTrace(); &#125; &#125; &#125;; thread.start();&#125; 服务端： 123456789101112131415161718// 定义 ROOT 为当前目录define('ROOT', dirname(__FILE__).'/'); // 限制拓展名为 jpg 且文件大小在5KB以内。if((pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION) == "jpg") &amp;&amp; ($_FILES["file"]["size"] &lt; 5000))&#123; // 上传文件失败 if($_FILES["file"]["error"] &gt; 0)&#123; echo "错误代码：" . $_FILES["file"]["error"] . "&lt;br /&gt;"; &#125; // 上传文件成功 else&#123; if ( !( file_exists(ROOT. $_FILES["file"]["name"]) ) )&#123; // 将临文件移动到指定路径 move_uploaded_file($_FILES["file"]["tmp_name"], ROOT . $_FILES["file"]["name"] ); &#125; &#125;&#125;?&gt; 建议先写服务端代码，确定接口可用后再用客户端发送请求。]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+        <tag>PHP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Fragment onResume 方法无效问题]]></title>
+    <url>%2Farticle%2F201602071317.html</url>
+    <content type="text"><![CDATA[onResume 在 Activity 中是个非常常用的生命周期方法，它在 Activity 每次显示时都被执行，可用于刷新 UI 等操作。 Fragment 和 Activity 一样存在 onResume 方法，但我发现直接覆写 onResume 方法后，当 Fragment 显示到前台时不会执行这个方法。网上有人推荐使用 setUserVisibleHint 方法。 123456789@Overridepublic void setUserVisibleHint(boolean isVisibleToUser) &#123; super.setUserVisibleHint(isVisibleToUser); if (isVisibleToUser) &#123; // 相当于 Fragment 的 onResume &#125; else &#123; // 相当于 Fragment 的 onPause &#125;&#125; 但我尝试后也发现没有效果，不知道是什么原因。 我的使用场景是，当用户退出 AnotherActivity ，返回 MainActivity 的时候，我希望 MainActivity 内已经存在的 Fragment 可以刷新 UI（查询数据库内是否有变更的内容）。我尝试过在 onResume 和 setUserVisibleHint 这两个方法下执行刷新 UI 的方法，都不成功；在 AnotherActivity 退出前调用 Fragment 内刷新 UI 的方法，也不成功。 最后我的解决方案是，手动执行，让 MainActivity 来通知 Fragment 执行 onResume 方法。 12345@Overridepublic void onResume() &#123; super.onResume(); // 添加需要的操作&#125; 在 MainActivity 下创建一个静态方法。 123public static void resumeFragment() &#123; fragment.onResume();&#125; 当需要执行 Fragment 的 onResume 方法时： 1MainActivity.resumeFragment(); 还有一种方法，直接在 MainActivity 的 onResume 方法里刷新 Fragment 的 UI ，也有效果。 1234if( fragment.isAdded() ) &#123; // Fragment 中的静态方法 fragment.refreshProfile();&#125;]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[解决 SQLite 把空值转为字符串]]></title>
+    <url>%2Farticle%2F201602062240.html</url>
+    <content type="text"><![CDATA[遇到一个非常诡异的问题。 当服务端通过 json_encode 方法输出 JSON 格式数据，空值会被以明文形式输出。 1&#123; "name": null &#125; 客户端通过 JSONTokener、JSONObject 解析后直接存入 SQLite 数据库，null（空值）会被认为是字符串“null”。 这样就导致从数据库中取出的是一个字符串，判断结果为非空。 我的解决办法是写一个静态方法，从服务器返回的 JSON 里解析出的字符串，都经过此方法。 12345678public static String fixNullValue(String string)&#123; if( string.equals("null") )&#123; string = ""; return string; &#125;else&#123; return string; &#125;&#125; 1name = fixNullValue(name); 即如果解析到的字符串内容等于“null”，就在存入数据库前赋值为空字符串。 注意，不能使用 string = null ，这样做的结果还是会被 SQLite 存为字符串“null”。 以后从数据库里取值的时候，可以用 isEmpty 方法判断是否为空。 1if( !name.isEmpty() )]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+        <tag>SQLite</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android 与服务端的 Session 保持]]></title>
+    <url>%2Farticle%2F201601312007.html</url>
+    <content type="text"><![CDATA[在开发联网应用的过程中，有时候会希望 php 服务端能通过 Session 保存一些信息，以便随时验证客户端的登录状态，或完成其它功能。但实际操作中发现，Android 客户端每次请求服务端都被视为一个新的请求，SessionID 都会改变，也就是说根本没办法使用 Session 存储和读取信息。 我们可以通过保存 SessionID 、请求服务端的同时传递 SessionID 来解决这个问题，让服务器知道两次请求来自同一个客户端。 发送请求并保存 SessionID ： 12345678URL url = new URL(link);HttpURLConnection conn= (HttpURLConnection)url.openConnection(); conn.connect();// 获得 SessionIDString cookieval = conn.getHeaderField("set-cookie");String sessionid;if(cookieval != null) &#123; sessionid = cookieval.substring(0, cookieval.indexOf(";"));&#125; 可以将 SesshinID 通过全局变量或者 SQLite 数据库保存下来，方便以后请求时调用。 请求链接的同时发送 SessionID ： 1234URL url = new URL(link);HttpURLConnection conn= (HttpURLConnection)url.openConnection();conn.setRequestProperty("cookie", UtilGlobalVariable.sessionId);conn.connect();]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+        <tag>PHP</tag>
+        <tag>Session</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android 客户端发送 GET 请求]]></title>
+    <url>%2Farticle%2F201601292210.html</url>
+    <content type="text"><![CDATA[最近在开发涉及服务端的工程，预感到将会频繁使用客户端向服务端发送 GET 请求、服务端向客户端返回内容。 于是 review 了以前写的一个雏形天气应用，重新理顺了使用方法，在此总结以备后用。 服务端我用的是 php ，功能无非是查询数据库和屏幕输出字符串，不再赘述。这里主要讲讲客户端的代码。 交互顺序大致是：客户端请求 http 链接，一般是带参数的 GET 链接。服务端做出反应，并屏幕输出内容（如登录是否成功），待客户端读取。客户端读取返回内容，并做出相应动作，如显示一个密码错误的提示。 这里客户端向服务端传递了2个参数，获取到服务端屏幕输出的信息，并通过 Handler 将信息发送给主线程。 1234567891011121314151617181920212223242526272829// 获取要发送的参数final String email = mEditEmail.getText().toString();final String password = mEditPassword.getText().toString();// 创建一个新线程Thread thread = new Thread()&#123; @Override public void run()&#123; String link = "http://www.caiyiming.com/example.php?email=" + email + "&amp;password=" + password; //要请求的链接 try&#123; // 发送 http 请求 URL url = new URL(link); HttpURLConnection conn= (HttpURLConnection)url.openConnection(); conn.connect(); // 读取返回的内容 InputStream in = conn.getInputStream(); BufferedReader reader = new BufferedReader(new InputStreamReader(in)); String info = reader.readLine(); // 发送消息给主线程 Message msg = Message.obtain(); msg.obj = info; msg.what = 0; handler.sendMessage(msg); &#125; catch (MalformedURLException e) &#123; e.printStackTrace(); &#125; catch (IOException e) &#123; e.printStackTrace(); &#125; &#125;&#125;;thread.start(); 假设服务端收到参数后，在数据库内比对了邮箱和密码，并屏幕输出了 success 或 failure 来向客户端反馈校验是否成功。子线程读取到信息后通过 Handler 的 sendMessage 向主线程发送消息。 接下来我们需要在主线程中写一个 Handler ，用于接收子线程传递过来的 success 或 failure ，并在用户界面上显示简短提示。 12345678910111213// 处理返回的内容Handler handler = new Handler()&#123; @Override public void handleMessage(Message msg)&#123; super.handleMessage(msg); String info = (String)msg.obj; if( info.equals("success") )&#123; Toast.makeText(getBaseContext(), "校验成功"), Toast.LENGTH_SHORT).show(); &#125; else( info.equals("failure") )&#123; Toast.makeText(getBaseContext(), "校验失败"), Toast.LENGTH_SHORT).show(); &#125; &#125;&#125;; 为什么我们不在子线程中直接显示提示呢？因为 UI 的变化只能由主线程来执行，在子线程中改变界面会导致程序崩溃。这一点我也是在经历过多次崩溃的教训后才终于理解了。 在这个例子中我只让服务端输出了简短的字符串，实际使用时也可以采用 JSON 格式输出大量信息，可参考 JSON 的解析方法实现。]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android 实现导航栏下拉菜单]]></title>
+    <url>%2Farticle%2F201601281943.html</url>
+    <content type="text"><![CDATA[只需两步即可在导航栏实现一个下拉菜单。 首先，在 res\menu 下创建子菜单的布局文件 menu_child.xml 。 1234567891011121314&lt;?xml version="1.0" encoding="utf-8"?&gt;&lt;menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"&gt; &lt;item android:id="@+id/action_settings" android:title="设置" android:orderInCategory="1" app:showAsAction="never"/&gt; &lt;item android:id="@+id/action_about" android:title="关于" android:orderInCategory="2" app:showAsAction="never" /&gt;&lt;/menu&gt; title 属性设置了子菜单显示的文本。orderInCategory 属性设置了排列顺序，数字小的在上、大的在下。showAsAction 属性必须为 never ，否则会被识别成一级菜单。 然后，在 Activity 中覆写两个方法，一个用于实现菜单，另一个用于设置子菜单的点击事件。 1234567891011121314151617181920// 菜单子项的布局@Overridepublic boolean onCreateOptionsMenu(Menu menu) &#123; getMenuInflater().inflate(R.menu.menu_child, menu); return true;&#125;// 菜单子项的点击事件@Overridepublic boolean onOptionsItemSelected(MenuItem item) &#123; int id = item.getItemId(); if (id == R.id.action_settings) &#123; Toast.makeText(getBaseContext(), "点击了设置按钮", Toast.LENGTH_SHORT).show(); return true; &#125; else if (id == R.id.action_about) &#123; Toast.makeText(getBaseContext(), "点击了关于按钮", Toast.LENGTH_SHORT).show(); return true; &#125; return super.onOptionsItemSelected(item);&#125; 不需要再做其他事情，Android 会自动在顶栏的最右边增加一个菜单按钮，点击后它将弹出子菜单。 实现效果：]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 ToolBar 实现自定义导航栏]]></title>
+    <url>%2Farticle%2F201601281912.html</url>
+    <content type="text"><![CDATA[ToolBar 可以实现导航栏的自定义效果，如在导航上添加返回按钮、菜单按钮等。 以前不会用 Android 默认提供的 ToolBar 或者 ActionBar ，每次都会自己写一个简单的顶栏。这几天尝试了用 ToolBar 实现导航栏。 首先，在 Android Studio 中新建一个工程并命名为 ToolBarPractice ，最小 API 设为8。添加 MainActivity 和 SecondActivity 两个空的 Activity ，默认都继承自 AppCompatActivity 。为什么不使用默认已经包含 ToolBar 的 Activity ？因为我想要手动添加 ToolBar 从而理清整个过程。 接下来在 MainActiviy 中添加一个按钮，用于跳转至 SecondActivity 。这部分比较简单，可以略过。 1234567891011121314151617&lt;RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin" android:paddingRight="@dimen/activity_horizontal_margin" android:paddingTop="@dimen/activity_vertical_margin" android:paddingBottom="@dimen/activity_vertical_margin" tools:context="com.caiyiming.toolbarpractice.MainActivity"&gt; &lt;Button android:id="@+id/buttonJump" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="JUMP"/&gt;&lt;/RelativeLayout&gt; 1234567891011121314151617181920public class MainActivity extends AppCompatActivity &#123; private Button mBtnJump; @Override protected void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); mBtnJump = (Button)findViewById(R.id.buttonJump); mBtnJump.setOnClickListener(new View.OnClickListener() &#123; @Override public void onClick(View v) &#123; Intent intent = new Intent(); intent.setClass(MainActivity.this, SecondActivity.class); startActivity(intent); &#125; &#125;); &#125;&#125; 因为准备在 SecondActivity 中使用 ToolBar 顶栏，必须修改它的主题，去除默认顶栏。这里通过在 style 文件中添加一个 AppTheme.NoActionBar 主题来实现，这也是 Android Studio 默认采用的方式。 另外，设置 MainActivity 作为 SecondActivity 的父 Acitivty ，这样在 SecondActivity 中点击返回按钮时才会返回 MainActivity 。 1234&lt;style name="AppTheme.NoActionBar"&gt; &lt;item name="windowActionBar"&gt;false&lt;/item&gt; &lt;item name="windowNoTitle"&gt;true&lt;/item&gt;&lt;/style&gt; 123456789&lt;activity android:name=".SecondActivity" android:label="SecondActivity" android:theme="@style/AppTheme.NoActionBar" android:parentActivityName=".MainActivity"&gt; &lt;meta-data android:name="android.support.PARENT_ACTIVITY" android:value="com.caiyiming.toolbarpractice.MainActivity" /&gt;&lt;/activity&gt; OK ，接下来在 style 文件中添加两个值，作为导航栏和状态栏的样式。 12&lt;style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" /&gt;&lt;style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" /&gt; 修改 SecondActivity 的布局文件，使其包含了一个 ToolBar 控件。 123456789101112131415161718192021222324&lt;android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:fitsSystemWindows="true" tools:context="com.caiyiming.toolbarpractice.SecondActivity"&gt; &lt;android.support.design.widget.AppBarLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:theme="@style/AppTheme.AppBarOverlay"&gt; &lt;android.support.v7.widget.Toolbar android:id="@+id/toolbar" android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" android:background="?attr/colorPrimary" app:popupTheme="@style/AppTheme.PopupOverlay" /&gt; &lt;/android.support.design.widget.AppBarLayout&gt; &lt;!--内容--&gt;&lt;/android.support.design.widget.CoordinatorLayout&gt; 接下来，修改 SecondActivity 的代码，实例化 ToolBar 并实现一个返回按钮。 另外，还可以自定义顶栏上的主标题、副标题、Logo、返回按钮图标，修改按钮的点击事件。 1234567891011121314151617181920212223242526272829public class SecondActivity extends AppCompatActivity &#123; @Override protected void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); setContentView(R.layout.activity_second); Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); // 设置图标 toolbar.setLogo(R.mipmap.ic_launcher); // 设置标题 toolbar.setTitle("Title"); // 设置副标题 toolbar.setSubtitle("Sub title"); // 设置返回按钮图标 toolbar.setNavigationIcon(R.mipmap.ic_chevron_left); setSupportActionBar(toolbar); // 添加默认返回按钮 getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 返回按钮的点击事件 toolbar.setNavigationOnClickListener(new View.OnClickListener() &#123; @Override public void onClick(View v) &#123; Toast.makeText(getBaseContext(), "点击了左侧导航按钮", Toast.LENGTH_SHORT).show(); &#125; &#125;); &#125;&#125; 接下来继续在顶栏的右侧实现几个菜单按钮。 首先，在 res 文件夹下新建一个菜单布局文件 menu_default.xml ，添加两个选项。title 属性用于设置提示，长按图标的情况下将显示这些文字。orderInCategory 属性用于设置排列顺序，数字小的在左、大的在右；icon 属性设置图标。showAsAction 属性设置显示方式，可选择总是显示，或仅当空间足够时显示等。 123456789101112131415&lt;menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"&gt; &lt;item android:id="@+id/action_next" android:title="create" android:orderInCategory="1" android:icon="@mipmap/ic_create" app:showAsAction="always" /&gt; &lt;item android:id="@+id/action_next" android:title="more" android:orderInCategory="2" android:icon="@mipmap/ic_more" app:showAsAction="always" /&gt;&lt;/menu&gt; 在 SecondActivity.java 中重写两个方法，实现菜单及其按钮的点击事件。 12345678910111213141516171819202122// 引用导航菜单布局@Overridepublic boolean onCreateOptionsMenu(Menu menu)&#123; getMenuInflater().inflate(R.menu.menu_default, menu); return true;&#125;// 导航按钮点击事件@Overridepublic boolean onOptionsItemSelected(MenuItem item) &#123; switch(item.getItemId())&#123; case R.id.action_create: Toast.makeText(getBaseContext(), "点击了Create图标", Toast.LENGTH_SHORT).show(); break; case R.id.action_more: Toast.makeText(getBaseContext(), "点击了More图标", Toast.LENGTH_SHORT).show(); break; default: break; &#125; return super.onOptionsItemSelected(item);&#125; 运行效果：]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[阻止键盘自动弹出 点击空白处结束输入]]></title>
+    <url>%2Farticle%2F201601271719.html</url>
+    <content type="text"><![CDATA[当一个包含 EditText 的个页面启动时，Android 将自动弹出软键盘引导用户输入内容。这样其实不太友好，有时我们希望用户能先看到整个页面，再决定点击输入框输入内容。 当用户输入结束后，按照一般的使用习惯，可能想要通过点击页面上的空白处来结束输入（关闭软键盘），而 Android 并不会默认这样做，需要自己通过代码实现。 那么，如何防止 EditText 自动获取焦点？其实很简单，只需要给 EditText 的任意父控件加入两个属性即可。原理是使父控件获取到焦点，从而截断 EditText 自动获取焦点的动作。 12345678910111213&lt;LinearLayout android:id="@+id/linearContentWrapper" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:focusable="true" android:focusableInTouchMode="true"&gt; &lt;EditText android:layout_width="match_parent" android:layout_height="wrap_content" /&gt;&lt;/LinearLayout&gt; 如何实现点击空白处结束输入并关闭软键盘？ 首先新建一个类，命名为 UtilHideKeyboard ，定义一个 hide 方法用于关闭软键盘。 123456789101112/** * 隐藏软键盘工具类 */public class UtilHideKeyboard &#123; public static void hide(Activity activity) &#123; InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE); inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0); &#125;&#125; 接下来在 Activity 的代码中设置 EditText 的父控件的触摸事件，这个父控件最好是最外层的。当用户触摸空白处（父控件）时，使父控件获取焦点，并调用刚才的 hide 方法关闭软键盘。 12345678910111213141516171819202122private LinearLayout mWrappper;@Overrideprotected void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); setContentView(R.layout.activity_login); ...... //隐藏软键盘 mWrappper = (LinearLayout)findViewById(R.id.linearContentWrapper); mWrappper.setOnTouchListener(new View.OnTouchListener() &#123; @Override public boolean onTouch(View v, MotionEvent event) &#123; if(event.getAction() == MotionEvent.ACTION_DOWN)&#123; mWrappper.requestFocus(); UtilHideKeyboard.hide(LoginActivity.this); &#125; return false; &#125; &#125;);&#125; 搞定，这才是 EditText 正确的打开方式！]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android 监听设备的开屏与锁屏事件]]></title>
+    <url>%2Farticle%2F201601081723.html</url>
+    <content type="text"><![CDATA[最近开发的一个小应用需要监听用户设备的开屏和锁屏事件，查了一些资料，发现普遍使用的方法是通过代码方式创建一个 BroadcastReceiver ，并监听 ACTION_SCREEN_ON 和 ACTION_SCREEN_OFF 两个意图。 代码如下： 12345678910111213141516/** * 实现广播接收者 */private final BroadcastReceiver ScreenActionReceiver = new BroadcastReceiver()&#123; @Override public void onReceive(final Context context, final Intent intent) &#123; String action = intent.getAction(); if (action.equals(Intent.ACTION_SCREEN_ON)) &#123; // 开屏事件 Toast.makeText(context,"监听到屏幕解锁", Toast.LENGTH_SHORT).show(); &#125; else if (action.equals(Intent.ACTION_SCREEN_OFF)) &#123; // 锁屏事件 Toast.makeText(context,"监听到屏幕锁定", Toast.LENGTH_SHORT).show(); &#125; &#125;&#125;; 12// 该变量用于判断广播接受者是否已注册private boolean isRegisterReceiver = false; 12345678910111213141516171819202122/** * 注册广播接收者 */private void registerScreenActionReceiver()&#123; if (!isRegisterReceiver) &#123; final IntentFilter filter = new IntentFilter(); filter.addAction(Intent.ACTION_SCREEN_OFF); filter.addAction(Intent.ACTION_SCREEN_ON); registerReceiver(ScreenActionReceiver, filter); isRegisterReceiver = true; &#125;&#125;/** * 取消注册广播接收者 */public void unregisterScreenActionReceiver(Context context) &#123; if (isRegisterReceiver) &#123; isRegisterReceiver = false; context.unregisterReceiver(ScreenActionReceiver); &#125;&#125; 最后在 Activity 或 Service 中调用 registerScreenActionReceiver 方法注册广播接受者。]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 DatePickerDialog 选择日期]]></title>
+    <url>%2Farticle%2F201512151559.html</url>
+    <content type="text"><![CDATA[新建一个工程并命名为 DatePickerDialogDemo ，使用 LinearLayout 布局。 在布局中分别添加一个 TextView 用于输出选择的日期、一个 Button 用于触发日期选择窗口。 MainActivity.xml: 123456789101112131415161718LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="15dp" tools:context="$&#123;relativePackage&#125;.$&#123;activityClass&#125;" &gt; &lt;TextView android:id="@+id/textviewText" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="" /&gt; &lt;Button android:id="@+id/buttonPickDate" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="选择日期"/&gt;&lt;/LinearLayout&gt; 新建一个类，继承自 DialogFragment 并实现 DatePickerDialog 接口。 onDateSet 方法在日期选择完成后被执行，它将调用 MainActivity 中的静态方法，更新 TextView 中的内容，把日期显示出来。 UtilSelectDate.java: 12345678910111213141516171819202122232425262728293031public class UtilSelectDate extends DialogFragment implements DatePickerDialog.OnDateSetListener &#123; // 初始化变量 int mYear; int mMonth; int mDay; // 初始化日期选择对话框 @Override public Dialog onCreateDialog(Bundle savedInstanceState) &#123; // 设置初始日期为本年本月本日 final Calendar mCal=Calendar.getInstance(); int year = mCal.get(Calendar.YEAR); int month = mCal.get(Calendar.MONTH); int day = mCal.get(Calendar.DAY_OF_MONTH); // 返回日期选择对话框 return new DatePickerDialog(getActivity(), this, year, month, day); &#125; // 日期选择完成事件 @Override public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) &#123; mYear = year; mMonth = monthOfYear+1; mDay = dayOfMonth; // 调用 MainActivity 中的方法更新日期 MainActivity.updateText(mYear, mMonth, mDay); &#125;&#125; MainActivity 继承自 FragmentActivity ，点击按钮后，实例化一个日期选择窗口并显示。 updateText 方法在 UtilSelectDate 类的 onDateSet 方法中调用，实现日期选择完成后的屏幕输出。 MainActivity.java: 1234567891011121314151617181920212223242526272829public class MainActivity extends FragmentActivity &#123; private Button mPickDate; private static TextView mText; @Override protected void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); // 实例化控件 mText = (TextView) findViewById(R.id.textviewText); mPickDate = (Button) findViewById(R.id.buttonPickDate); // 按钮点击事件 mPickDate.setOnClickListener(new OnClickListener()&#123; @Override public void onClick(View arg0) &#123; DialogFragment mFragment=new UtilSelectDate(); mFragment.show(MainActivity.this.getSupportFragmentManager(), null); &#125; &#125;); &#125; // 屏幕输出日期 static void updateText(int year, int month, int day)&#123; mText.setText(String.valueOf(year)+"年"+String.valueOf(month)+"月"+String.valueOf(day)+"日"); &#125;&#125; 需要注意的是，如果是在 Fragment（而不是 FragmentActivity ）中使用，执行show 方法的语句需要改为： 1mFragment.show(getFragmentManager(), null);]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[根据系统版本设置不同的主题]]></title>
+    <url>%2Farticle%2F201512151459.html</url>
+    <content type="text"><![CDATA[通常情况下，Android 应用中的控件样式为系统默认主题中的样式。 为了统一控件样式、使应用整体更协调美观，我们经常会指定应用的主题，比如 Holo 主题。但是 Holo 主题只能支持 Android 3.2（API 13）及以上的系统。为了兼容 Android 3.2 以下机型，有必要让 Android 3.2 及以上、Android 3.2 以下的机型使用不同的主题。 以 Holo 主题为例： 在 res 文件夹下新建 values-v13 文件夹，在 values-v13 文件夹下新建 style.xml 文件，内容如下。 123&lt;resources&gt; &lt;style name="AppBaseTheme" parent="android:Theme.Holo.Light.NoActionBar"&gt;&lt;/style&gt;&lt;/resources&gt; 修改 value 文件夹下的 style.xml 文件。 123&lt;resources&gt; &lt;style name="AppBaseTheme" parent="@android:style/Theme.Light.NoTitleBar"&gt;&lt;/style&gt;&lt;/resources&gt; 最后，修改 AndroidManifest.xml ，设置应用的主题为 AppBaseTheme 。 12345&lt;application ... android:theme="@style/AppBaseTheme" &gt; ...&lt;/application&gt; 这样，当 API=13 时，应用的主题为 Theme.Holo.Light.NoActionBar 。]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用隐式 Intent 调用其他应用]]></title>
+    <url>%2Farticle%2F201512071550.html</url>
+    <content type="text"><![CDATA[所谓隐式 Intent（意图），即不像显式 Intent 那样明确指定由哪个 Activity 响应，而是告诉系统我们想做什么，由系统匹配可响应该意图的其他程序。 在应用中使用隐式 Intent 可调用系统中的其他应用，完成打开网页、发送短信等操作。 下面通过一个 demo 实践隐式 Intent 的基本用法，涉及的行为有：拨打电话、发送短信、发送邮件、浏览网页。 首先，在 Activity 的布局文件中添加几个按钮，点击可执行相应的隐式 Intent 。 12345678910111213141516171819202122232425262728&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="10dp" tools:context="com.caiyiming.implicititentpractice.MainActivity" &gt; &lt;Button android:id="@+id/buttonCall" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="拨打电话"/&gt; &lt;Button android:id="@+id/buttonSMS" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="发送短信"/&gt; &lt;Button android:id="@+id/buttonEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="发送邮件"/&gt; &lt;Button android:id="@+id/buttonWeb" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="浏览网页"/&gt;&lt;/LinearLayout&gt; 注意，要调用系统拨号功能必须在 AndroidManifest.xml 中声明拨号权限。 1&lt;uses-permission android:name="android.permission.CALL_PHONE"&gt;&lt;/uses-permission&gt; 然后，在 Activity 的代码中绑定按钮的点击事件，并添加实现隐式 Intent 的方法。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687public class MainActivity extends ActionBarActivity &#123; // 声明按钮 private Button mButtonCall; private Button mButtonSMS; private Button mButtonEmail; private Button mButtonWeb; @Override protected void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); // 实例化按钮 mButtonCall = (Button) findViewById(R.id.buttonCall); mButtonSMS = (Button) findViewById(R.id.buttonSMS); mButtonEmail = (Button) findViewById(R.id.buttonEmail); mButtonWeb = (Button) findViewById(R.id.buttonWeb); // 添加点击事件 mButtonCall.setOnClickListener(new OnClickListener()&#123; @Override public void onClick(View v)&#123; intentCall(); &#125; &#125;); mButtonSMS.setOnClickListener(new OnClickListener()&#123; @Override public void onClick(View v)&#123; intentSMS(); &#125; &#125;); mButtonEmail.setOnClickListener(new OnClickListener()&#123; @Override public void onClick(View v)&#123; intentEmail(); &#125; &#125;); mButtonWeb.setOnClickListener(new OnClickListener()&#123; @Override public void onClick(View v)&#123; intentWeb(); &#125; &#125;); &#125; /** * 添加用于拨打电话、发送短信、发送邮件、浏览网页的方法 */ protected void intentCall() &#123; // 新建意图 Intent mIntent = new Intent(Intent.ACTION_CALL); // 设置要拨打的号码 Uri mUri = Uri.parse("tel:10086"); mIntent.setData(mUri); startActivity(mIntent); &#125; protected void intentSMS() &#123; Intent mIntent = new Intent(Intent.ACTION_SENDTO); // 设置要发送短信的号码 Uri mUri = Uri.parse("smsto:10086"); mIntent.setData(mUri); mIntent.putExtra("sms_body", "余额"); // 消息内容 startActivity(mIntent); &#125; protected void intentEmail() &#123; Intent mIntent = new Intent(Intent.ACTION_SENDTO); // 设置协议 Uri mUri = Uri.parse("mailto:"); mIntent.setData(mUri); // 设置收件人 String[] mEmail = &#123;"example@example.com", "example@example.com"&#125;; // 设置抄送方 String[] mCc = &#123;"example@example.com"&#125;; // 设置密送方 String[] mBcc = &#123;"example@example.com"&#125;; // 设置邮件标题 String mSubject = "你好"; // 设置邮件内容 String mText = "很高兴认识你！"; mIntent.putExtra(Intent.EXTRA_EMAIL, mEmail); mIntent.putExtra(Intent.EXTRA_CC, mCc); mIntent.putExtra(Intent.EXTRA_BCC, mBcc); mIntent.putExtra(Intent.EXTRA_SUBJECT, mSubject); mIntent.putExtra(Intent.EXTRA_TEXT, mText); // 添加附件 // mintent.putExtra(Intent.EXTRA_STREAM, Uri.parse(...)); startActivity(mIntent); &#125; protected void intentWeb()&#123; Intent mIntent = new Intent(Intent.ACTION_VIEW); Uri mUri = Uri.parse("http://www.caiyiming.com"); mIntent.setData(mUri); startActivity(mIntent); &#125;&#125; 运行应用程序，点击按钮即可调用其他程序响应意图。]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android 使用 ListView 实现列表]]></title>
+    <url>%2Farticle%2F201512071519.html</url>
+    <content type="text"><![CDATA[第一步，在 Activity 的布局文件中添加 ListView 控件。 123456789101112&lt;RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" tools:context="$&#123;relativePackage&#125;.$&#123;activityClass&#125;" &gt; &lt;ListView android:id="@+id/listviewList" android:layout_width="wrap_content" android:layout_height="wrap_content"/&gt;&lt;/RelativeLayout&gt; 第二步，新建一个布局文件 layout_listview_item.xml ，作为列表中子项目的布局。 这里我添加了一个 ImageView 和两个 TextView ，LinearLayout 和 RelativeLayout 仅用于排版。 123456789101112131415161718192021222324252627282930313233343536373839&lt;RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="10dp" &gt; &lt;LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal"&gt; &lt;RelativeLayout android:layout_width="wrap_content" android:layout_height="match_parent" android:paddingRight="5dp" android:gravity="center"&gt; &lt;ImageView android:id="@+id/imageviewImage" android:layout_width="25dp" android:layout_height="25dp"/&gt; &lt;/RelativeLayout&gt; &lt;RelativeLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center"&gt; &lt;TextView android:id="@+id/textviewTextOne" android:layout_width="wrap_content" android:layout_height="wrap_content"/&gt; &lt;TextView android:id="@+id/textviewTextTwo" android:layout_below="@id/textviewTextOne" android:layout_width="wrap_content" android:layout_height="wrap_content"/&gt; &lt;/RelativeLayout&gt; &lt;/LinearLayout&gt;&lt;/RelativeLayout&gt; 第三步，在 Activity 的代码中实现 ListView 。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960public class MainActivity extends Activity &#123; // 声明控件 private ListView mListView; @Override protected void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); // 实例化控件 mListView = (ListView) findViewById(R.id.listviewList); // 生成动态数组 ArrayList&lt;HashMap&lt;String, Object&gt;&gt; mListItem = new ArrayList&lt;HashMap&lt;String, Object&gt;&gt;(); for(int i=0; i&lt;10; i++) &#123; // 新建 HashMap 对象 HashMap&lt;String, Object&gt; mMap = new HashMap&lt;String, Object&gt;(); // 插入图像 mMap.put("ItemImage", R.drawable.ic_launcher ); // 插入文本 mMap.put("ItemTitle", "Item"); // 插入变量 mMap.put("ItemText", "This is Item No."+i); mListItem.add(mMap); //添加进动态数组 &#125; // 生成适配器 SimpleAdapter mSimpleAdapter = new SimpleAdapter(this, mListItem, // 数据对象 R.layout.layout_listview_item, // 子项目布局文件 new String[] &#123;"ItemImage", "ItemTitle", "ItemText"&#125;, // 数组中内容的key new int[] &#123;R.id.imageviewImage, R.id.textviewTextOne, R.id.textviewTextTwo &#125; // 对应控件的ID ); // 添加并显示 mListView.setAdapter(mSimpleAdapter); // 处理点击事件 mListView.setOnItemClickListener(new OnItemClickListener() &#123; @Override public void onItemClick(AdapterView&lt;?&gt; arg0, View arg1, int arg2, long arg3) &#123; Toast.makeText(getBaseContext(), "点击了第" + arg2 + "个项目", Toast.LENGTH_SHORT).show(); &#125; &#125;); // 处理长按事件 mListView.setOnCreateContextMenuListener(new OnCreateContextMenuListener() &#123; @Override public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) &#123; menu.setHeaderTitle("长按菜单"); // 窗口标题 menu.add(0, 0, 0, "菜单第一行"); // 菜单子项 menu.add(0, 1, 0, "菜单第二行"); menu.add(0, 2, 0, "菜单第三行"); &#125; &#125;); &#125; // 长按菜单点击事件 @Override public boolean onContextItemSelected(MenuItem mItem) &#123; Toast.makeText(getBaseContext(), "点击了长按菜单中的第" + mItem.getItemId() + "个项目", Toast.LENGTH_SHORT).show(); return super.onContextItemSelected(mItem); &#125;&#125; 实现效果：]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 layer-list 实现控件阴影]]></title>
+    <url>%2Farticle%2F201512052105.html</url>
+    <content type="text"><![CDATA[在开发 demo 应用的过程中用到给 LinearLayout 添加阴影。 这里使用 layer-list 实现，实际上就是给 LinearLayout 添加了一个包含两层 shape 的 xml 文件作为背景，有点类似 PS 里的图层。 在 drawable 文件夹下新建一个 xml 文件。 123456789101112131415161718192021&lt;layer-list xmlns:android="http://schemas.android.com/apk/res/android"&gt; &lt;!-- 阴影 --&gt; &lt;item&gt; &lt;shape android:shape="rectangle" &gt; &lt;!-- 阴影颜色 --&gt; &lt;gradient android:angle="90" android:endColor="#b7b7b7" android:startColor="#e8e8e8" /&gt; &lt;!-- 阴影圆角 --&gt; &lt;corners android:radius="0dp" /&gt; &lt;/shape&gt; &lt;/item&gt; &lt;!-- 前景 --&gt; &lt;item android:bottom="2dp"&gt; &lt;!-- 阴影厚度 --&gt; &lt;shape android:shape="rectangle" &gt; &lt;solid android:color="#fff" /&gt; &lt;!-- 前景颜色 --&gt; &lt;corners android:radius="0dp" /&gt; &lt;!-- 前景圆角 --&gt; &lt;/shape&gt; &lt;/item&gt;&lt;/layer-list&gt; 为 LinearLayout 设置 background 属性，引用此 xml 文件即可。]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android 应用中使用外部字体]]></title>
+    <url>%2Farticle%2F201512052039.html</url>
+    <content type="text"><![CDATA[Android 系统的默认字体虽不算丑，但应该不能满足大部分人对界面设计的追求。 在布局文件中，TextView 控件提供了一个 fontFamily 属性，熟悉 CSS 的人可能认为这个属性是用来修改文本字体的。多次尝试之后，我发现这个属性并没什么用。好在我们还可以在代码中引用外部字体。 在工程的 assets 文件夹下新建 fonts 文件夹，用于存放字体文件。然后新建 Typeface 对象，并设置好字体的路径。最后，为 TextView 对象设置 Typeface 即可。 12345678910111213141516public class MainActivity extends Activity &#123; private TextView mTopTitle; @Override protected void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); mTopTitle = (TextView) findViewById(R.id.textviewTopTitle); // 设置字体路径 Typeface mFont= Typeface.createFromAsset(getAssets(), "fonts/Microsoft-YaHei.ttf"); // 设置文本字体 mTopTitle.setTypeface(mFont); &#125;&#125; 注意，字体文件的拓展名有 ttf 、otf 等，写错拓展名将导致应用崩溃。]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android 判断系统版本]]></title>
+    <url>%2Farticle%2F201512051642.html</url>
+    <content type="text"><![CDATA[在开发应用的过程中，有时会遇到一些匪夷所思的兼容性问题。同一个 Activity ，在不同版本的系统上，可能出现完全不一样的效果。 例如：我遇到过，单边圆角形状在 Android4.0 上显示正常，但在 Android2.2 上出现 bug 。 这时候需要判断用户的系统版本，编写不同的代码。 123456// 判断系统版本是否在 Android 3.0 (Honeycomb) 以上。if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.HONEYCOMB)&#123; // Android 3.0及以上&#125; else &#123; // Android 3.0以下&#125; Android 各系统版本对应的 SDK_INT 变量： 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102public static class VERSION_CODES &#123; /** * Magic version number for a current development build, which has * not yet turned into an official release. */ public static final int CUR_DEVELOPMENT = 10000; /** * October 2008: The original, first, version of Android. Yay! */ public static final int BASE = 1; /** * February 2009: First Android update, officially called 1.1. */ public static final int BASE_1_1 = 2; /** * May 2009: Android 1.5. */ public static final int CUPCAKE = 3; /** * September 2009: Android 1.6. */ public static final int DONUT = 4; /** * November 2009: Android 2.0 */ public static final int ECLAIR = 5; /** * December 2009: Android 2.0.1 */ public static final int ECLAIR_0_1 = 6; /** * January 2010: Android 2.1 */ public static final int ECLAIR_MR1 = 7; /** * June 2010: Android 2.2 */ public static final int FROYO = 8; /** * November 2010: Android 2.3 */ public static final int GINGERBREAD = 9; /** * February 2011: Android 2.3.3. */ public static final int GINGERBREAD_MR1 = 10; /** * February 2011: Android 3.0. */ public static final int HONEYCOMB = 11; /** * May 2011: Android 3.1. */ public static final int HONEYCOMB_MR1 = 12; /** * June 2011: Android 3.2. */ public static final int HONEYCOMB_MR2 = 13; /** * October 2011: Android 4.0. */ public static final int ICE_CREAM_SANDWICH = 14; /** * December 2011: Android 4.0.3. */ public static final int ICE_CREAM_SANDWICH_MR1 = 15; /** * June 2012: Android 4.1. */ public static final int JELLY_BEAN = 16; /** * Android 4.2: Moar jelly beans! */ public static final int JELLY_BEAN_MR1 = 17; /** * Android 4.3: Jelly Bean MR2, the revenge of the beans. */ public static final int JELLY_BEAN_MR2 = 18; /** * Android 4.4: KitKat, another tasty treat. */ public static final int KITKAT = 19;&#125;]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android 实现“再按一次退出程序”]]></title>
+    <url>%2Farticle%2F201511292049.html</url>
+    <content type="text"><![CDATA[我们经常会在 APP 中看到用连按两次返回键来退出应用的设计。 通常，用户在打开应用的首个 Activity 上按下返回键，得到类似“再按一次退出程序”的短提示，用户再次按下返回键，应用退出。 这样的设计，一方面尊重了用户长期以来自发形成的操作习惯、使得退出应用更加简便，另一方面节省了视图空间，界面上无需提供一个退出按钮。 实际上要实现按两次返回键退出应用是很容易的。Activity 中有一个 onKeyUp 方法用来监听按键事件，覆写这个方法并添加对返回键的处理。 1234567891011121314151617181920212223// 该变量用于存储上一次按键时间private long mFirstTime = 0;@Override public boolean onKeyUp(int keyCode, KeyEvent event) &#123; switch(keyCode) &#123; case KeyEvent.KEYCODE_BACK : long mSecondTime = System.currentTimeMillis(); // 当按键间隔大于2秒时弹出提示 if ( mSecondTime - mFirstTime &gt; 2000) &#123; Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show(); // 更新上一次按键时间 mFirstTime = mSecondTime; return true; &#125; // 当按键间隔小于2秒时退出程序 else &#123; System.exit(0); &#125; break; &#125; return super.onKeyUp(keyCode, event); &#125; 当用户第一次按下返回键，两个变量之差显然大于2000毫秒，应用弹出“再按一次退出程序”提示并将当前时间（即 mSecondTime 的值）赋予 mFirstTime 。 当用户第二次按下返回键，如果两次按键时间小于2000毫秒，应用退出；如果两次按键时间大于2000毫秒，再次弹出提示并更新 mFirstTime 。]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 Intent 实现页面跳转与传值]]></title>
+    <url>%2Farticle%2F201511111947.html</url>
+    <content type="text"><![CDATA[Android 提供了 Intent（意图）用于实现 Activity（页面）的跳转与传值。Intent 好比 Android 中的信使，负责组件间通讯，它甚至可以在我们的应用中调用系统中的其他程序。 一般跳转： 123Intent mIntent = new Intent();mIntent.setClass(Context packageContext, Class class);startActivity(mIntent); 带参数的跳转： 12345// 当前 ActivityIntent mIntent = new Intent();mIntent.setClass(Context packageContext, Class class);mIntent.putExtra(String name, String value);startActivity(mIntent); 123// 目标 ActivityBundle mBundle = getIntent().getExtras();String mText = mBundle.getString(String name); 新建一个 demo 应用并命名为 IntentParactice ，创建默认的 MainActivity 。 1、修改 MainActivity 的布局文件 activity_main.xml ，添加一个输入框和一个“跳转”按钮。 123456789101112131415161718192021222324252627&lt;RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:padding="10dp" tools:context="$&#123;relativePackage&#125;.$&#123;activityClass&#125;" &gt; &lt;LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" &gt; &lt;EditText android:id="@+id/edittextInfo" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/&gt; &lt;Button android:id="@+id/buttonJump" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="跳转"/&gt; &lt;/LinearLayout&gt;&lt;/RelativeLayout&gt; 2、创建 TargetActivity 的布局文件 activity_target.xml ，仅包含一个 TextView ，用于输出接收到的参数。 1234567891011121314&lt;RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#000000" android:padding="10dp" &gt; &lt;TextView android:id="@+id/textviewOuput" android:layout_width="match_parent" android:layout_height="wrap_content" android:textSize="16sp" android:textColor="#FFFFFF"/&gt;&lt;/RelativeLayout&gt; 3、修改 MainActivity.java ，绑定按钮的点击事件，实现点击后保存输入的内容、跳转到目标 Activity 并传参。不用理会 IDE 报错，TargetActivity 稍后就会创建。 123456789101112131415161718192021222324252627282930313233343536public class MainActivity extends Activity &#123; // 声明控件 private EditText mInfo; private Button mJump; @Override protected void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); // 实例化控件 mInfo = (EditText) findViewById(R.id.edittextInfo); mJump = (Button) findViewById(R.id.buttonJump); // 绑定按钮的点击事件 mJump.setOnClickListener(new OnClickListener() &#123; @Override public void onClick(View v) &#123; toJump(); &#125; &#125;); &#125; protected void toJump()&#123; // 获取输入的内容 String mText = ""; mText = mInfo.getText().toString(); // 新建 Intent 并设置目标页面为 TargetActivity Intent mIntent = new Intent(); mIntent.setClass(MainActivity.this, TargetActivity.class); // 添加参数到 Intent mIntent.putExtra("Text", mText); // 开始 Intent startActivity(mIntent); &#125;&#125; 4、新建 TargetActivity.java 作为目标 Activity 。在 AndroidManifest.xml 中声明该页面，将 activity_target.xml 作为该页面的布局文件。TargetActivity 它将接收 MainActivity 传递的参数并在页面上输出。 12345678910111213141516171819202122232425public class TargetActivity extends Activity &#123; // 声明控件 private TextView mOutput; @Override protected void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); setContentView(R.layout.activity_target); // 实例化控件 mOutput = (TextView) findViewById(R.id.textviewOuput); getInfo(); &#125; protected void getInfo()&#123; // 获取 Intent 内包含的参数 Bundle mBundle = getIntent().getExtras(); // 提取键值为 Text 的参数 String mText = ""; mText = mBundle.getString("Text"); // 在页面上输出 mOutput.setText(mText); &#125;&#125; 运行程序，在第一个页面上输入文本，点击按钮将跳转到第二个页面，并在页面时显示收到的参数。]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android 存储和解析 JSON 数据]]></title>
+    <url>%2Farticle%2F201511100107.html</url>
+    <content type="text"><![CDATA[JSON是一种轻量级的数据交换格式。JSON 采用完全独立于语言的文本格式，易于阅读和编写，同时也易于机器解析和生成（一般用于提升网络传输速率）。 JSON 中的数据以键值对（key-value）的形式存在的。1234567&#123; "用户": &#123; "姓氏": "唐", "名字": "三藏", "邮箱": "email@example.com" &#125;&#125; 新建一个 demo 应用并命名为 JSONPractice ，生成默认的 Activity 。 修改 activity_main.xml ，添加一个 TextView 控件。 12345678910111213&lt;RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:padding="10dp"&gt; &lt;TextView android:id="@+id/textView" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="false"/&gt;&lt;/RelativeLayout&gt; 在 MainActivity 类中新建一个 TextView ，并在 onCreate 方法中将其实例化。它将用于显示解析后的信息。 12345678private TextView mTextView;@Overrideprotected void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); mTextView = (TextView) findViewById(R.id.textView);&#125; 在 MainActivity 类中添加 JSONWrite 方法，用于以 JSON 格式将数据保存到文本文件，然后在日志中打印数据。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778protected void JSONWrite()&#123; // 待存储的信息 String mCompany = "蔡一鸣博客 CAIYIMING BLOG"; String mAddress = "中国 福建省 厦门市"; String mTelephone = "0592-1234567"; String[] mDataName = &#123;"孙悟空", "猪悟能", "沙悟净"&#125;; String[] mDataAge = &#123;"20", "19", "21"&#125;; double[] mDataSalary = &#123; 3500.0, 2900.0, 4000.0&#125;; Date[] mDataTime = &#123;new Date(), new Date(), new Date()&#125;; // 创建外层 JSON 对象 JSONObject mAllData = new JSONObject(); // 创建 JSON 数组 JSONArray mArray = new JSONArray(); // 创建单个员工的 JSON 对象 for (int i=0; i&lt;mDataName.length; i++) &#123; JSONObject mTemp = new JSONObject(); try &#123; mTemp.put("Name", mDataName[i]); mTemp.put("Age", mDataAge[i]); mTemp.put("Salary", mDataSalary[i]); mTemp.put("Time", mDataTime[i]); &#125; catch(JSONException e)&#123; &#125; // 将单个员工的 JSON 对象放进 JSON 数组 mArray.put(mTemp); &#125; try &#123; // 将所有数据存入外层 JSON 对象 mAllData.put("Employees", mArray); mAllData.put("Company", mCompany); mAllData.put("Address", mAddress); mAllData.put("Telephone", mTelephone); &#125; catch(JSONException e)&#123; &#125; // 若存储介质不存在则终止操作 if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) &#123; return; &#125; // 新建文件对象 路径为 JSONPractice\JSON.txt（File.separator 等于 \ 符号） File mFile = new File(Environment.getExternalStorageDirectory()+File.separator+"JSONPractice"+File.separator+"JSON.txt"); // 如果不存在 JSONPractice 则新建 if (!mFile.getParentFile().exists()) &#123; mFile.getParentFile().mkdirs(); &#125; // 新建打印流并打印数据 PrintStream mOut = null; try &#123; mOut = new PrintStream(new FileOutputStream(mFile)); mOut.print(mAllData.toString()); Log.d("MainActivity", "JSON.txt保存成功！"); &#125; catch(FileNotFoundException e)&#123; // 若文件不存在则打印日志 Log.d("MainActivity", "JSON.txt保存失败！"); &#125; finally&#123; // 若打印流非空则关闭打印流 if (mOut!=null) &#123; mOut.close(); &#125; &#125; // 检查文件是否存在并打印日志 String mContent = ""; if (mFile.exists()) &#123; try &#123; InputStream mInputStream = new FileInputStream(mFile); InputStreamReader mInputReader = new InputStreamReader(mInputStream); BufferedReader mBufferReader = new BufferedReader(mInputReader); String mLine; // 分行读取并打印 while (( mLine = mBufferReader.readLine()) != null) &#123; mContent += mLine; &#125; Log.d("MainActivity", mContent); mInputStream.close(); &#125; catch (java.io.FileNotFoundException e) &#123; &#125; catch (IOException e) &#123; &#125; &#125; &#125; 添加 JSONRead 方法，用于读取 JSONWrite 方法保存的文件，并将 JSON 数据解析出来，然后以其他格式在屏幕上输出。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566protected void JSONRead()&#123; File mFile = new File(Environment.getExternalStorageDirectory()+File.separator+"JSONPractice"+File.separator+"JSON.txt"); String mContent = ""; if (mFile.exists()) &#123; try &#123; // 读取数据 InputStream mInputStream = new FileInputStream(mFile); InputStreamReader mInputReader = new InputStreamReader(mInputStream); BufferedReader mBufferReader = new BufferedReader(mInputReader); String mLine; while (( mLine = mBufferReader.readLine()) != null) &#123; mContent += mLine; &#125; mInputStream.close(); // 解析数据 try &#123; JSONTokener mJT = new JSONTokener(mContent); JSONObject mJO = (JSONObject) mJT.nextValue(); // 解析单位信息 String mCompany = mJO.getString("Company"); String mTelephone = mJO.getString("Telephone"); String mAddress = mJO.getString("Address"); // 解析员工信息 JSONArray mEmployees = mJO.getJSONArray("Employees"); // 员工一 JSONObject mEmployeeOne = mEmployees.getJSONObject(0); String[] mEmOneInfo = new String[4]; mEmOneInfo[0] = mEmployeeOne.getString("Name"); mEmOneInfo[1] = mEmployeeOne.getString("Age"); mEmOneInfo[2] = mEmployeeOne.getString("Salary"); mEmOneInfo[3] = mEmployeeOne.getString("Time"); String mEmOne = ""; for ( int i=0; i&lt;=3; i++) &#123; mEmOne = mEmOne + mEmOneInfo[i] + " "; &#125; // 员工二 JSONObject mEmployeeTwo = mEmployees.getJSONObject(1); String[] mEmTwoInfo = new String[4]; mEmTwoInfo[0] = mEmployeeTwo.getString("Name"); mEmTwoInfo[1] = mEmployeeTwo.getString("Age"); mEmTwoInfo[2] = mEmployeeTwo.getString("Salary"); mEmTwoInfo[3] = mEmployeeTwo.getString("Time"); String mEmTwo = ""; for ( int i=0; i&lt;=3; i++) &#123; mEmTwo = mEmTwo + mEmTwoInfo[i] + " "; &#125; // 员工三 JSONObject mEmployeeThree = mEmployees.getJSONObject(1); String[] mEmThreeInfo = new String[4]; mEmThreeInfo[0] = mEmployeeThree.getString("Name"); mEmThreeInfo[1] = mEmployeeThree.getString("Age"); mEmThreeInfo[2] = mEmployeeThree.getString("Salary"); mEmThreeInfo[3] = mEmployeeThree.getString("Time"); String mEmThree = ""; for ( int i=0; i&lt;=3; i++) &#123; mEmThree = mEmThree + mEmThreeInfo[i] + " "; &#125; String mOutput = null; // 汇总数据并输出 mOutput = "单位："+mCompany+"\n"+"电话："+mTelephone+"\n"+"地址："+mAddress+ "\n\n员工信息\n\n"+mEmOne+"\n"+mEmTwo+"\n"+mEmThree; mTextView.setText(mOutput); &#125; catch (JSONException e) &#123; &#125; &#125; catch (java.io.FileNotFoundException e)&#123; &#125; catch (IOException e)&#123; &#125; &#125;&#125; 修改 onCreate 方法，在声明周期中执行 JSONWrite 、JSONRead 方法。 12345678910@Overrideprotected void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); mTextView = (TextView) findViewById(R.id.textView); // 将信息以 JSON 格式保存到本地 JSONWrite(); // 读取并解析文件中的 JSON 数据 JSONRead();&#125; 运行应用，LogCat 中打印了 JSON 数据，说明 JSONWrite 方法执行成功，Activity 输出格式化的内容，说明 JSONRead 方法执行成功。]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+        <tag>JSON</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[原生 SQL 语句操作 SQLite 数据库]]></title>
+    <url>%2Farticle%2F201511081215.html</url>
+    <content type="text"><![CDATA[如果你既不具备数据库基础，又对 SQLite 没有任何了解，建议你先阅读相关文章补充一下理论知识。如果你具备数据库基础、希望更直接地了解 SQLite ，那么接下来的内容可能正是你想要的。 在 Android 中操作 SQLite 数据库有两种方式：使用封装的 API 、直接执行原生 SQL 语句。 在这个 demo 中我将直接使用原生 SQL 语句操作数据库。 新建一个应用并命名为 SQLitePractice ，创建默认的 Activity 。不用修改布局，使用 LogCat 输出日志来监控代码的执行。 在 AndroidManifest.xml 中添加权限： 123456789101112131415161718192021222324&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.caiyiming.sqlitepractice" android:versionCode="1" android:versionName="1.0" &gt; &lt;uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"&gt;&lt;/uses-permission&gt; &lt;uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"&gt;&lt;/uses-permission&gt; &lt;uses-sdk android:minSdkVersion="8" android:targetSdkVersion="19" /&gt; &lt;application android:allowBackup="true" android:icon="@drawable/ic_launcher" android:label="@string/app_name" android:theme="@style/AppTheme" &gt; &lt;activity android:name=".MainActivity" android:label="@string/app_name" &gt; &lt;intent-filter&gt; &lt;action android:name="android.intent.action.MAIN" /&gt; &lt;category android:name="android.intent.category.LAUNCHER" /&gt; &lt;/intent-filter&gt; &lt;/activity&gt; &lt;/application&gt;&lt;/manifest&gt; 编写 MainActivity.java 文件。 添加 SQLitePractice 方法用于执行测试代码，它将在 Activity 的 onCreate 方法中被执行。每执行一步操作，判断是否成功并使用 LogCat 输出日志。 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980818283848586878889909192939495public class MainActivity extends Activity &#123; @Override protected void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); SQLitePractice(); &#125; protected void SQLitePractice()&#123; String mSQL; Cursor mCursor; String mId = null; String mUsername = null; String mPassword = null; // 创建文件夹 File mFolder = new File("/data/data/com.caiyiming.sqlitepractice/databases/"); if (!mFolder.exists()) &#123; mFolder.mkdirs(); &#125; // 创建数据库 SQLiteDatabase mDB; mDB = SQLiteDatabase.openOrCreateDatabase("/data/data/com.caiyiming.sqlitepractice/databases/user.db", null); if (mDB.isOpen()) &#123; Log.d("MainActivity", "数据库打开成功！"); &#125; else&#123; Log.d("MainActivity", "数据库打开失败！"); &#125; // 创建数据表 mSQL = "CREATE TABLE IF NOT EXISTS user(_id Integer Primary Key Autoincrement, username Text, password Text)"; mDB.execSQL(mSQL); mSQL = "SELECT * FROM sqlite_master WHERE name='user'"; mCursor = mDB.rawQuery(mSQL, null); if (mCursor.getCount()!=0) &#123; Log.d("MainActivity", "数据表创建成功！"); &#125; else&#123; Log.d("MainActivity", "数据表创建失败！"); &#125; // 插入数据 mSQL = "SELECT * FROM user WHERE username='小蔡'"; mCursor = mDB.rawQuery(mSQL, null); if (mCursor.getCount()==0) &#123; mSQL = "INSERT INTO user('username','password') VALUES('小蔡', '0123456789')"; mDB.execSQL(mSQL); &#125; if (mCursor.getCount()!=0) &#123; Log.d("MainActivity", "数据插入成功！"); &#125; else&#123; Log.d("MainActivity", "数据插入成功！"); &#125; // 查询数据 mSQL = "SELECT * FROM user WHERE username='小蔡'"; mCursor = mDB.rawQuery(mSQL, null); if (mCursor.moveToFirst()) &#123; mId = mCursor.getString(mCursor.getColumnIndex("_id")); mUsername = mCursor.getString(mCursor.getColumnIndex("username")); mPassword = mCursor.getString(mCursor.getColumnIndex("password")); Log.d("MainActivity", "查询数据成功！"); Log.d("MainActivity", "编号:"+mId+", 用户:"+mUsername+", 密码:"+mPassword); &#125; else&#123; Log.d("MainActivity", "查询数据失败！"); &#125; // 修改数据 mSQL = "UPDATE user SET password='9876543210' WHERE username='小蔡'"; mDB.execSQL(mSQL); mSQL = "SELECT * FROM user WHERE username='小蔡'"; mCursor = mDB.rawQuery(mSQL, null); mCursor.moveToFirst(); mUsername = mCursor.getString(mCursor.getColumnIndex("username")); mPassword = mCursor.getString(mCursor.getColumnIndex("password")); if (mPassword.equals("9876543210")) &#123; Log.d("MainActivity", "数据修改成功！"); Log.d("MainActivity", "编号:"+mId+", 用户:"+mUsername+", 密码:"+mPassword); &#125; else&#123; Log.d("MainActivity", "修改数据失败！"); Log.d("MainActivity", "编号:"+mId+", 用户:"+mUsername+", 密码:"+mPassword); &#125; // 删除数据 mSQL = "DELETE FROM user WHERE username='小蔡'"; mDB.execSQL(mSQL); mSQL = "SELECT * FROM user WHERE username='小蔡'"; mCursor = mDB.rawQuery(mSQL, null); if (!mCursor.moveToFirst()) &#123; Log.d("MainActivity", "删除数据成功！"); &#125; // 关闭数据库 mDB.close(); if (!mDB.isOpen()) &#123; Log.d("MainActivity", "数据库关闭成功！"); &#125; else&#123; Log.d("MainActivity", "数据库关闭失败！"); &#125; &#125;&#125; 执行程序，新建一个标签为”MainActivity”的筛选，观察 LogCat 输出的日志。 通过 LogCat 日志可以了解到，代码中对 SQLite 数据库的操作都已经执行了。]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[使用 ViewPager 实现页面滑动]]></title>
+    <url>%2Farticle%2F201511052235.html</url>
+    <content type="text"><![CDATA[新建一个 demo 应用，命名为 ViewPagerPractice 。 1、创建3个布局文件，添加不同的背景和文字，作为3个页面（Fragment）的布局。 1234567891011121314&lt;!-- fragment_one.xml --&gt;&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="#FF4040"&gt; &lt;TextView android:id="@+id/fragment_left_text" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Fragment One!" android:textColor="#FFF" android:padding="10dp"/&gt;&lt;/LinearLayout&gt; 1234567891011121314&lt;!-- fragment_two.xml --&gt;&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="#FFD700"&gt; &lt;TextView android:id="@+id/fragment_middle_text" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Fragment Two!" android:textColor="#FFF" android:padding="10dp"/&gt;&lt;/LinearLayout&gt; 1234567891011121314&lt;!-- fragment_three.xml --&gt;&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="#4876FF"&gt; &lt;TextView android:id="@+id/fragment_right_text" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Fragment Three!" android:textColor="#FFF" android:padding="10dp"/&gt;&lt;/LinearLayout&gt; 2、创建3个类，继承 Fragment ，用于构建并返回3个不同布局的 Fragment 。 12345678// FragmentOne.javapublic class FragmentOne extends Fragment &#123; @Override public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) &#123; View v = inflater.inflate(R.layout.fragment_one, parent, false); return v; &#125;&#125; 12345678// FragmentTwo.javapublic class FragmentTwo extends Fragment &#123; @Override public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) &#123; View v = inflater.inflate(R.layout.fragment_two, parent, false); return v; &#125;&#125; 12345678// FragmentThree.javapublic class FragmentThree extends Fragment &#123; @Override public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) &#123; View v = inflater.inflate(R.layout.fragment_three, parent, false); return v; &#125;&#125; 3、编辑 Activity 类，使其继承自 FragmentActivity 。 123456789101112131415161718192021222324252627282930313233343536373839404142434445// MainActivity.javapublic class MainActivity extends FragmentActivity &#123; // 声明变量 private ViewPager mViewPager; private ArrayList&lt;Fragment&gt; mFragmentList; private FragmentOne mFragmentOne; private FragmentTwo mFragmentTwo; private FragmentThree mFragmentThree; @Override public void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); // 实例化 ViewPager 并设为视图 mViewPager = new ViewPager(this); mViewPager.setId(R.id.viewPager); setContentView(mViewPager); // 实例化3个 Fragment 并存入数组 mFragmentOne = new FragmentOne(); mFragmentTwo = new FragmentTwo(); mFragmentThree = new FragmentThree(); mFragmentList = new ArrayList&lt;Fragment&gt;(); mFragmentList.add(mFragmentOne); mFragmentList.add(mFragmentTwo); mFragmentList.add(mFragmentThree); // 为 ViewPager 适配数据 FragmentManager mFragmentManager = getSupportFragmentManager(); mViewPager.setAdapter(new FragmentStatePagerAdapter(mFragmentManager) &#123; @Override public int getCount() &#123; return mFragmentList.size(); &#125; @Override public Fragment getItem(int id) &#123; return mFragmentList.get(id); &#125; &#125;); //设置第2个Fragment为初始显示界面 mViewPager.setCurrentItem(1); &#125;&#125; 运行应用，可以看到已经实现了三屏滑动切换。]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android 使用 Toast 显示提示消息]]></title>
+    <url>%2Farticle%2F201511041034.html</url>
+    <content type="text"><![CDATA[Toast 是 Android 中用来显示信息的一种机制，能够在屏幕上显示一段提示消息。 新建一个 demo 应用并命名为 ToastPractice ，生成默认的 Activity 。 1、修改 activity_main.xml ，添加一个按钮。 123456789101112131415&lt;RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:paddingBottom="@dimen/activity_vertical_margin" android:paddingLeft="@dimen/activity_horizontal_margin" android:paddingRight="@dimen/activity_horizontal_margin" android:paddingTop="@dimen/activity_vertical_margin" tools:context="com.caiyiming.toastpractice.MainActivity" &gt; &lt;Button android:id="@+id/buttonToastShort" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="短提示"/&gt;&lt;/RelativeLayout&gt; 2、修改 MainActivity.java ，添加按钮并绑定点击事件。点击该按钮将实例化 Toast 对象、在屏幕上显示短消息。 12345678910111213141516171819public class MainActivity extends ActionBarActivity &#123; private Button mBtn_1; @Override protected void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); mBtn_1 = (Button) findViewById(R.id.buttonToastShort); mBtn_1.setOnClickListener(new OnClickListener() &#123; @Override public void onClick(View v) &#123; Toast mToast = Toast.makeText(getApplicationContext(), "这是一个短提示。", Toast.LENGTH_SHORT); mToast.show(); &#125; &#125;); &#125;&#125; 程序运行效果： makeText 方法的第三个参数用于设置 Toast 出现的时长。Toast.LENGTH_SHORT 相当于2-3秒时长，使用 Toast.LENGTH_LONG 将使 Toast 显示更久。]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Android 使用 Fragment 构造页面]]></title>
+    <url>%2Farticle%2F201511022234.html</url>
+    <content type="text"><![CDATA[假设你遇到这样的场景：1、需要将相同的界面元素显示在多个不同的页面。2、需要用几个相对独立的模块构成一个页面。 单纯使用 Activity 难以满足这样的需求，需要通过 Fragment（碎片）实现。简单的说，不再直接在 Activity 上添加元素，而是在 Fragment 上添加元素，然后把这个 Fragment 添加到需要显示这些元素的 Activity 中。 你可以将一个 Fragment 添加到多个 Activity 、把多个 Fragment 添加到一个 Activity 、用一个 Fragment 替换另一个 Fragment ，让页面元素的管理更加灵活。 首先创建一个 demo 应用，命名为 FragmentPractice 。 1、新建布局文件 fragment_default.xml ，它将作为 Fragment 的布局。 12345678910111213&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical"&gt; &lt;TextView android:id="@+id/fragment_text" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="10dp" android:background="#FF4040" android:textColor="#FFF" android:text="●This is Fragment."/&gt;&lt;/LinearLayout&gt; 2、新建一个类文件 DefaultFragment.java ，稍后将调用它建立一个 Fragment 对象。 1234567public class DefaultFragment extends Fragment &#123; @Override public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState)&#123; View v = inflater.inflate(R.layout.fragment_default, parent, false); return v; &#125;&#125; 3、修改 Activity 的布局文件 activity_main.xml ，添加 FragmentLayout ，作为 Fragment 的容器。 123456789101112131415161718192021222324252627&lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center_horizontal" android:paddingTop="30dp" android:background="#F2F2F2" &gt; &lt;TextView android:id="@+id/activity_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingBottom="20dp" android:text="●This is Activity." /&gt; &lt;TextView android:id="@+id/container_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingBottom="10dp" android:textColor="#EEC900" android:text="●This is Container. ↓" /&gt; &lt;FrameLayout android:id="@+id/fragmentContainer" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="#EEC900" android:padding="10dp"/&gt;&lt;/LinearLayout&gt; 4、修改 MainActivity.java ，使其继承 FragmentActivity ，然后重写 onCreate 方法，在该方法中创建 Fragment 。 12345678910public class MainActivity extends FragmentActivity &#123; @Override protected void onCreate(Bundle savedInstanceState) &#123; super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); FragmentManager mFragmentManager = getSupportFragmentManager(); mFragment = new DefaultFragment(); mFragmentManager.beginTransaction().add(R.id.fragmentContainer, mFragment).commit(); &#125;&#125; 运行结果：]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+        <tag>Java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[搭建 Android 开发环境]]></title>
+    <url>%2Farticle%2F201510300114.html</url>
+    <content type="text"><![CDATA[第一步，安装 JDK 。访问 Oracle 官网 下载 与操作系统对应版本的 JDK ，并完成安装。 第二步，配置环境变量。以 Win7 为例，右键单击“计算机”，选择“属性”，进入“高级系统设置”，点击右下角的“环境变量”，在“系统变量”下方点击“新建”按钮。 新建以下变量：① JAVA_HOME ，变量值为 JDK 的安装路径（如 C:\Program Files\Java\jdk1.8.0_51\）。② PATH ，该变量已经存在，直接在变量值后增加“%JAVA_HOME%\bin;”。③ CLASSPATH ，变量值为“.;%JAVA_HOME%\ lib\dt.jar; %JAVA_HOME%\ lib\tool.jar”。 第三步，安装 IDE 。即集成开发环境，Android 的 IDE 有 Eclipse 和 Android Studio ，前者是一个开源的开发平台，后者是 Google 专门为 Android 设计的 IDE 。 由于 Android Studio 尚不普及，大部分学习资料仍基于 Eclipse ，所以我选择安装 Eclipse 。然而并不是所有版本的 Eclipse 都默认支持 Android 开发，需要包含 ADT、SDK 以支持 Android 开发。可以直接下载已集成 ADT、SDK、Eclipse 的压缩包，解压即可使用。 第四步，关联 SDK 。 启动 Eclipse ，点击“Window”菜单选择“Preferences”，进入“Android”选项，在这里设置 SDK 的目录。至此，已经完成了 Android 开发环境的配置。进入“Window”→“Android Virtual Device Manager”创建一个虚拟设备，点击“File”→“New”→“Android Application Project”新建一个应用，直接运行将可以在屏幕上看到“Hello world!”。 *该方案已过时，建议使用 Android Studio 作为 IDE 。]]></content>
+      <categories>
+        <category>安卓</category>
+      </categories>
+      <tags>
+        <tag>Android</tag>
+      </tags>
+  </entry>
+</search>
