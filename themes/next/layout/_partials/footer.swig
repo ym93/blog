@@ -20,6 +20,8 @@
   </a>
 </div>
 
-<p>Hosted by <a href="https://pages.coding.me">Coding Pages</a></p>
+<p>
+  <a href="http://www.miitbeian.gov.cn/">闽ICP备14013901号</a>
+</p>
 
 {% endif %}
