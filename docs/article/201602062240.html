@@ -80,7 +80,7 @@
 
 
 
-<meta name="description" content="遇到一个非常诡异的问题。 当服务端通过 json_encode 方法输出 JSON 格式数据，空值会被以明文形式输出。 1&amp;#123; &quot;name&quot;: null &amp;#125; 客户端通过 JSONTokener、JSONObject 解析后直接存入 SQLite 数据库，null（空">
+<meta name="description" content="遇到一个非常诡异的问题。 当服务端通过 json_encode 方法输出 JSON 格式数据，空值会被以明文形式输出。 1&amp;#123; &quot;name&quot;: null &amp;#125; 客户端通过 JSONTokener、JSONObject 解析后直接存入 SQLite 数据库，null（空值）会被认为是字符串“null”。 这样就导致从数据库中取出的是一个字符串，判断结果为非空。 我的解决办法是写一个静">
 <meta name="keywords" content="Android,Java,SQLite">
 <meta property="og:type" content="article">
 <meta property="og:title" content="解决 SQLite 把空值转为字符串">
@@ -88,7 +88,7 @@
 <meta property="og:site_name" content="蔡一鸣的前端小事">
 <meta property="og:description" content="遇到一个非常诡异的问题。 当服务端通过 json_encode 方法输出 JSON 格式数据，空值会被以明文形式输出。 1&amp;#123; &quot;name&quot;: null &amp;#125; 客户端通过 JSONTokener、JSONObject 解析后直接存入 SQLite 数据库，null（空值）会被认为是字符串“null”。 这样就导致从数据库中取出的是一个字符串，判断结果为非空。 我的解决办法是写一个静">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-29T02:05:50.083Z">
+<meta property="og:updated_time" content="2017-12-28T13:54:21.176Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="解决 SQLite 把空值转为字符串">
 <meta name="twitter:description" content="遇到一个非常诡异的问题。 当服务端通过 json_encode 方法输出 JSON 格式数据，空值会被以明文形式输出。 1&amp;#123; &quot;name&quot;: null &amp;#125; 客户端通过 JSONTokener、JSONObject 解析后直接存入 SQLite 数据库，null（空值）会被认为是字符串“null”。 这样就导致从数据库中取出的是一个字符串，判断结果为非空。 我的解决办法是写一个静">

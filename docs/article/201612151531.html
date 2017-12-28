@@ -88,7 +88,7 @@
 <meta property="og:site_name" content="蔡一鸣的前端小事">
 <meta property="og:description" content="第一步，安装依赖。包括编译工具和需要用到的库。 1yum -y install make gcc-c++ cmake bison-devel  ncurses-devel perl-Module-Install.noarch">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-15T07:13:33.686Z">
+<meta property="og:updated_time" content="2017-12-28T13:54:21.234Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux 编译安装 MySQL5.6">
 <meta name="twitter:description" content="第一步，安装依赖。包括编译工具和需要用到的库。 1yum -y install make gcc-c++ cmake bison-devel  ncurses-devel perl-Module-Install.noarch">
@@ -393,7 +393,7 @@
         <p>第一步，安装依赖。包括编译工具和需要用到的库。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install make gcc-c++ cmake bison-devel  ncurses-devel perl-Module-Install.noarch</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
-<p>第二步，从 <a href="http://www.mysql.com/" target="_blank" rel="external">官网</a> 下载并解压 MySQL 源码（Source Code）的压缩包。</p>
+<p>第二步，从 <a href="http://www.mysql.com/" target="_blank" rel="noopener">官网</a> 下载并解压 MySQL 源码（Source Code）的压缩包。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget http://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-5.6.35.tar.gz</span><br><span class="line">tar xvf mysql-5.6.35.tar.gz</span><br><span class="line">cd mysql-5.6.35</span><br></pre></td></tr></table></figure>
 <p>第三步，简单配置并编译安装 MySQL 。更多配置项可参阅官方文档。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cmake \</span><br><span class="line">-DCMAKE_INSTALL_PREFIX=/usr/local/mysql5.6 \</span><br><span class="line">-DMYSQL_DATADIR=/usr/local/mysql5.6/data \</span><br><span class="line">-DMYSQL_UNIX_ADDR=/usr/local/mysql5.6/mysql.sock \</span><br><span class="line">-DDEFAULT_CHARSET=utf8 \</span><br><span class="line">-DDEFAULT_COLLATION=utf8_general_ci</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>

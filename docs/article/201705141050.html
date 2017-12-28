@@ -88,7 +88,7 @@
 <meta property="og:site_name" content="蔡一鸣的前端小事">
 <meta property="og:description" content="Hexo 是一个开源博客框架，更准确地说，它是一个静态博客生成工具。你用 Markdown 写文章，然后交给 Hexo 生成纯静态的网页文件、自动部署到服务器。过程优雅，体验惬意。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-15T07:10:51.887Z">
+<meta property="og:updated_time" content="2017-12-28T13:54:21.257Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用 Hexo 搭建静态博客">
 <meta name="twitter:description" content="Hexo 是一个开源博客框架，更准确地说，它是一个静态博客生成工具。你用 Markdown 写文章，然后交给 Hexo 生成纯静态的网页文件、自动部署到服务器。过程优雅，体验惬意。">
@@ -391,8 +391,8 @@
 
       
         <p>Hexo 是一个开源博客框架，更准确地说，它是一个静态博客生成工具。你用 Markdown 写文章，然后交给 Hexo 生成纯静态的网页文件、自动部署到服务器。过程优雅，体验惬意。<br><a id="more"></a></p>
-<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>Hexo 使用 JavaScript（Node.js） 编译文件，需要安装 <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> 。</p>
-<p>Hexo 使用 Git Bash 执行命令，需要安装 <a href="https://git-scm.com/" target="_blank" rel="external">Git</a> 。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>Hexo 使用 JavaScript（Node.js） 编译文件，需要安装 <a href="https://nodejs.org/" target="_blank" rel="noopener">Node.js</a> 。</p>
+<p>Hexo 使用 Git Bash 执行命令，需要安装 <a href="https://git-scm.com/" target="_blank" rel="noopener">Git</a> 。</p>
 <p>确保已安装 Node.js 和 Git ，在 Git Bash 中执行以下命令，全局安装 Hexo 。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
 <h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p>指定一个文件夹并初始化 Hexo ，该命令将在 my-hexo 文件夹下生成一个 Hexo 项目必要的文件。</p>
@@ -414,12 +414,12 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new draft &apos;Hello World&apos;</span><br></pre></td></tr></table></figure>
 <p>将指定的草稿发布为文章。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo publish post Hello-World.md</span><br></pre></td></tr></table></figure>
-<p>除了 Markdown 语法，Hexo 还提供了从 Octopress（另一个博客框架）移植而来的标签插件，用于在文章中添加引述、图片、代码、视频、超链接等内容。（详见 <a href="https://hexo.io/docs/tag-plugins.html" target="_blank" rel="external">Tag Plugins</a>）</p>
+<p>除了 Markdown 语法，Hexo 还提供了从 Octopress（另一个博客框架）移植而来的标签插件，用于在文章中添加引述、图片、代码、视频、超链接等内容。（详见 <a href="https://hexo.io/docs/tag-plugins.html" target="_blank" rel="noopener">Tag Plugins</a>）</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;% codeblock lang:js %&#125;</span><br><span class="line">alert(&apos;Hello World!&apos;);</span><br><span class="line">&#123;% endcodeblock %&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="手动部署"><a href="#手动部署" class="headerlink" title="手动部署"></a>手动部署</h3><p>执行以下命令在 public 目录下生成静态页面。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo generate</span><br></pre></td></tr></table></figure>
 <p>直接将静态页面上传到服务器即可。</p>
-<h3 id="Git-部署"><a href="#Git-部署" class="headerlink" title="Git 部署"></a>Git 部署</h3><p>Hexo 同时提供了其他较为优雅的部署方式，支持使用 Git、FTP 等方式自动部署到服务器。（详见 <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a>）</p>
+<h3 id="Git-部署"><a href="#Git-部署" class="headerlink" title="Git 部署"></a>Git 部署</h3><p>Hexo 同时提供了其他较为优雅的部署方式，支持使用 Git、FTP 等方式自动部署到服务器。（详见 <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a>）</p>
 <p>以 Git 方式为例，执行以下命令安装 deployer-git 模块。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
 <p>编辑配置文件，设置代码仓库。</p>

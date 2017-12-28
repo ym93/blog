@@ -88,7 +88,7 @@
 <meta property="og:site_name" content="蔡一鸣的前端小事">
 <meta property="og:description" content="Laravel Homestead 是一套完整的 PHP 开发环境，类似 WampServer 。不同的是，Homestead 运行于虚拟机之中，而 WampServer 则直接将服务端软件安装在本机上。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-15T07:14:49.089Z">
+<meta property="og:updated_time" content="2017-12-28T13:54:21.217Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Homestead 开发环境配置">
 <meta name="twitter:description" content="Laravel Homestead 是一套完整的 PHP 开发环境，类似 WampServer 。不同的是，Homestead 运行于虚拟机之中，而 WampServer 则直接将服务端软件安装在本机上。">
@@ -393,8 +393,8 @@
         <p>Laravel Homestead 是一套完整的 PHP 开发环境，类似 WampServer 。不同的是，Homestead 运行于虚拟机之中，而 WampServer 则直接将服务端软件安装在本机上。<br><a id="more"></a></p>
 <p>Homestead 的安装依赖于虚拟机软件和 Vagrant 。Vagrant 是一个快速搭建开发环境的工具，类似装系统用的 Ghost ，可以直接把别人打包好的开发环境（包括系统和服务端软件），Copy/Paste 到一台设备中，省去逐一安装服务端软件的麻烦。</p>
 <p>接下来的实践完全基于官方文档，并且已成功在 Win7 64bit 下安装了 Homestead 。</p>
-<h3 id="安装虚拟机软件"><a href="#安装虚拟机软件" class="headerlink" title="安装虚拟机软件"></a>安装虚拟机软件</h3><p>虚拟机软件可选择 VirtualBox 或 VMware ，虽然官方推荐使用效率更高的 VMware ，但为了节约时间我安装了开源且免费的 <a href="https://www.virtualbox.org/" target="_blank" rel="external">VirtualBox</a> ，版本5.1.8。</p>
-<h3 id="安装-Vagrant"><a href="#安装-Vagrant" class="headerlink" title="安装 Vagrant"></a>安装 Vagrant</h3><p>访问<a href="https://www.vagrantup.com/" target="_blank" rel="external">官网</a>下载并安装 Vagrant 。</p>
+<h3 id="安装虚拟机软件"><a href="#安装虚拟机软件" class="headerlink" title="安装虚拟机软件"></a>安装虚拟机软件</h3><p>虚拟机软件可选择 VirtualBox 或 VMware ，虽然官方推荐使用效率更高的 VMware ，但为了节约时间我安装了开源且免费的 <a href="https://www.virtualbox.org/" target="_blank" rel="noopener">VirtualBox</a> ，版本5.1.8。</p>
+<h3 id="安装-Vagrant"><a href="#安装-Vagrant" class="headerlink" title="安装 Vagrant"></a>安装 Vagrant</h3><p>访问<a href="https://www.vagrantup.com/" target="_blank" rel="noopener">官网</a>下载并安装 Vagrant 。</p>
 <h3 id="添加-Vagrant-Box"><a href="#添加-Vagrant-Box" class="headerlink" title="添加 Vagrant Box"></a>添加 Vagrant Box</h3><p>Vagrant Box 是使用 Vagrant 将一整套开发环境打包成的 .box 镜像文件。在命令行工具中执行以下命令即可添加 Homestead 镜像，等待下载/安装完毕。如果下载失败，可参考<a href="http://www.caiyiming.com/article/20161024.html">解决方案</a>。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vagrant box add laravel/homestead</span><br></pre></td></tr></table></figure>
 <h3 id="安装-Homestead"><a href="#安装-Homestead" class="headerlink" title="安装 Homestead"></a>安装 Homestead</h3><p>使用 Git 命令拷贝 Homestead 的代码并保存到 Home 目录的 Homestead 文件夹下。命令行中的 ~ 目录即为 Home 目录，如果你不知道 Home 目录的路径，尝试在“计算机”的地址栏输入 <code>%homepath%</code> 访问。</p>

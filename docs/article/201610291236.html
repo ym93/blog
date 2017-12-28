@@ -88,7 +88,7 @@
 <meta property="og:site_name" content="蔡一鸣的前端小事">
 <meta property="og:description" content="近期使用 Homestead 作为开发环境，由于命令行方式操作数据库效率低（学艺不精），于是准备安装一个 GUI 工具来辅助学习/开发，首选已经熟练使用的 phpMyAdmin 。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-11-15T07:14:35.247Z">
+<meta property="og:updated_time" content="2017-12-28T13:54:21.220Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在 Homestead 上安装 phpMyAdmin">
 <meta name="twitter:description" content="近期使用 Homestead 作为开发环境，由于命令行方式操作数据库效率低（学艺不精），于是准备安装一个 GUI 工具来辅助学习/开发，首选已经熟练使用的 phpMyAdmin 。">
@@ -391,7 +391,7 @@
 
       
         <p>近期使用 Homestead 作为开发环境，由于命令行方式操作数据库效率低（学艺不精），于是准备安装一个 GUI 工具来辅助学习/开发，首选已经熟练使用的 phpMyAdmin 。<br><a id="more"></a></p>
-<p>第一步，<a href="https://www.phpmyadmin.net/" target="_blank" rel="external">下载</a> 最新版本的 phpMyAdmin ，解压到代码目录下。</p>
+<p>第一步，<a href="https://www.phpmyadmin.net/" target="_blank" rel="noopener">下载</a> 最新版本的 phpMyAdmin ，解压到代码目录下。</p>
 <p>第二步，修改服务器的配置文件 ~\.homestead\Homestead.yaml ，添加一个新的站点。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">folders:</span><br><span class="line">  - map: ~/Code</span><br><span class="line">    to: /home/vagrant/Code</span><br><span class="line">sites:</span><br><span class="line">  - map: phpmyadmin.app</span><br><span class="line">    to: /home/vagrant/Code/phpmyadmin/</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
 <p>第三步，修改 hosts 文件，新增一行内容，注意 ip 需要和 Homestead 配置文件中的一致。</p>
