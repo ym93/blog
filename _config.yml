@@ -12,7 +12,7 @@ timezone: Asia/Shanghai
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: https://www.caiyiming.com
+url: https://ymcn.github.io
 root: /
 # permalink: :year/:month/:day/:title/
 permalink: article/:time.html
@@ -70,4 +70,4 @@ theme: next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://git.duapp.com/appidse54nam7et
+  repo: https://github.com/ymcn/ymcn.github.io.git
