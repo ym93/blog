@@ -1,56 +1,49 @@
 // Custom styles.
 
 // 滚动条
-// --------------------------------------------------
-
 ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
-    background: #e6e6e6;
+  width: 5px;
+  height: 5px;
+  background: #e6e6e6;
 }
 ::-webkit-scrollbar-track {
-    background: #e6e6e6;
+  background: #e6e6e6;
 }
 ::-webkit-scrollbar-thumb {
-    background: #999;
+  background: #999;
 }
 @media (max-width: 767px) {
-    ::-webkit-scrollbar-thumb {
-        border-radius: 3px;
-    }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+  }
 }
 
-// 文本
-// --------------------------------------------------
-
+// 文字
 body {
   font-size: 15px;
 }
-
 @media (max-width: 767px) {
 	.posts-expand .post-title {
-	    font-size: 20px;
+    font-size: 20px;
 	}
-    h3 {
-        font-size: 15px;
-    }
+  h3 {
+    font-size: 15px;
+  }
 }
 
 // 导航
-// --------------------------------------------------
 
 .site-nav-toggle button {
-    outline: none;
-    cursor: default;
+  outline: none;
+  cursor: default;
 }
 @media (max-width: 767px) {
 	.menu .menu-item a {
-	    cursor: default;
+    cursor: default;
 	}
 }
 
 // 图片
-// --------------------------------------------------
 
 // 图片块使用细体标题
 .post-body .image-caption, .post-body .figure .caption {
@@ -77,8 +70,8 @@ a.fancybox {
 
 // 新增图片并排显示类
 .posts-expand .fancybox img.side-by-side {
-    display: inline-block !important;
-    margin-right: 10px;
+  display: inline-block !important;
+  margin-right: 10px;
 }
 
 // 图片并排时隐藏标题
@@ -108,42 +101,35 @@ a.fancybox {
 
 
 // 分类
-// --------------------------------------------------
-
-// 使分类项水平居中
 .category-all-page .category-list-item {
-    padding-left: 46.5%;
+  padding-left: 46.5%;
 }
 
 @media screen and (max-width: 480px) {
 	.category-all-page .category-list-item {
-	    padding-left: 41%;
+    padding-left: 41%;
 	}
 }
 
-
 // 头像
-// --------------------------------------------------
 .site-author-image {
-    border-radius: 50%;
+  border-radius: 50%;
 }
 
 
 // 代码高亮
-// --------------------------------------------------
 
 // 移除移动端代码块的内边距
 @media (max-width: 767px) {
 	.post-body .highlight {
-    	padding: 0px;
+  	padding: 0px;
 	}
 }
 
 
 // 搜索
-// --------------------------------------------------
 
-// 整体
+// 弹窗
 .local-search-popup {
 	height: 70%;
 }
@@ -179,4 +165,15 @@ a.fancybox {
     height: 100%;
     position: fixed;
 	}
+}
+
+// 广告
+.main {
+  padding-bottom: 0;
+}
+.footer {
+  position: relative;
+}
+.footer .ad {
+  padding-bottom: 40px;
 }
