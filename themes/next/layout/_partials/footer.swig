@@ -1,5 +1,5 @@
 <div class="ad">
-  <a target="_blank" href="https://s.click.taobao.com/t?e=m%3D2%26s%3DCFebbz%2FHVrUcQipKwQzePCperVdZeJviEViQ0P1Vf2kguMN8XjClAgj%2BK3bu6D7xDx8CHme7ZTJfY5bsyYcvX6OlNJG%2B4TYGc7fM9LAhISuyp8ZArdvSkBmIkXBqRClNTcEU%2BDykfuSM%2BhtH71aX6uIOTs4KMj3yjpOyWSRdiSZDEm2YKA6YIrbIzrZDfgWtwGXLU4WXsy8CZuZoOOkzXFxfvOyje0ynomfkDJRs%2BhU%3D">
+  <a target="_blank" href="https://s.click.taobao.com/d3FjwSw">
     <img src="/images/aliyun.jpg">
   </a>
 </div>

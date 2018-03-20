@@ -29,7 +29,7 @@ yum-config-manager --enable rhui-REGION-rhel-server-extras rhui-REGION-rhel-serv
 安装 Certbot 客户端：
 
 ```
-sudo yum install certbot-nginx
+yum install certbot-nginx
 ```
 
 ### 使用
@@ -37,7 +37,7 @@ sudo yum install certbot-nginx
 申请和部署 SSL 证书：
 
 ```
-sudo certbot --nginx
+certbot --nginx
 ```
 
 Cerbot 将分析 Nginx 的配置文件（默认为 `/etc/nginx/nginx.conf` ），然后自动完成证书的申请和部署，包括修改 Nginx 配置文件并重启服务。这也是我之前一直遇到错误的问题所在：如果 Nginx 的安装目录不是 `/etc/nginx` ，Cerbot 找不到配置文件就会报错。
@@ -45,7 +45,7 @@ Cerbot 将分析 Nginx 的配置文件（默认为 `/etc/nginx/nginx.conf` ）�
 所以，需要使用 `--nginx-server-root` 指定配置文件的路径：
 
 ```
-sudo certbot --nginx --nginx-server-root=/usr/local/nginx/conf
+certbot --nginx --nginx-server-root=/usr/local/nginx/conf
 ```
 
 然后根据提示选择你要启用 HTTPS 的站点，等待证书部署完成。
@@ -53,7 +53,7 @@ sudo certbot --nginx --nginx-server-root=/usr/local/nginx/conf
 如果只希望 Cerbot 申请证书但不自动部署，使用 `certonly` 子命令：
 
 ```
-sudo certbot --nginx certonly
+certbot --nginx certonly
 ```
 
 ### 续期
@@ -61,7 +61,7 @@ sudo certbot --nginx certonly
 测试证书更新命令是否正常：
 
 ```
-sudo certbot renew --dry-run
+certbot renew --dry-run
 ```
 
 执行 `crontab -e` 编辑任务调度文件，添加一个任务，定期检测证书的有效期并自动更换新的证书。
