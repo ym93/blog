@@ -1,9 +1,3 @@
-<div class="ad">
-  <a target="_blank" href="https://s.click.taobao.com/d3FjwSw">
-    <img src="/images/aliyun.jpg">
-  </a>
-</div>
-
 <div class="copyright" >
   {% set current = date(Date.now(), "YYYY") %}
   &copy; {% if theme.since and theme.since != current %} {{ theme.since }} - {% endif %}
@@ -26,8 +20,8 @@
   </a>
 </div>
 
-<p>
+{# <p>
   <a href="http://www.miitbeian.gov.cn/">闽ICP备14013901号</a>
-</p>
+</p> #}
 
 {% endif %}
