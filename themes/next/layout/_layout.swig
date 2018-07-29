@@ -13,13 +13,10 @@
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="{{ page.lang || page.language || config.language }}">
 
-  <script>
-  // WeChat Share Image
-  var ua = window.navigator.userAgent.toLowerCase();
-  if (ua.match(/MicroMessenger/i) == 'micromessenger') {
-    document.write('<div style="position:fixed;top:0;left:-300px;width:0;height:0;overflow:hidden;"><img src="/images/global/icon.png" width="300" height="300"></div>');
-  }
-  </script>
+  {# Share Image #}
+  <div class="site-share-image">
+    <img src="/images/common/icon.png" width="300" height="300">
+  </div>
 
   {% include '_third-party/analytics/index.swig' %}
 
@@ -69,14 +66,16 @@
 
   </div>
 
+  {# WeChat Share Title #}
   <script>
-  // WeChat Share Title
-  var ua = window.navigator.userAgent.toLowerCase();
-  if (ua.match(/MicroMessenger/i) == 'micromessenger') {
-    if (document.title.indexOf(" | ") > 0) document.title = document.title.substring( 0, document.title.lastIndexOf(" | "));
-  }
-  // Baidu Push
-  (function(){
+    if (window.navigator.userAgent.indexOf('MicroMessenger') >= 0 && document.title.indexOf(" | ") > 0) {
+      document.title = document.title.substring(0, document.title.lastIndexOf(" | "));
+    }
+  </script>
+
+  {# Baidu Push #}
+  <script>
+    (function(){
       var bp = document.createElement('script');
       var curProtocol = window.location.protocol.split(':')[0];
       if (curProtocol === 'https') {
@@ -87,7 +86,7 @@
       }
       var s = document.getElementsByTagName("script")[0];
       s.parentNode.insertBefore(bp, s);
-  })();
+    })();
   </script>
 
   {% include '_scripts/vendors.swig' %}
