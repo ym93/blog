@@ -95,4 +95,4 @@ $promise = $client->sendAsync($request)->then(function ($response) {
 $promise->wait();
 ```
 
-ENV: Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Lumen 5.3
+相关环境：Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Lumen 5.3

@@ -36,4 +36,4 @@ btt: function() {
 
 `window.scrollY` 返回文档在垂直方向已滚动的像素值。如果返回值不等于0，就在10毫秒后向上滚动30像素，然后递归调用 `btt` 方法。如果返回值等于0，说明当前位置已位于顶部，不执行任何操作。
 
-ENV: Windows 7 x64 / Chrome 60
+相关环境：Windows 7 x64 / Chrome 60

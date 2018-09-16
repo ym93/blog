@@ -123,4 +123,4 @@ apidoc -i ./ -o apidoc
 apidoc -f ".*\\.js$" -f ".*\\.ts$"
 ```
 
-ENV: Windows 7 x64 / Node.js 6.10.1 / npm 3.10.10 / apiDoc 0.17.6
+相关环境：Windows 7 x64 / Node.js 6.10.1 / npm 3.10.10 / apiDoc 0.17.6

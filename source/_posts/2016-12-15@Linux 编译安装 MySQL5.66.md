@@ -72,4 +72,4 @@ export PATH=$PATH:/usr/local/mysql5.6/bin
 
 第八步，执行 `mysql` 命令登录 MySQL 。
 
-ENV: Aliyun ECS / CentOS 7 x64
+相关环境：Aliyun ECS / CentOS 7 x64

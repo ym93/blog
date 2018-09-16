@@ -70,4 +70,4 @@ certbot renew --dry-run
 0 5 * * * certbot renew
 ```
 
-ENV: Aliyun ECS / CentOS 7 x64 / Python 2.7 / Nginx 1.12
+相关环境：Aliyun ECS / CentOS 7 x64 / Python 2.7 / Nginx 1.12

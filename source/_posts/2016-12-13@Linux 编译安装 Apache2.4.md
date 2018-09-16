@@ -73,4 +73,4 @@ ServerName localhost:80
 /usr/local/apache2.4/bin/apachectl -k start
 ```
 
-ENV: Aliyun ECS / CentOS 7 x64
+相关环境：Aliyun ECS / CentOS 7 x64

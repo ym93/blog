@@ -56,4 +56,4 @@ Include conf/extra/httpd-vhosts.conf
 
 最后，重启 WampServer 即可。
 
-ENV: Windows 7 x64 / WampServer 2.5
+相关环境：Windows 7 x64 / WampServer 2.5

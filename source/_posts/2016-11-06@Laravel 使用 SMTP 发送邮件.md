@@ -56,4 +56,4 @@ Mail::send('emails.content', ['data'=>$data], function($m)use($email) {
 $m->from(env('MAIL_USERNAME'), env('CUS_MAILALIAS'));
 ```
 
-ENV: Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2
+相关环境：Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2

@@ -143,4 +143,4 @@ $img->save('public/bar.png', 60);
 
 我只记录了部分常用的接口，更多 API 及其用法可以 [阅读](http://image.intervention.io/) 官方文档了解。
 
-ENV: Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.3
+相关环境：Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.3

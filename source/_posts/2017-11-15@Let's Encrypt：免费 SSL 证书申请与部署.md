@@ -156,4 +156,4 @@ yum install bind-utils
 ```
 
 
-ENV: Aliyun ECS / CentOS 7 x64 / Nginx 1.12
+相关环境：Aliyun ECS / CentOS 7 x64 / Nginx 1.12

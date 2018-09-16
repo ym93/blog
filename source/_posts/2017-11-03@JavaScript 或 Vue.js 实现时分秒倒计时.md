@@ -104,4 +104,4 @@ new Vue({
 })
 ```
 
-ENV: Windows 7 x64 / Vue.js 2.4.4
+相关环境：Windows 7 x64 / Vue.js 2.4.4

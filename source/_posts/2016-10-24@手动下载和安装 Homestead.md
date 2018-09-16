@@ -75,4 +75,4 @@ boxb1926d351572dd849646d59563156601f026e2a5
 
 简单总结一下。这两种方法都是我探索后发现的、退而求其次地安装 Homestead 虚拟机的方法。前者直接用命令通过本地镜像安装，但会出现 Vagrant 认错版本的尴尬（或许日后的版本更新可以修复）。后者则用本地镜像文件，替换掉缓存文件，欺骗 Vagrant 下载已完成从而执行安装。后者不需要纠正版本识别错误。
 
-ENV: Windows 10 x64 / VirtualBox 5.1.8 / Laravel Homestead
+相关环境：Windows 10 x64 / VirtualBox 5.1.8 / Laravel Homestead

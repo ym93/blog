@@ -18,4 +18,4 @@ tags:
 
 第四步，完成 CentOS 配置。设置 ROOT 密码并创建用户，然后点击“完成配置”，等待 CentOS 配置完成后重启即可。
 
-ENV: Windows 7 x64 / VirtualBox 5.1.8
+相关环境：Windows 7 x64 / VirtualBox 5.1.8

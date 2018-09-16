@@ -33,6 +33,6 @@ mysqli.default_socket    = /usr/local/mysql5.6/mysql.sock
 pdo_mysql.default_socket = /usr/local/mysql5.6/mysql.sock
 ```
 
-ENV: Aliyun ECS / CentOS 7 x64 / Apache 2.4 / MySQL 5.6 / PHP 7.1
+相关环境：Aliyun ECS / CentOS 7 x64 / Apache 2.4 / MySQL 5.6 / PHP 7.1
 
  

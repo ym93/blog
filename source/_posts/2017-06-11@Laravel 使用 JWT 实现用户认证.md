@@ -148,4 +148,4 @@ https://api.example.com/example?token={ Token }
 $user = JWTAuth::parseToken()->authenticate();
 ```
 
-ENV: Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.4
+相关环境：Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.4

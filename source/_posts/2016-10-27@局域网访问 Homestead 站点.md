@@ -48,4 +48,4 @@ vagrant provision
 
 现在你已可以使用同一 WIFI 下（局域网内）的手机、平板等设备通过 ip 地址访问 Homestead 服务器。
 
-ENV: Windows 10 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2
+相关环境：Windows 10 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2

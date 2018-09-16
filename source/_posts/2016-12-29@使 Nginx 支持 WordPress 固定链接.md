@@ -63,4 +63,4 @@ server {
 }
 ```
 
-ENV: Aliyun ECS / CentOS 7 x64 / Nginx 1.8 / PHP 5.6 / WordPress 4.7
+相关环境：Aliyun ECS / CentOS 7 x64 / Nginx 1.8 / PHP 5.6 / WordPress 4.7

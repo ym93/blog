@@ -159,4 +159,4 @@ Excel::create()->store('xls', false, true);
 
 Laravel Excel 还提供了很多包含表格样式修改在内的其他 API 。感兴趣的话可以阅读 [官方文档](http://www.maatwebsite.nl/laravel-excel/docs) 了解。
 
-ENV: Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.3
+相关环境：Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.3

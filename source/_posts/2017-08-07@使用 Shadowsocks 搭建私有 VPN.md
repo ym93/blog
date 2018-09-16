@@ -147,4 +147,4 @@ ssserver -c /etc/shadowsocks.json -d stop
 
 Shadowsocks 客户端的使用非常简单。在客户端中“添加服务器”，正确填写服务器的地址、端口、密码和加密方式，然后就可以连接服务端了。
 
-ENV: Vultr Cloud Compute / CentOS 7 x64 / Python 2.7.5
+相关环境：Vultr Cloud Compute / CentOS 7 x64 / Python 2.7.5
