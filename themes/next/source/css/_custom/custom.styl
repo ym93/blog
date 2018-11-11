@@ -56,12 +56,16 @@ body {
 
 // 图片块使用细体标题
 .post-body .image-caption, .post-body .figure .caption {
+  margin: 10px auto 25px;
 	font-weight: normal;
 }
 
 // 图片弹窗使用细体标题
-.fancybox-title-float-wrap .child {
-	font-weight: normal;
+.fancybox-title-float-wrap {
+  margin-bottom: -50px;
+  .child {
+    font-weight: normal;
+  }
 }
 
 // 移除图片超链接的边框
@@ -69,12 +73,13 @@ a.fancybox {
 	border-bottom: none;
 }
 
-// 调整图片及标题的边距
+// 缩略图
 .posts-expand .fancybox img {
-	margin-bottom: 20px;
-}
-.posts-expand .fancybox img + p {
-	margin: -10px 0 25px 0 !important;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, .25);
+	margin: 30px auto 20px auto;
 }
 
 // 新增图片并排显示类
