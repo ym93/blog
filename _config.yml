@@ -7,7 +7,7 @@ title: 蔡一鸣博客
 subtitle:
 description:
 author: 蔡一鸣
-language: zh-Hans
+language: zh-CN
 timezone: Asia/Shanghai
 
 # URL
@@ -64,7 +64,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: next
+theme: next-6
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
