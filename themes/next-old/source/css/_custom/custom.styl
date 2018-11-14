@@ -1,0 +1,182 @@
+// Custom styles.
+
+// 分享图标
+.site-share-image {
+  position: fixed;
+  top: -300px;
+  left: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+// 滚动条
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background: #e6e6e6;
+}
+::-webkit-scrollbar-track {
+  background: #e6e6e6;
+}
+::-webkit-scrollbar-thumb {
+  background: #999;
+}
+@media (max-width: 767px) {
+  ::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+  }
+}
+
+// 文字
+body {
+  font-size: 15px;
+}
+@media (max-width: 767px) {
+	.posts-expand .post-title {
+    font-size: 20px;
+	}
+  h3 {
+    font-size: 15px;
+  }
+}
+
+// 导航
+.site-nav-toggle button {
+  outline: none;
+  cursor: default;
+}
+@media (max-width: 767px) {
+	.menu .menu-item a {
+    cursor: default;
+	}
+}
+
+// 图片
+
+// 图片块使用细体标题
+.post-body .image-caption, .post-body .figure .caption {
+  margin: 10px auto 25px;
+	font-weight: normal;
+}
+
+// 图片弹窗使用细体标题
+.fancybox-title-float-wrap {
+  margin-bottom: -50px;
+  .child {
+    font-weight: normal;
+  }
+}
+
+// 移除图片超链接的边框
+a.fancybox {
+	border-bottom: none;
+}
+
+// 缩略图
+.posts-expand .fancybox img {
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, .25);
+	margin: 30px auto 20px auto;
+}
+
+// 新增图片并排显示类
+.posts-expand .fancybox img.side-by-side {
+  display: inline-block !important;
+  margin-right: 10px;
+}
+
+// 图片并排时隐藏标题
+.posts-expand .fancybox img.side-by-side + p {
+	display: none;
+}
+
+@media screen and (max-width: 480px) {
+	// 移动端图片铺满宽度
+	.posts-expand .fancybox img {
+		width: 100%;
+		display: block !important;
+		margin-right: auto !important;
+	}
+	// 移动端显示图片标题
+	.posts-expand .fancybox img.side-by-side + p {
+		display: block;
+	}
+  // 避免移动端图片弹窗溢出
+  .fancybox-wrap {
+    max-width: calc(100% - 40px) !important;
+  }
+  .fancybox-inner {
+    width: 100% !important;
+  }
+}
+
+
+// 分类
+.category-all-page .category-list-item {
+  padding-left: 46.5%;
+}
+
+@media screen and (max-width: 480px) {
+	.category-all-page .category-list-item {
+    padding-left: 41%;
+	}
+}
+
+// 头像
+.site-author-image {
+  border-radius: 50%;
+}
+
+
+// 代码高亮
+
+// 移除移动端代码块的内边距
+@media (max-width: 767px) {
+	.post-body .highlight {
+  	padding: 0px;
+	}
+}
+
+
+// 搜索
+
+// 弹窗
+.local-search-popup {
+	height: 70%;
+}
+
+// 搜索栏
+.local-search-popup .local-search-header {
+	padding: 5px 10px;
+}
+.local-search-popup .local-search-input-wrapper input {
+	font-size: 16px;
+}
+
+// 搜索结果
+.local-search-popup #local-search-result {
+	padding: 20px;
+	box-sizing: border-box;
+}
+.local-search-popup ul.search-result-list {
+	list-style: none;
+}
+.local-search-popup a.search-result-title {
+	font-size: 14px;
+}
+.local-search-popup .search-keyword {
+	border-bottom: 1px dashed #F44336;
+  color: #F44336;
+  font-weight: normal;
+  margin: 0 2px;
+}
+
+@media (max-width: 767px) {
+	.local-search-popup {
+    height: 100%;
+    position: fixed;
+	}
+}
