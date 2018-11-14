@@ -94,6 +94,7 @@
     {% endif %}
   </div>
 
+  {% include '_scripts/custom.swig' %}
   {% include '_scripts/vendors.swig' %}
   {% include '_scripts/commons.swig' %}
 
