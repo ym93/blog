@@ -15,7 +15,7 @@ timezone: Asia/Shanghai
 url: https://ymcn.github.io
 root: /
 # permalink: :year/:month/:day/:title/
-permalink: article/:time.html
+permalink: article/:year:month:day:hour:minute.html
 permalink_defaults:
 
 # Directory
