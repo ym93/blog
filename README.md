@@ -17,6 +17,13 @@ function postPermalinkFilter(data) {
 }
 ```
 
+添加默认分享图片。
+
+``` js
+// hexo/lib/plugins/helper/open_graph.js
+result += og('og:image', '/images/logo.png', false);
+```
+
 ## 运行
 
 ```
