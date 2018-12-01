@@ -1,7 +1,5 @@
 ---
 title: 解决无法用 localhost 连接 MySQL
-id: 1316
-comment: false
 categories:
   - 后端
 date: 2016-12-23 00:17:27
@@ -12,7 +10,9 @@ tags:
 
 今天尝试往云主机上迁移博客，遇到不少麻烦，其中就包括无法用 localhost 连接 MySQL 。用了一个晚上才得以解决，记录一下解决过程。
 
-第一步，检查 `/etc/hosts` 文件。确认 localhost 已映射到 127.0.0.1 ，否则添加正确的映射。<!--more-->经检查，确定 hosts 设置没有问题。
+第一步，检查 `/etc/hosts` 文件。确认 localhost 已映射到 127.0.0.1 ，否则添加正确的映射。经检查，确定 hosts 设置没有问题。
+
+<!-- more -->
 
 ```
 127.0.0.1    localhost

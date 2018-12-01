@@ -1,7 +1,5 @@
 ---
 title: 使用 AlertDialog 实现自定义对话框
-id: 660
-comment: false
 categories:
   - 安卓
 date: 2016-02-08 20:11:58
@@ -29,7 +27,7 @@ tags:
     android:layout_height="wrap_content"/>
 </LinearLayout>
 ```
-<!--more-->
+<!-- more -->
 
 构造 AlertDialog ：
 

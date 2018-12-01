@@ -1,7 +1,5 @@
 ---
 title: 使用 layer-list 实现控件阴影
-id: 409
-comment: false
 categories:
   - 安卓
 date: 2015-12-05 21:05:56
@@ -12,7 +10,8 @@ tags:
 在开发 demo 应用的过程中用到给 LinearLayout 添加阴影。
 
 这里使用 layer-list 实现，实际上就是给 LinearLayout 添加了一个包含两层 shape 的 xml 文件作为背景，有点类似 PS 里的图层。
-<!--more-->
+
+<!-- more -->
 
 在 drawable 文件夹下新建一个 xml 文件。
 

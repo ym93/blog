@@ -15,7 +15,7 @@ tags:
 
 <!-- more -->
 
-{% img /images/posts/2017/2017-11-15@backend-lets-encrypt.png 360 %}
+{% img /images/posts/2017/11/lets_encrypt_logo.png 360 %}
 
 Let's Encrypt 基于 ACME 协议验证你对一个域名的控制权。以 GetSSL （Let's Encrypt 的客户端程序）为例，假设你的域名为 `yourdomain.com`，GetSSL 将随机生成一个页面，然后由 CA 服务器访问这个页面，我们假设这个页面的链接为 `https://yourdomain.com/token` 。如果可以访问，CA 服务器就会颁发该域名的 SSL 证书。
 

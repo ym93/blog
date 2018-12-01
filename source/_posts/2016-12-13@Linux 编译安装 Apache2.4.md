@@ -1,7 +1,5 @@
 ---
 title: Linux 编译安装 Apache2.4
-id: 1278
-comment: false
 categories:
   - 后端
 date: 2016-12-13 15:10:53
@@ -15,7 +13,7 @@ tags:
 ```
 yum install -y gcc gcc-c++
 ```
-<!--more-->
+<!-- more -->
 
 第二步，编译安装依赖。包括 APR、APR-Util、PCRE 。
 

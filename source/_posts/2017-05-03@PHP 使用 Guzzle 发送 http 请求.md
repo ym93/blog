@@ -1,7 +1,5 @@
 ---
 title: PHP 使用 Guzzle 发送 http 请求
-id: 2330
-comment: false
 categories:
   - 后端
 date: 2017-05-03 18:41:44
@@ -10,7 +8,8 @@ tags:
 ---
 
 Guzzle 是一个开源的 PHP HTTP 客户端，同时支持同步和异步方法。使用它可以轻松发送 GET、POST 请求，实现和第三方服务器的通信。
-<!--more-->
+
+<!-- more -->
 
 ### 安装
 

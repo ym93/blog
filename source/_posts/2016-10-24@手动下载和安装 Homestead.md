@@ -1,7 +1,5 @@
 ---
 title: 手动下载和安装 Homestead
-id: 1030
-comment: false
 categories:
   - 后端
 date: 2016-10-24 14:09:43
@@ -10,7 +8,8 @@ tags:
 ---
 
 在配置 Homestead 开发环境的过程中，执行以下命令将下载1G左右的镜像文件（Vagrant Box），然后安装包含完整 Homestead 环境的虚拟机。由于资源服务器位于海外，经常导致下载速度缓慢、下载失败等问题。
-<!--more-->
+
+<!-- more -->
 
 ```
 vagrant box add laravel/homestead

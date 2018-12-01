@@ -1,7 +1,5 @@
 ---
 title: 原生 SQL 语句操作 SQLite 数据库
-id: 250
-comment: false
 categories:
   - 安卓
 date: 2015-11-08 12:15:40
@@ -17,7 +15,7 @@ tags:
 在 Android 中操作 SQLite 数据库有两种方式：使用封装的 API 、直接执行原生 SQL 语句。
 
 在这个 demo 中我将直接使用原生 SQL 语句操作数据库。
-<!--more-->
+<!-- more -->
 
 新建一个应用并命名为 _SQLitePractice_ ，创建默认的 Activity 。不用修改布局，使用 LogCat 输出日志来监控代码的执行。
 
@@ -154,6 +152,6 @@ public class MainActivity extends Activity {
 
 执行程序，新建一个标签为"MainActivity"的筛选，观察 LogCat 输出的日志。
 
-{% img /images/posts/2015/2015-11-08@android-sqlite.png 480 控制台日志 %}
+{% img /images/posts/2015/11/android_sqlite.png 480 控制台日志 %}
 
 通过 LogCat 日志可以了解到，代码中对 SQLite 数据库的操作都已经执行了。

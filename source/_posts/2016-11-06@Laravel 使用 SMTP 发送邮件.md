@@ -1,7 +1,5 @@
 ---
 title: Laravel 使用 SMTP 发送邮件
-id: 1153
-comment: false
 categories:
   - 后端
 date: 2016-11-06 16:01:44
@@ -11,7 +9,8 @@ tags:
 ---
 
 Laravel 基于 SwiftMailer 库提供了一套邮件 API 。我在阅读文档后尝试使用 SMTP 发送邮件，并测试成功，下面简单记录一下过程。
-<!--more-->
+
+<!-- more -->
 
 第一步，修改 .env 文件中的邮件设置，包括邮件驱动、服务器地址、端口、用户名、密码。邮件驱动自然是 smtp ，其他选项根据你的邮箱填写。
 

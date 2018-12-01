@@ -1,7 +1,5 @@
 ---
 title: Android 使用 ListView 实现列表
-id: 417
-comment: false
 categories:
   - 安卓
 date: 2015-12-07 15:19:12
@@ -11,6 +9,8 @@ tags:
 ---
 
 第一步，在 Activity 的布局文件中添加 ListView 控件。
+
+<!-- more -->
 
 ``` xml
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -26,8 +26,6 @@ tags:
 
 </RelativeLayout>
 ```
-
-<!-- more -->
 
 第二步，新建一个布局文件 layout_listview_item.xml ，作为列表中子项目的布局。
 
@@ -142,8 +140,8 @@ public class MainActivity extends Activity {
 
 实现效果：
 
-{% img side-by-side /images/posts/2015/2015-12-07@android-list-view-1.png 220 列表 %}
+{% img side-by-side /images/posts/2015/12/android_list_view_1.png 220 列表 %}
 
-{% img side-by-side /images/posts/2015/2015-12-07@android-list-view-2.png 220 点击事件 %}
+{% img side-by-side /images/posts/2015/12/android_list_view_2.png 220 点击事件 %}
 
-{% img side-by-side /images/posts/2015/2015-12-07@android-list-view-3.png 220 长按事件 %}
+{% img side-by-side /images/posts/2015/12/android_list_view_3.png 220 长按事件 %}

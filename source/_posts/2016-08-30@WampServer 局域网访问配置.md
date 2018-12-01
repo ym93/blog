@@ -1,7 +1,5 @@
 ---
 title: WampServer 局域网访问配置
-id: 777
-comment: false
 categories:
   - 后端
 date: 2016-08-30 12:11:44
@@ -11,6 +9,7 @@ tags:
 ---
 
 让局域网内的其他设备（如 Pad 、手机）可以访问 WampServer 上的内容，将会非常便于测试不同设备的浏览效果。要做到这点，需要修改 Apache 配置文件，使服务器允许被局域网内的设备访问。
+
 <!-- more -->
 
 1、如果未在 WampServer 中配置虚拟主机过的情况下，直接在 http.conf 中找以下字段，一般在 `<Directory>` 标签内。将 Require local 修改为 Require all granted 即可。重启服务器后，局域网内的其他设备通过 IP 地址（如 192.168.1.1 ）访问。由于我的 WampSever 已配置过虚拟主机，未测试实际效果。

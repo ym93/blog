@@ -1,7 +1,5 @@
 ---
 title: 使 Nginx 支持 WordPress 固定链接
-id: 1331
-comment: false
 categories:
   - 其他
 date: 2016-12-29 13:29:12
@@ -12,7 +10,9 @@ tags:
 
 昨天把博客从虚拟主机迁移到了云主机，同时也将引擎由 Apache 更换成了 Nginx 。迁移过程基本顺利，仅出现 WordPress 的“固定链接”功能无法正常使用，导致文章不能正常浏览。
 
-在阅读官方文档后，问题已解决。<!--more-->编辑当前站点的 .conf 文件，在 `server` 内添加以下内容，然后重启 Web 服务即可。
+<!-- more -->
+
+在阅读官方文档后，问题已解决。编辑当前站点的 .conf 文件，在 `server` 内添加以下内容，然后重启 Web 服务即可。
 
 ```
 location / {

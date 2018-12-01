@@ -1,7 +1,5 @@
 ---
 title: 使用 Laravel Excel 导入导出 Excel & CSV
-id: 1521
-comment: false
 categories:
   - 后端
 date: 2017-02-16 23:32:28
@@ -11,7 +9,8 @@ tags:
 ---
 
 Laravel Excel 是一个开源库，使用它可以很轻易地在 Laravel 项目上实现导入和导出 Excel、CSV 文件。Laravel Excel 基于另一个开源项目 PHPExcel ，所以如果你的应用不是运行在 Laravel 上， 你也可以尝试使用 PHPExcel 。
-<!--more-->
+
+<!-- more -->
 
 ### 安装
 

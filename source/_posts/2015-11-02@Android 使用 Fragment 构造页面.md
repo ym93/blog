@@ -1,7 +1,5 @@
 ---
 title: Android 使用 Fragment 构造页面
-id: 21
-comment: false
 categories:
   - 安卓
 date: 2015-11-02 22:34:33
@@ -12,7 +10,9 @@ tags:
 
 假设你遇到这样的场景：1、需要将相同的界面元素显示在多个不同的页面。2、需要用几个相对独立的模块构成一个页面。
 
-单纯使用 Activity 难以满足这样的需求，需要通过 Fragment（碎片）实现。<!--more-->简单的说，不再直接在 Activity 上添加元素，而是在 Fragment 上添加元素，然后把这个 Fragment 添加到需要显示这些元素的 Activity 中。
+单纯使用 Activity 难以满足这样的需求，需要通过 Fragment（碎片）实现。简单的说，不再直接在 Activity 上添加元素，而是在 Fragment 上添加元素，然后把这个 Fragment 添加到需要显示这些元素的 Activity 中。
+
+<!-- more -->
 
 你可以将一个 Fragment 添加到多个 Activity 、把多个 Fragment 添加到一个 Activity 、用一个 Fragment 替换另一个 Fragment ，让页面元素的管理更加灵活。
 
@@ -97,4 +97,4 @@ public class MainActivity extends FragmentActivity {
 
 运行结果：
 
-{% img /images/posts/2015/2015-11-02@android-fragment.png 240  在页面中添加 Fragment %}
+{% img /images/posts/2015/11/android_fragment.png 240  在页面中添加 Fragment %}

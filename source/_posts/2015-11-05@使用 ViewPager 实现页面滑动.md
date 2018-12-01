@@ -1,7 +1,5 @@
 ---
 title: 使用 ViewPager 实现页面滑动
-id: 204
-comment: false
 categories:
   - 安卓
 date: 2015-11-05 22:35:22
@@ -13,7 +11,8 @@ tags:
 新建一个 demo 应用，命名为 _ViewPagerPractice_ 。
 
 1、创建3个布局文件，添加不同的背景和文字，作为3个页面（Fragment）的布局。
-<!--more-->
+
+<!-- more -->
 
 ``` xml
 <!-- fragment_one.xml -->
@@ -153,8 +152,8 @@ public class MainActivity extends FragmentActivity {
 
 运行应用，可以看到已经实现了三屏滑动切换。
 
-{% img side-by-side /images/posts/2015/2015-11-05@android-view-pager-1.png 220 当前页 %}
+{% img side-by-side /images/posts/2015/11/android_view_pager_1.png 220 当前页 %}
 
-{% img side-by-side /images/posts/2015/2015-11-05@android-view-pager-2.png 220 切换上一页 %}
+{% img side-by-side /images/posts/2015/11/android_view_pager_2.png 220 切换上一页 %}
 
-{% img side-by-side /images/posts/2015/2015-11-05@android-view-pager-3.png 220 切换下一页 %}
+{% img side-by-side /images/posts/2015/11/android_view_pager_3.png 220 切换下一页 %}

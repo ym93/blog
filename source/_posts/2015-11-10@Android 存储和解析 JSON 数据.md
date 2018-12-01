@@ -1,7 +1,5 @@
 ---
 title: Android 存储和解析 JSON 数据
-id: 265
-comment: false
 categories:
   - 安卓
 date: 2015-11-10 01:07:49
@@ -14,7 +12,9 @@ tags:
 > JSON是一种轻量级的数据交换格式。JSON 采用完全独立于语言的文本格式，易于阅读和编写，同时也易于机器解析和生成（一般用于提升网络传输速率）。
 
 JSON 中的数据以键值对（key-value）的形式存在的。
-<!--more-->
+
+<!-- more -->
+
 ``` java
 {
   "用户": {
@@ -230,6 +230,6 @@ protected void onCreate(Bundle savedInstanceState) {
 
 运行应用，LogCat 中打印了 JSON 数据，说明 `JSONWrite` 方法执行成功，Activity 输出格式化的内容，说明 `JSONRead` 方法执行成功。
 
-{% img /images/posts/2015/2015-11-10@android-json-1.png 480 控制台日志 %}
+{% img /images/posts/2015/11/android_json_1.png 480 控制台日志 %}
 
-{% img /images/posts/2015/2015-11-10@android-json-2.png 240 屏幕输出内容 %}
+{% img /images/posts/2015/11/android_json_2.png 240 屏幕输出内容 %}

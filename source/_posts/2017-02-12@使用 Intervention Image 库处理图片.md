@@ -1,7 +1,5 @@
 ---
 title: 使用 Intervention Image 库处理图片
-id: 1391
-comment: false
 categories:
   - 后端
 date: 2017-02-12 13:05:49
@@ -14,7 +12,9 @@ Intervention Image 是一个开源图片处理库。使用它需要 PHP>=5.4、F
 
 ### 安装
 
-执行以下命令使用 Composer 安装 Intervention Image 的最新版本。<!--more-->
+执行以下命令使用 Composer 安装 Intervention Image 的最新版本。
+
+<!-- more -->
 
 ``` sh
 composer require intervention/image

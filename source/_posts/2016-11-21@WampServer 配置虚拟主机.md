@@ -1,7 +1,5 @@
 ---
 title: WampServer 配置虚拟主机
-id: 1190
-comment: false
 categories:
   - 后端
 date: 2016-11-21 14:14:18
@@ -10,7 +8,8 @@ tags:
 ---
 
 WampServer 默认创建一个站点，以 www 目录作为网站的根目录，通过 `http://localhost/` 访问。通过修改配置文件可以创建虚拟主机，即实现多站点。
-<!--more-->
+
+<!-- more -->
 
 第一步，启用 Apache 的 mod_rewrite 模块。打开配置文件 bin\apache\apache2.4.9\conf\httpd.conf ，找到下行并去掉前面的 `#` 号。
 

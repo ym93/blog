@@ -13,7 +13,7 @@ Shadowsocks 是一种基于 SOCKS5 协议的代理工具，可以帮助我们实
 
 <!-- more -->
 
-{% img /images/posts/2017/2017-08-07@others-shadowsocks.png 480 使用 YouTube 观看 NASA 太空直播（720P ） %}
+{% img /images/posts/2017/08/shadowsocks_youtube.png 480 使用 YouTube 观看 NASA 太空直播（720P ） %}
 
 Shadowsocks 包含服务端和客户端。服务端运行在你的服务器上（位于海外），客户端运行在你的电脑或手机上。简单地说，当你要访问 Google 的时候，实际上由服务端访问 Google 并将其得到的内容返回到客户端。
 

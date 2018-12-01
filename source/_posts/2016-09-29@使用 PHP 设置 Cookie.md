@@ -1,7 +1,5 @@
 ---
 title: 使用 PHP 设置 Cookie
-id: 822
-comment: false
 categories:
   - 后端
 date: 2016-09-29 14:42:33
@@ -17,7 +15,8 @@ tags:
 ``` php
 setcookie(name,value,expire,path,domain,secure)
 ```
-<!--more-->
+<!-- more -->
+
 使用 `setcookie` 方法新建 cookie 。必需参数：name ，Cookie 的名称；value ，Cookie值。可选参数：expire ，Cookie 的过期时间；path ，Cookie 的服务器路径；domain ，Cookie 的域名；secure ，是否使用安全链接。
 
 例如，创建一个名称为 email ，值为 exaple@example.com ，两星期后过期的 Cookie ，网上普遍的写法是这样的：

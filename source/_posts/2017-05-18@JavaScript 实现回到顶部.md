@@ -8,7 +8,8 @@ tags:
 ---
 
 过去，我一般用 jQuery 的 `scrollTop` 和 `animate` 方法实现回到顶部（back to top）按钮。现在基本不在项目里引入 jQuery ，只能试着用原生写了。实际上，原生 JavaScript 实现起来也很容易。
-<!--more-->
+
+<!-- more -->
 
 滚动 body 到顶部：
 

@@ -1,7 +1,5 @@
 ---
 title: Cropper + Canvas 实现用户头像裁剪与上传
-id: 763
-comment: false
 categories:
   - 前端
 date: 2016-08-28 23:14:24
@@ -11,7 +9,8 @@ tags:
 ---
 
 第一步：使用 Github 上的开源项目 [cropper](https://github.com/fengyuanchen/cropper) 实现选择被裁剪图片、裁剪操作和不同大小头像的预览，这个项目可以返回（被裁减图片上）需要裁出的部分的坐标和尺寸。
-<!--more-->
+
+<!-- more -->
 
 第二步：通过 cropper 直接取到 x、y、w、h 四个值，就是你要裁取的图片相对原图的坐标和尺寸。
 

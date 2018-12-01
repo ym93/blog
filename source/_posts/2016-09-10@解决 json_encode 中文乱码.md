@@ -1,7 +1,5 @@
 ---
 title: 解决 json_encode 中文乱码
-id: 802
-comment: false
 categories:
   - 后端
 date: 2016-09-10 17:29:00

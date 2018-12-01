@@ -1,7 +1,5 @@
 ---
 title: Linux 编译安装 MySQL5.6
-id: 1286
-comment: false
 categories:
   - 后端
 date: 2016-12-15 15:31:58
@@ -15,7 +13,7 @@ tags:
 ```
 yum -y install make gcc-c++ cmake bison-devel  ncurses-devel perl-Module-Install.noarch
 ```
-<!--more-->
+<!-- more -->
 
 第二步，从 [官网](http://www.mysql.com/) 下载并解压 MySQL 源码（Source Code）的压缩包。
 

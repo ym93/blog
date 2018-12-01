@@ -1,7 +1,5 @@
 ---
 title: 在 Homestead 上安装 phpMyAdmin
-id: 1062
-comment: false
 categories:
   - 后端
 date: 2016-10-29 12:36:39
@@ -11,11 +9,12 @@ tags:
 ---
 
 近期使用 Homestead 作为开发环境，由于命令行方式操作数据库效率低（学艺不精），于是准备安装一个 GUI 工具来辅助学习/开发，首选已经熟练使用的 phpMyAdmin 。
-<!--more-->
+
+<!-- more -->
 
 第一步，[下载](https://www.phpmyadmin.net/) 最新版本的 phpMyAdmin ，解压到代码目录下。
 
-第二步，修改服务器的配置文件 ~\\.homestead\Homestead.yaml ，添加一个新的站点。
+第二步，修改服务器的配置文件 `~\.homestead\Homestead.yaml` ，添加一个新的站点。
 
 ```
 folders:

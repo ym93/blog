@@ -1,7 +1,5 @@
 ---
 title: 局域网访问 Homestead 站点
-id: 1053
-comment: false
 categories:
   - 后端
 date: 2016-10-27 14:24:26
@@ -10,15 +8,16 @@ tags:
 ---
 
 设置 Homestead 服务器为可被局域网内的其他设备访问，可以非常方便地测试移动端浏览效果，同时也可以把页面分享给团队的其他成员浏览。
-<!--more-->
 
-第一步，修改脚本文件 ~\Homestead\scripts\homestead.rb ，允许局域网中的其他设备访问虚拟机。 将 _config.vm.network_ 属性的值修改为 `public_network` 。
+<!-- more -->
+
+第一步，修改脚本文件 `~\Homestead\scripts\homestead.rb` ，允许局域网中的其他设备访问虚拟机。 将 _config.vm.network_ 属性的值修改为 `public_network` 。
 
 ```
 config.vm.network :public_network, ip: settings["ip"] ||= "192.168.10.10"
 ```
 
-第二步，修改配置文件（~/.homestead/Homestead.yaml），将虚拟机的 ip 修改为当前局域网网段中的 ip 。
+第二步，修改配置文件`~/.homestead/Homestead.yaml`，将虚拟机的 ip 修改为当前局域网网段中的 ip 。
 
 ```
 ip: "192.168.1.200"

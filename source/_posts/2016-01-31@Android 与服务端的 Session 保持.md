@@ -1,7 +1,5 @@
 ---
 title: Android 与服务端的 Session 保持
-id: 611
-comment: false
 categories:
   - 安卓
 date: 2016-01-31 20:07:54
@@ -13,7 +11,8 @@ tags:
 ---
 
 在开发联网应用的过程中，有时候会希望 php 服务端能通过 Session 保存一些信息，以便随时验证客户端的登录状态，或完成其它功能。但实际操作中发现，Android 客户端每次请求服务端都被视为一个新的请求，SessionID 都会改变，也就是说根本没办法使用 Session 存储和读取信息。
-<!--more-->
+
+<!-- more -->
 
 我们可以通过保存 SessionID 、请求服务端的同时传递 SessionID 来解决这个问题，让服务器知道两次请求来自同一个客户端。
 

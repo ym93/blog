@@ -1,7 +1,5 @@
 ---
 title: Git、Shell、Git Shell、Git Bash
-id: 908
-comment: false
 categories:
   - 后端
 date: 2016-10-23 10:47:47
@@ -12,7 +10,8 @@ tags:
 由于 Linux 和 Git 知识储备不足，最近被这些名词搞得混乱，有必要理清概念为接下来的学习铺路。
 
 Git：版本控制系统，类似 SVN 。之前也是 Git 和 GitHub 傻傻分不清楚，GitHub 是用 Git 进行版本控制的项目托管平台，本质是一个网站，所以 Git≠GitHub 。
-<!--more-->
+
+<!-- more -->
 
 Shell：计算机壳层，是指“提供使用者使用界面”的软件，类似 Windows 中的命令行工具（cmd.exe）。
 

@@ -1,7 +1,5 @@
 ---
 title: 使用 JavaScript 清空上传控件的值
-id: 2301
-comment: false
 categories:
   - 前端
 date: 2017-04-28 00:03:26
@@ -10,7 +8,8 @@ tags:
 ---
 
 有时候我们可能希望在某个时间点帮用户清空上传控件（即 file 类型的 input 元素）的值，让交互更加友好。不过，上传控件本身并未提供一个简单的方法用于清除已选中的文件。
-<!--more-->
+
+<!-- more -->
 
 ``` xhtml
 <input type="file">

@@ -1,7 +1,5 @@
 ---
 title: Homestead 开发环境配置
-id: 932
-comment: false
 categories:
   - 后端
 date: 2016-10-23 14:43:09
@@ -10,7 +8,8 @@ tags:
 ---
 
 Laravel Homestead 是一套完整的 PHP 开发环境，类似 WampServer 。不同的是，Homestead 运行于虚拟机之中，而 WampServer 则直接将服务端软件安装在本机上。
-<!--more-->
+
+<!-- more -->
 
 Homestead 的安装依赖于虚拟机软件和 Vagrant 。Vagrant 是一个快速搭建开发环境的工具，类似装系统用的 Ghost ，可以直接把别人打包好的开发环境（包括系统和服务端软件），Copy/Paste 到一台设备中，省去逐一安装服务端软件的麻烦。
 

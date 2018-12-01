@@ -1,7 +1,5 @@
 ---
 title: 将 WordPress 移动到子目录
-id: 1909
-comment: false
 categories:
   - 其他
 date: 2017-03-13 17:46:10
@@ -10,7 +8,8 @@ tags:
 ---
 
 WordPress 默认安装在网站的根目录，这无疑会使目录结构看起来很混乱。查阅文档后发现 WordPress 本身允许用户将其文件移动到子目录。
-<!--more-->
+
+<!-- more -->
 
 首先，在根目录下创建用于存放 WordPress 文件的文件夹。例如： `wordpress` 。
 

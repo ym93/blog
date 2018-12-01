@@ -1,7 +1,5 @@
 ---
 title: Fragment onResume 方法无效问题
-id: 645
-comment: false
 categories:
   - 安卓
 date: 2016-02-07 13:17:22
@@ -12,7 +10,8 @@ tags:
 `onResume` 在 Activity 中是个非常常用的生命周期方法，它在 Activity 每次显示时都被执行，可用于刷新 UI 等操作。
 
 Fragment 和 Activity 一样存在 `onResume` 方法，但我发现直接覆写 `onResume` 方法后，当 Fragment 显示到前台时不会执行这个方法。网上有人推荐使用 `setUserVisibleHint` 方法。
-<!--more-->
+
+<!-- more -->
 
 ``` java
 @Override

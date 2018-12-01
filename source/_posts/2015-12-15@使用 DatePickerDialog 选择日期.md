@@ -1,7 +1,5 @@
 ---
 title: 使用 DatePickerDialog 选择日期
-id: 443
-comment: false
 categories:
   - 安卓
 date: 2015-12-15 15:59:22
@@ -13,7 +11,8 @@ tags:
 新建一个工程并命名为 DatePickerDialogDemo ，使用 LinearLayout 布局。
 
 在布局中分别添加一个 TextView 用于输出选择的日期、一个 Button 用于触发日期选择窗口。
-<!--more-->
+
+<!-- more -->
 
 MainActivity.xml:
 
