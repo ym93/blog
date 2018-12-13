@@ -21,7 +21,7 @@ function postPermalinkFilter(data) {
 
 ``` js
 // hexo/lib/plugins/helper/open_graph.js
-result += og('og:image', urlFn.resolve(url || config.url, '/images/logo.jpg'), false);
+if (!images.length) result += og('og:image', urlFn.resolve(url || config.url, '/images/logo.jpg'), false);
 ```
 
 ## 运行
