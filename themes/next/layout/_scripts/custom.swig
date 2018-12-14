@@ -1,6 +1,7 @@
-{# Set WeChat share title. #}
+{# WeChat & App page title #}
 <script type="text/javascript">
-  if (window.navigator.userAgent.indexOf('MicroMessenger') >= 0 && document.title.indexOf(" | ") > 0) {
+  var ua = window.navigator.userAgent;
+  if (ua.indexOf('MicroMessenger') || ua.indexOf('YimingBlog') && document.title.indexOf(" | ") > 0) {
     document.title = document.title.substring(0, document.title.lastIndexOf(" | "));
   }
 </script>
