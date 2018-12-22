@@ -1,7 +1,7 @@
 ---
 title: PHP 使用 Guzzle 发送 http 请求
 categories:
-  - 后端
+  - Web Back-end
 date: 2017-05-03 18:41:44
 tags:
   - PHP

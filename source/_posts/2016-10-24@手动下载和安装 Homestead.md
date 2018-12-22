@@ -1,7 +1,7 @@
 ---
 title: 手动下载和安装 Homestead
 categories:
-  - 后端
+  - Web Back-end
 date: 2016-10-24 14:09:43
 tags:
   - Homestead

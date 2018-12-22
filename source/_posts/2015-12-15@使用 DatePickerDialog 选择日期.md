@@ -1,7 +1,7 @@
 ---
 title: 使用 DatePickerDialog 选择日期
 categories:
-  - 安卓
+  - Android
 date: 2015-12-15 15:59:22
 tags:
   - Android

@@ -1,7 +1,7 @@
 ---
 title: 使用 JavaScript 清空上传控件的值
 categories:
-  - 前端
+  - Web Front-end
 date: 2017-04-28 00:03:26
 tags:
   - JavaScript

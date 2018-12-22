@@ -1,7 +1,7 @@
 ---
 title: WampServer 配置虚拟主机
 categories:
-  - 后端
+  - Web Back-end
 date: 2016-11-21 14:14:18
 tags:
   - WampServer

@@ -1,7 +1,7 @@
 ---
 title: Homestead 开发环境配置
 categories:
-  - 后端
+  - Web Back-end
 date: 2016-10-23 14:43:09
 tags:
   - Homestead

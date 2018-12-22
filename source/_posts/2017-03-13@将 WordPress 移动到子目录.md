@@ -1,7 +1,7 @@
 ---
 title: 将 WordPress 移动到子目录
 categories:
-  - 其他
+  - Other
 date: 2017-03-13 17:46:10
 tags:
   - WordPress

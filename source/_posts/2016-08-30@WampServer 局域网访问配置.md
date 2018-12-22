@@ -1,7 +1,7 @@
 ---
 title: WampServer 局域网访问配置
 categories:
-  - 后端
+  - Web Back-end
 date: 2016-08-30 12:11:44
 tags:
   - Apache

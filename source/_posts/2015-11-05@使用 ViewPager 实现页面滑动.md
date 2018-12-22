@@ -1,7 +1,7 @@
 ---
 title: 使用 ViewPager 实现页面滑动
 categories:
-  - 安卓
+  - Android
 date: 2015-11-05 22:35:22
 tags:
   - Android

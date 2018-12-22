@@ -1,7 +1,7 @@
 ---
 title: 使用 PHP 设置 Cookie
 categories:
-  - 后端
+  - Web Back-end
 date: 2016-09-29 14:42:33
 tags:
   - PHP

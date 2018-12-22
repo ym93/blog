@@ -1,7 +1,7 @@
 ---
 title: Linux 编译安装 Apache2.4
 categories:
-  - 后端
+  - Web Back-end
 date: 2016-12-13 15:10:53
 tags:
   - Apache

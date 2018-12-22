@@ -1,7 +1,7 @@
 ---
 title: Android 存储和解析 JSON 数据
 categories:
-  - 安卓
+  - Android
 date: 2015-11-10 01:07:49
 tags:
   - Android

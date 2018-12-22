@@ -1,7 +1,7 @@
 ---
 title: Linux 编译安装 MySQL5.6
 categories:
-  - 后端
+  - Web Back-end
 date: 2016-12-15 15:31:58
 tags:
   - MySQL

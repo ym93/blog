@@ -2,7 +2,7 @@
 title: JavaScript / Vue.js 实现时分秒倒计时
 date: 2017-11-03 23:45:19
 categories:
-  - 前端
+  - Web Front-end
 tags:
   - JavaScript
   - Vue.js

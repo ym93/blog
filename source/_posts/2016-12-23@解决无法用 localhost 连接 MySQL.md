@@ -1,7 +1,7 @@
 ---
 title: 解决无法用 localhost 连接 MySQL
 categories:
-  - 后端
+  - Web Back-end
 date: 2016-12-23 00:17:27
 tags:
   - MySQL

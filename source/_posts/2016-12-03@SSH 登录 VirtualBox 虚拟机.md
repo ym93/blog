@@ -1,7 +1,7 @@
 ---
 title: SSH 登录 VirtualBox 虚拟机
 categories:
-  - 后端
+  - Web Back-end
 date: 2016-12-03 18:12:47
 tags:
   - SSH

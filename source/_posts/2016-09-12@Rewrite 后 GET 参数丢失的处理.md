@@ -1,7 +1,7 @@
 ---
 title: Rewrite 后 GET 参数丢失的处理
 categories:
-  - 后端
+  - Web Back-end
 date: 2016-09-12 14:50:26
 tags:
   - Apache

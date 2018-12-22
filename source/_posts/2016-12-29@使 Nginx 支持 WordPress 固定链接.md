@@ -1,7 +1,7 @@
 ---
 title: 使 Nginx 支持 WordPress 固定链接
 categories:
-  - 其他
+  - Other
 date: 2016-12-29 13:29:12
 tags:
   - WordPress

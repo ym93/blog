@@ -1,7 +1,7 @@
 ---
 title: Android 上传文件到 PHP 服务端
 categories:
-  - 安卓
+  - Android
 date: 2016-02-07 14:10:05
 tags:
   - Android

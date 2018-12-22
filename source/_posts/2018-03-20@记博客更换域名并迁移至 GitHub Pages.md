@@ -2,7 +2,7 @@
 title: 记博客更换域名并迁移至 GitHub Pages
 date: 2018-03-20 11:14:57
 categories:
-  - 后端
+  - Web Back-end
 tags:
   - GitHub Pages
   - SSL

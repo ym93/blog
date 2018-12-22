@@ -1,7 +1,7 @@
 ---
 title: Android 使用 ListView 实现列表
 categories:
-  - 安卓
+  - Android
 date: 2015-12-07 15:19:12
 tags:
   - Android

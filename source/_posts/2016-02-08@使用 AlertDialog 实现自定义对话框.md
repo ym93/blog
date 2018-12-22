@@ -1,7 +1,7 @@
 ---
 title: 使用 AlertDialog 实现自定义对话框
 categories:
-  - 安卓
+  - Android
 date: 2016-02-08 20:11:58
 tags:
   - Android

@@ -1,7 +1,7 @@
 ---
 title: 使用 Intervention Image 库处理图片
 categories:
-  - 后端
+  - Web Back-end
 date: 2017-02-12 13:05:49
 tags:
   - Laravel
