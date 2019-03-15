@@ -5,7 +5,7 @@
 为永久链接（Permalinks）添加两个变量：`hour` 和 `minute` 。
 
 ``` js
-// hexo/bin/plugins/filter/post_permalink.js
+// hexo/lib/plugins/filter/post_permalink.js
 function postPermalinkFilter(data) {
   const config = this.config;
   const meta = {
