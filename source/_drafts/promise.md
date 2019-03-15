@@ -13,6 +13,8 @@ tags:
 
 起初，人们使用回调函数进行异步编程。回调函数是指一个可被另一个函数访问，并在后者执行后调用的函数。过多的回调函数嵌套形成难以阅读和维护的回调地狱（Callback Hell / Pyramid of Doom）。
 
+<!-- more -->
+
 ``` js
 login(function () {
   getUserInfo(function () {
@@ -176,7 +178,6 @@ function fulfill (eventualValue) {
 ``` js
 this.catch = function (onRejected) {
   this.onRejected = onRejected
-  return this
 }
 ```
 
@@ -220,3 +221,5 @@ MyPromise.all = function (promises) {
   })
 }
 ```
+
+[点此](https://github.com/ymcn/promise) 查看完整代码示例。
