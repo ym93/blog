@@ -13,7 +13,7 @@ tags:
 
 <!-- more -->
 
-## **什么是 Serverless**
+## 什么是 Serverless
 
 Serverless，即无服务器计算，是一种云架构。
 
@@ -21,7 +21,7 @@ Serverless 消除基础设施管理任务，使开发者能够将更多运维职
 
 **用简单的话说就是：用各种服务代替服务器，你充值就可以了。**
 
-{% img /images/posts/2019/11/serverless_brands.jpg 540 云服务商 %}
+{% img no-border /images/posts/2019/11/serverless_intro.jpg 540 Serverless %}
 
 它的优势包括：无需维护服务器，可灵活拓展，按量付费（通常是按调用次数和流量），内置可用性和容错功能，以及 —— 环保。（前方高能我要上价值）据《福布斯》杂志统计，典型服务器的计算能力仅有 5%~15% 的利用率。如今，Serverless 架构将使人类更有效率地利用计算资源，减少温室气体排放。
 
@@ -63,7 +63,7 @@ IaaS 只提供最少的服务，但并不见得省钱。我个人认为它是对
 
 有没有更理想（可以偷懒）的计算服务呢？答案就是 FaaS！我认为它介于 PaaS 和 SasS 之间。
 
-## **什么是 FaaS**
+## 什么是 FaaS
 
 FaaS（Function as a Service）是函数即服务，是一种云计算服务。它提供一个平台，允许使用者开发、运行和管理应用程序功能，而无需构建和维护基础设施。
 
@@ -77,7 +77,7 @@ FaaS（Function as a Service）是函数即服务，是一种云计算服务。�
 
 目前我们可以选择的典型 FaaS 服务包括：AWS Lambda、阿里云函数计算、腾讯云云函数。
 
-## **构建和管理 Serverless 应用**
+## 构建和管理 Serverless 应用
 
 有了 FaaS 云计算服务，我们要如何构建和管理后端应用程序呢？最直接的办法，是在云服务商提供的控制台上编写和部署函数，但这显然不够科学。
 
@@ -87,7 +87,7 @@ Serverless Framework 是一个构建和管理 Serverless 应用的完整解决�
 
 {% img no-border /images/posts/2019/11/serverless_serverless_framework.jpg 540 Serverless Framework %}
 
-## **Serverless 初体验**
+## Serverless 初体验
 
 为更进一步了解 Serverless 应用程序的开发，我摸索了一下 Serverless Framework 搭配云函数（腾讯云）的使用姿势。我认为体验可以用“有点儿爽”来形容。
 
@@ -167,11 +167,11 @@ serverless remove                  # 移除整个服务
 
 随后我反复多次修改触发器，然后用 `deploy -f` 命令部署，发现**存量触发器并不会删除，而是在原有基础上增加了新的触发器**。一开始这个设定令我感到不解，它意味着不能做到把一个接口直接从 `GET` 改成 `POST`，但同时也避免了一个误操作导致事故。在我提单询问是否支持覆盖配置后，腾讯云运维小哥表示记录下了这个需求。
 
-## **搭建 Serverless 平台**
+## 搭建 Serverless 平台
 
 除了直接使用云服务商提供的 FaaS 服务，我们可以搭建自己的 Serverless 平台吗？答案就是前文中提到的开源项目 —— OpenWhisk。
 
-### **OpenWhisk 简介**
+### OpenWhisk 简介
 
 OpenWhisk 是一个事件驱动的计算平台，也被称为 Serverless 或 FaaS，它在事件触发或直接调用时执行代码。
 
@@ -185,7 +185,7 @@ OpenWhisk 是一个事件驱动的计算平台，也被称为 Serverless 或 Faa
 
 包（Package）用于与其他服务集成，例如团队协作工具 Slack，代码托管平台 GitHub，使这些平台上发生的一些事件能够触发我们的触发器。
 
-### **OpenWhisk 工作原理**
+### OpenWhisk 工作原理
 
 作为一个开源项目，OpenWhisk 站在巨人的肩膀上，包括 Nginx，Kafka，Docker，CouchDB。**这些组件集合在一起构成了一个“基于事件的无服务器编程服务”。**
 
@@ -205,7 +205,7 @@ OpenWhisk 提供基于 HTTP，遵循 RESTful 设计的面向用户的 API。
 
 
 
-### **OpenWhisk 体验**
+### OpenWhisk 体验
 
 无！:(
 
@@ -219,18 +219,12 @@ OpenWhisk 提供基于 HTTP，遵循 RESTful 设计的面向用户的 API。
 
 部分参考资料如下：
 
-[Serverless Computing - AWS](https://aws.amazon.com/serverless/)
-
-[从 IaaS 到 FaaS —— Serverless 架构的前世今生 - AWS](https://aws.amazon.com/cn/blogs/china/iaas-faas-serverless/)
-
-[IaaS，PaaS，SaaS 的区别 - 阮一峰的网络日志]([http://www.ruanyifeng.com/blog/2017/07/iaas-paas-saas.html](http://www.ruanyifeng.com/blog/2017/07/iaas-paas-saas.html))
-
-[什么是 Serverless 架构和 FaaS 函数即服务？- 知乎专栏](https://zhuanlan.zhihu.com/p/31386919)
-
-[Function as a service - Wikipedia](https://en.wikipedia.org/wiki/Function_as_a_service)
-
-[Serverless Framework 快速入门 - 腾讯云](https://cloud.tencent.com/document/product/1154/39005)
-
-[OpenWhisk 简介：轻松创建微服务 - IBM](https://www.ibm.com/developerworks/cn/opensource/os-introducing-openwhisk-microservices-made-easy/)
+- [Serverless Computing - AWS](https://aws.amazon.com/serverless/)
+- [从 IaaS 到 FaaS —— Serverless 架构的前世今生 - AWS](https://aws.amazon.com/cn/blogs/china/iaas-faas-serverless/)
+- [IaaS，PaaS，SaaS 的区别 - 阮一峰的网络日志](http://www.ruanyifeng.com/blog/2017/07/iaas-paas-saas.html)
+- [什么是 Serverless 架构和 FaaS 函数即服务？- 知乎专栏](https://zhuanlan.zhihu.com/p/31386919)
+- [Function as a service - Wikipedia](https://en.wikipedia.org/wiki/Function_as_a_service)
+- [Serverless Framework 快速入门 - 腾讯云](https://cloud.tencent.com/document/product/1154/39005)
+- [OpenWhisk 简介：轻松创建微服务 - IBM](https://www.ibm.com/developerworks/cn/opensource/os-introducing-openwhisk-microservices-made-easy/)
 
 &nbsp;
