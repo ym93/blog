@@ -45,6 +45,7 @@ hexo deploy
 
 在云主机的站点目录下拉取 `gh-pages` 分支内容。
 
+原 `.blog` 域名不再续费，使用 CloudFlare 永久重定向到新域名。
 
 ## 更换主题
 
