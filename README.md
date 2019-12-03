@@ -33,6 +33,19 @@ if (!images.length) result += og('og:image', urlFn.resolve(url || config.url, '/
 hexo server
 ```
 
+## 部署
+
+由于境内访问 GitHub Pages 速度不稳定，目前部署于腾讯云。
+
+仍使用 `hexo` 部署命令推送内容到 GitHub Pages，但实际已不提供访问。
+
+```
+hexo deploy
+```
+
+在云主机的站点目录下拉取 `gh-pages` 分支内容。
+
+
 ## 更换主题
 
 以 NexT 主题为例，迁移自定义代码。
