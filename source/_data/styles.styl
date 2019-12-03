@@ -11,6 +11,13 @@ p > code {
   word-break: break-all;
 }
 
+// 列表
+ul {
+  p {
+    margin-bottom: 0;
+  }
+}
+
 // 应用内浏览
 .in-app {
   .headband, .header, .footer {
@@ -41,27 +48,53 @@ button, a {
 
 // 移动端
 @media (max-width: 991px) {
-  // 增大正文字号（不包括 ul、ol 及行内的 code）
-  .post-body {
-    p {
-      font-size: 1.125em; // 18px
-      code {
-        font-size 0.88em; // 16px
-      }
-    }
-    ul p, ol p {
-      font-size: 1em; // 16px
+  // 导航栏
+  .site-meta {
+    padding: 15px 0 18px 0;
+  }
+  .site-title {
+    font-size: 1.125em;
+  }
+  .menu-item .badge {
+    font-weight: 400;
+  }
+  // 标题
+  h1 {
+    font-size: 1.375em;
+  }
+  h2 {
+    font-size: 1.25em;
+  }
+  h3 {
+    font-size: 1.125em;
+  }
+  h4 {
+    font-size: 1em;
+  }
+  h5 {
+    font-size: .875em;
+  }
+  // 引用
+  blockquote {
+    font-size: .875em;
+  }
+  // 列表
+  ul {
+    padding-inline-start: 2.1em;
+    p, a {
+      font-size: .875em;
     }
   }
-  // 减小列表缩进
-  ul {
-    padding-inline-start: 2.3em;
+  li {
+    p, a {
+      font-size: .875em;
+    }
   }
 }
 
 @media (max-width: 767px) {
-  // 移除多余的左右留白
+  // 缩小左右留白
   .posts-expand {
-    margin: 0 0;
+    margin: 0 10px;
   }
 }
