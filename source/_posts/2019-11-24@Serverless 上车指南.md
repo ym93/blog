@@ -23,11 +23,15 @@ Serverless 消除基础设施管理任务，使开发者能够将更多运维职
 
 {% img no-border /images/posts/2019/11/serverless_intro.jpg 540 Serverless %}
 
-它的优势包括：无需维护服务器，可灵活拓展，按量付费（通常是按调用次数和流量），内置可用性和容错功能，以及 —— 环保。（前方高能我要上价值）据《福布斯》杂志统计，典型服务器的计算能力仅有 5%~15% 的利用率。如今，Serverless 架构将使人类更有效率地利用计算资源，减少温室气体排放。
+**Serverles 服务由一系列服务构成，包括计算服务、存储服务、数据库服务、API 网关服务等。**
+
+它的优势包括：无需维护服务器，可灵活拓展，按量付费（通常是按调用次数和流量），内置可用性和容错功能，以及 —— 环保。（前方高能我要上价值）
+
+据《福布斯》杂志统计，典型服务器的计算能力仅有 5%~15% 的利用率。可想而知，Serverless 架构将使人类更有效率地利用计算资源，减少温室气体排放。
 
 注：可用性是指读写操作在单台服务器出问题后，在其他服务器上依然能够完成读写操作。容错是指单台或多台服务器出问题（主要是网络问题）后，正常服务的服务器依然能正常提供服务。
 
-**Serverles 服务由一系列服务构成，包括计算服务、存储服务、数据库服务、API 网关服务等。**目前提供 Serverless 的云服务商有 AWS、阿里云、腾讯云等等。2014 年发布的 AWS Lambda 是首个公有云无服务器计算服务。
+目前提供 Serverless 的云服务商有 AWS、阿里云、腾讯云等等。2014 年发布的 AWS Lambda 是首个公有云无服务器计算服务。
 
 发展里程碑：
 
@@ -83,15 +87,18 @@ FaaS（Function as a Service）是函数即服务，是一种云计算服务。�
 
 Serverless Framework 是一个构建和管理 Serverless 应用的完整解决方案。2015 年，Serverless Framework 开源项目发布。直到今天，它已然成为开发者在 FaaS 平台上部署应用的主要方式。
 
+{% img no-border /images/posts/2019/11/serverless_serverless_framework.jpg 540 Serverless Framework %}
+
 **简单的说，你在本地写好的函数，用命令行就能部署到云服务商提供的 FaaS 服务中。**
 
-{% img no-border /images/posts/2019/11/serverless_serverless_framework.jpg 540 Serverless Framework %}
 
 ## Serverless 初体验
 
 为更进一步了解 Serverless 应用程序的开发，我摸索了一下 Serverless Framework 搭配云函数（腾讯云）的使用姿势。我认为体验可以用“有点儿爽”来形容。
 
-首先，需要在云函数控制台上创建一个函数，帮助我们自动配置“角色”，用于向云函数提供对接腾讯云上其他资源的权限。因为后续用 Serverless Framework 部署函数的时候，会先打包上传到对象存储服务。（踩坑后才知道的）
+{% img /images/posts/2019/11/serverless_practice.jpg 320 Talk is cheap %}
+
+**首先，需要在云函数控制台上创建一个函数，帮助我们自动配置“角色”，用于向云函数提供对接腾讯云上其他资源的权限。**因为后续用 Serverless Framework 部署函数的时候，会先打包上传到对象存储服务。（踩坑后才知道的）
 
 选择预置的 HelloWorld 函数部署就可以了。给函数配置一种触发事件，我选择的是 API 网关触发。跟随提示很容易配置了 API 网关，保存，随后便得到了一个链接。和预想的一样，访问这个链接函数就会执行，浏览器上输出了代码中打印的内容。
 
