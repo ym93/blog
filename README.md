@@ -9,17 +9,16 @@
 ``` js
 // hexo/lib/plugins/filter/post_permalink.js
 function postPermalinkFilter(data) {
-  const config = this.config;
+  // 为固定链接新增变量
   const meta = {
     /* ... */
     hour: data.date.format('HH'),
     minute: data.date.format('mm')
   };
-  ...
 }
 ```
 
-添加默认的开放图谱缩略图，用于在 Facebook 和 Twitter 等海外平台上分享时显示。
+添加默认的开放图谱缩略图，用于在 Facebook 和 Twitter 等海外平台上分享时显示，非必要。
 
 ``` js
 // hexo/lib/plugins/helper/open_graph.js
@@ -44,10 +43,11 @@ hexo server
 /themes/next/source/css/_custom # 自定义样式
 ```
 
-需要关注的主题配置项有：
+需要关注的主题配置项：
 
 - Favicon
 - 菜单
 - 边栏头像
 - 搜索
 - 统计
+- 自定义文件（custom_file_path）

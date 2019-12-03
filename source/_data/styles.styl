@@ -1,0 +1,57 @@
+// 基础样式
+.hidden {
+  display: none !important;
+}
+.no-border {
+  border: none !important;
+}
+
+// 代码
+p > code {
+  word-break: break-all;
+}
+
+// 应用内浏览
+.in-app {
+  .headband, .header, .footer {
+    display: none;
+  }
+  .main {
+    padding-bottom: 0;
+  }
+  .post {
+    padding-bottom: 50px;
+  }
+}
+
+// 移除触摸高亮
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+// PC 端
+@media (min-width: 992px) {
+  // 隐藏菜单中冗余的“分类”和“标签”
+  .menu {
+    .menu-item-tags, .menu-item-categories {
+      display: none;
+    }
+  }
+}
+
+// 移动端
+@media (max-width: 991px) {
+  // 增大正文字号（不包括 ul、ol 列表）
+  .post-body {
+    p {
+      font-size: 1.125em;
+    }
+    ul p, ol p {
+      font-size: 1em;
+    }
+  }
+  // 减小列表缩进
+  ul {
+    padding-inline-start: 2.3em;
+  }
+}

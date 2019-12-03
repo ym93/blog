@@ -11,11 +11,11 @@ tags:
 
 > Build and run applications without thinking about servers. —— AWS
 
-<!-- more -->
-
 ## 什么是 Serverless
 
 Serverless，即无服务器计算，是一种云架构。
+
+<!-- more -->
 
 Serverless 消除基础设施管理任务，使开发者能够将更多运维职责转移给云。让开发者在不考虑服务器的情况下，构建并运行应用程序和服务。同时，它支持几乎任何类型的应用或后端服务。
 
