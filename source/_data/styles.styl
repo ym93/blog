@@ -41,17 +41,27 @@ button, a {
 
 // 移动端
 @media (max-width: 991px) {
-  // 增大正文字号（不包括 ul、ol 列表）
+  // 增大正文字号（不包括 ul、ol 及行内的 code）
   .post-body {
     p {
-      font-size: 1.125em;
+      font-size: 1.125em; // 18px
+      code {
+        font-size 0.88em; // 16px
+      }
     }
     ul p, ol p {
-      font-size: 1em;
+      font-size: 1em; // 16px
     }
   }
   // 减小列表缩进
   ul {
     padding-inline-start: 2.3em;
+  }
+}
+
+@media (max-width: 767px) {
+  // 移除多余的左右留白
+  .posts-expand {
+    margin: 0 0;
   }
 }
