@@ -52,9 +52,7 @@ hexo deploy
 以 NexT 主题为例，迁移自定义代码。
 
 ```
-/themes/next/_config.yml        # 主题配置
-/themes/next/layout/_custom     # 自定义页面结构
-/themes/next/source/css/_custom # 自定义样式
+/source/_data/ # 自定义文件所在目录
 ```
 
 需要关注的主题配置项：
