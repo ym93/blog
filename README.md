@@ -37,13 +37,13 @@ hexo server
 
 由于境内访问 GitHub Pages 速度不稳定，目前部署于腾讯云。
 
-仍使用 `hexo` 部署命令推送内容到 GitHub Pages，但实际已不提供访问。
+推送内容到远程仓库 `dist` 分支：
 
 ```
 hexo deploy
 ```
 
-在云主机的站点目录下拉取 `gh-pages` 分支内容。
+然后在云主机的站点目录下拉取 `dist` 分支内容。
 
 原 `.blog` 域名不再续费，使用 CloudFlare 永久重定向到新域名。
 

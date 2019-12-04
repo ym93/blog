@@ -13,7 +13,7 @@ tags:
 
 ## 什么是 Serverless
 
-Serverless，即无服务器计算，是一种云架构。Serverles 服务由一系列服务构成，包括计算服务、存储服务、数据库服务、API 网关服务等。
+Serverless，即无服务器计算，是一种云架构。Serverless 服务由一系列服务构成，包括计算服务、存储服务、数据库服务、API 网关服务等。
 
 <!-- more -->
 
