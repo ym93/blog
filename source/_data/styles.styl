@@ -47,53 +47,74 @@ button, a {
 }
 
 // 移动端
+// --------------------------------------------------
 @media (max-width: 991px) {
-  // 导航栏
+  // 个性化导航
   .site-meta {
-    padding: 15px 0 18px 0;
+    padding: 12px 0 20px 0;
+    background: #fff;
+    box-shadow: 0 0 3px rgba(0,0,0,0.3);
+  }
+  .headband {
+    display: none;
   }
   .site-title {
-    font-size: 1.125em;
+    display: none;
   }
+  .brand { 
+    color: #333;
+    position: relative;
+    z-index: 1;
+    &:hover {
+      color: #333;
+    }
+    &::before {
+      content: 'ym';
+      display: inline-block;
+      font-size: 1.125em;
+    }
+    &::after {
+      content: '';
+      display: inline-block;
+      height: .6em;
+      width: 2em;
+      background: rgba(230, 236, 2, 0.5);
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index -1;
+    }
+  }
+  .site-nav-toggle .toggle .toggle-line {
+    background: #333;
+  }
+  // 菜单
   .menu-item .badge {
     font-weight: 400;
   }
   // 标题
-  h1 {
-    font-size: 1.375em;
-  }
-  h2 {
-    font-size: 1.25em;
-  }
-  h3 {
-    font-size: 1.125em;
-  }
-  h4 {
-    font-size: 1em;
-  }
-  h5 {
-    font-size: .875em;
-  }
-  // 引用
+  h1 { font-size: 1.375em; } // 22px
+  h2 { font-size: 1.25em;  } // 20px
+  h3 { font-size: 1.125em; } // 18px
+  h4 { font-size: 1em;     } // 16px
+  h5 { font-size: .875em;  } // 14px
+  // 引文
   blockquote {
     font-size: .875em;
   }
   // 列表
+  ul, li {
+    p, a {
+      font-size: .875em;
+    }
+  }
   ul {
     padding-inline-start: 2.1em;
-    p, a {
-      font-size: .875em;
-    }
-  }
-  li {
-    p, a {
-      font-size: .875em;
-    }
   }
 }
-
 @media (max-width: 767px) {
-  // 缩小左右留白
+  // 缩小正文左右留白
   .posts-expand {
     margin: 0 10px;
   }
