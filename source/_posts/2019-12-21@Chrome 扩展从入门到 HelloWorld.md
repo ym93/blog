@@ -1,15 +1,19 @@
 ---
-title: Chrome 扩展：从入门到造一个书签同步插件
-categories:
-  - Web Front-end
+title: Chrome 扩展从入门到 HelloWorld
 tags:
   - Chrome
   - WebComponents
+categories:
+  - Web Front-end
+date: 2019-12-21 01:26:05
 ---
+
 
 ## 认识 Chrome 扩展
 
 扩展（Extension）是用于修改或者增加浏览器功能的小型软件。“扩展”这个称谓可能稍显陌生，在国内人们更习惯于称它们为**浏览器插件**。它们使用 HTML，JavaScript, CSS 等网页开发技术构建。
+
+<!-- more -->
 
 **你可以理解为，扩展就是在浏览器中持续运行的网页，当你需要时随时唤醒它，而不需要等待加载。**扩展之于 Chrome 浏览器，就像小程序之于微信。
 
@@ -23,8 +27,6 @@ Chrome 扩展经历了：
 - 2010年12月，“扩展中心”升级为我们今天熟知的 Chrome 网上应用店。
 
 **时至今日，Chrome 网上应用店托管着大约19万个扩展。**
-
-[图：一些常见的扩展]
 
 它们之中有大名鼎鼎的广告拦截程序 Adblock Plus，网页长截屏工具 Full Page Screen Capture，也有前端开发同学们熟悉的调试工具 Vue Devtools，React Developer Tools。
 
@@ -187,13 +189,13 @@ chrome.runtime.onInstalled.addListener(function() {
 
 这是因为 Chrome 提供了动态修改它们的接口。以浏览器按钮为例，`chrome.browserAction` API 包含了用于设置弹窗的 `setPopup`，以及用于设置图标的 `setIcon`。
 
-## 做一个书签同步扩展
+## 后记
 
+本想写一篇《Chrome 扩展：从入门到做一个 XXX 插件》，记录一个 ~~既有功能又有颜值~~ 还凑合的扩展开发全过程。由于工作太忙入完门就继续不下去了。文章在草稿里躺了半个月，今天正式宣布放弃。
 
+但愿为感兴趣的同学上手浏览器扩展开发做了点微小工作。
 
-### 为什么做
-
-
+Orz...
 
 ## 参考资料
 

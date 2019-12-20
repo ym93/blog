@@ -36,6 +36,11 @@ button, a {
   -webkit-tap-highlight-color: transparent;
 }
 
+// 代码
+code, kbd, samp {
+  font-size: .875em;
+}
+
 // PC 端
 @media (min-width: 992px) {
   // 隐藏菜单中冗余的“分类”和“标签”
@@ -111,6 +116,13 @@ button, a {
   }
   ul {
     padding-inline-start: 2.1em;
+  }
+  // 回到首页
+  .back-to-top {
+    cursor: default;
+    &:hover {
+      color: #fff;
+    }
   }
 }
 @media (max-width: 767px) {
