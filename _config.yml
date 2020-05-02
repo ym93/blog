@@ -97,4 +97,4 @@ theme: next-v7.6
 deploy:
   type: git
   repo: https://github.com/ymcn/blog.git
-  branch: dist
+  branch: gh-pages
