@@ -6,11 +6,6 @@
   border: none !important;
 }
 
-// 代码
-p > code {
-  word-break: break-all;
-}
-
 // 列表
 ul {
   p {
@@ -18,18 +13,26 @@ ul {
   }
 }
 
-// 应用内浏览
-.in-app {
-  .headband, .header, .footer {
-    display: none;
-  }
-  .main {
-    padding-bottom: 0;
-  }
-  .post {
-    padding-bottom: 50px;
-  }
+// 菜单
+.menu-item .badge {
+  font-weight: 400;
 }
+.menu .menu-item .badge {
+  text-shadow: none;
+}
+
+// 应用内浏览
+// .in-app {
+//   .headband, .header, .footer {
+//     display: none;
+//   }
+//   .main {
+//     padding-bottom: 0;
+//   }
+//   .post {
+//     padding-bottom: 50px;
+//   }
+// }
 
 // 移除触摸高亮
 button, a {
@@ -37,12 +40,30 @@ button, a {
 }
 
 // 代码
+p > code {
+  word-break: break-all;
+}
 code, kbd, samp {
   font-size: .875em;
 }
 
 // PC 端
 @media (min-width: 992px) {
+  // 布局
+  .container {
+    padding-top: 10px;
+  }
+  .header-inner, .sidebar-inner, .content-wrap {
+    border-radius: 5px;
+  }
+  // 标题栏
+  .site-meta {
+    display: none;
+  }
+  // 头像
+  .site-author-image {
+    max-width: 88px;
+  }
   // 隐藏菜单中冗余的“分类”和“标签”
   .menu {
     .menu-item-tags, .menu-item-categories {
@@ -56,8 +77,9 @@ code, kbd, samp {
 @media (max-width: 991px) {
   // 个性化导航
   .site-meta {
-    padding: 12px 0 20px 0;
+    padding: 1rem 0;
     background: #fff;
+    box-shadow: none;
     box-shadow: 0 0 3px rgba(0,0,0,0.3);
   }
   .headband {
@@ -78,18 +100,18 @@ code, kbd, samp {
       display: inline-block;
       font-size: 1.125em;
     }
-    &::after {
-      content: '';
-      display: inline-block;
-      height: .6em;
-      width: 2em;
-      background: rgba(230, 236, 2, 0.5);
-      position: absolute;
-      top: 60%;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index -1;
-    }
+    // &::after {
+    //   content: '';
+    //   display: inline-block;
+    //   height: .6em;
+    //   width: 2em;
+    //   background: rgba(230, 236, 2, 0.5);
+    //   position: absolute;
+    //   top: 60%;
+    //   left: 50%;
+    //   transform: translateX(-50%);
+    //   z-index -1;
+    // }
   }
   .site-nav-toggle .toggle .toggle-line {
     background: #333;

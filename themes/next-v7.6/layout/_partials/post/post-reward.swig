@@ -14,7 +14,9 @@
       {%- endif %}
       <div style="display: inline-block;">
         <img src="{{ url_for(image) }}" alt="{{ author }} {{ translation }}">
+        {%- if false %}
         <p>{{ translation }}</p>
+        {%- endif %}
       </div>
     {%- endfor %}
 

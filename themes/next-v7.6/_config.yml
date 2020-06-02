@@ -17,7 +17,7 @@ cache:
   enable: true
 
 # Remove unnecessary files after hexo generate.
-minify: false
+minify: true
 
 # Define custom file paths.
 # Create your custom files in site directory `source/_data` and uncomment needed files below.
@@ -40,10 +40,10 @@ custom_file_path:
 # ---------------------------------------------------------------
 
 favicon:
-  small: /images/favicon_16x16.png
-  medium: /images/favicon_32x32.png
-  apple_touch_icon: /images/logo_rounded.png
-  safari_pinned_tab: /images/logo_rounded.png
+  # small: /images/favicon_16x16.png
+  # medium: /images/favicon_32x32.png
+  # apple_touch_icon: /images/logo_rounded.png
+  # safari_pinned_tab: /images/logo_rounded.png
   #android_manifest: /images/manifest.json
   #ms_browserconfig: /images/browserconfig.xml
 
@@ -79,7 +79,7 @@ footer:
   # Beian ICP and gongan information for Chinese users. See: http://www.beian.miit.gov.cn, http://www.beian.gov.cn
   beian:
     enable: true
-    icp: 闽ICP备14013901号-3
+    icp: 粤ICP备20041235号
     # The digit in the num of gongan beian.
     gongan_id:
     # The full num of gongan beian.
@@ -104,10 +104,9 @@ creative_commons:
 # ---------------------------------------------------------------
 
 # Schemes
+# scheme: Mist
 scheme: Pisces
-#scheme: Mist
-#scheme: Pisces
-#scheme: Gemini
+# scheme: Gemini
 
 
 # ---------------------------------------------------------------
@@ -182,7 +181,7 @@ site_state: true
 # Value before `||` delimiter is the target permalink, value after `||` delimiter is the name of Font Awesome icon.
 social:
   #GitHub: https://github.com/yourname || github
-  #E-Mail: mailto:yourname@gmail.com || envelope
+  # E-Mail: mailto:hi@caiyiming.com || envelope
   #Weibo: https://weibo.com/yourname || weibo
   #Google: https://plus.google.com/yourname || google
   #Twitter: https://twitter.com/yourname || twitter
@@ -268,12 +267,12 @@ tag_icon: false
 # Front-matter variable (unsupport animation).
 reward_settings:
   # If true, reward will be displayed in every article by default.
-  enable: false
+  enable: true
   animation: false
   #comment: Donate comment here.
 
 reward:
-  #wechatpay: /images/wechatpay.png
+  wechatpay: /images/wechatpay.png
   #alipay: /images/alipay.png
   #bitcoin: /images/bitcoin.png
 
@@ -365,7 +364,7 @@ codeblock:
     style:
 
 back2top:
-  enable: true
+  enable: false
   # Back to top in sidebar.
   sidebar: false
   # Scroll percent label in b2t button.
