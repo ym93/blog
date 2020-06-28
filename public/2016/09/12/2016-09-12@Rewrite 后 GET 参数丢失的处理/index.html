@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        Rewrite 后 GET 参数丢失的处理 
+<p>在 Apache Rewrite 中，如果定义的规则中包含了自定义 GET 参数，原有的 GET 参数就会消失。</p>
+<p>例如，下面这条规则生效后，访问 <a href="http://www.example.com/mike" target="_blank" rel="noopener">www.example.com/mike</a> 实际上是访问 <a href="http://www.example.com/index.php?url=mike" target="_blank" rel="noopener">www.example.com/index.php?url=mike</a> ，index.php 可以接收到参数 url ，这个 GET 参数实际上是我们在重写时自定义的。</p>
+<a id="more"></a>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RewriteRule ^([a-zA-Z\d]+)$ index.php?url&#x3D;$1</span><br></pre></td></tr></table></figure>
+
+<p>如果访问的时候加上其他参数（如 <a href="http://www.example.com/mike?param=1）" target="_blank" rel="noopener">www.example.com/mike?param=1）</a> ，index.php 仍旧只能接收到参数 url ，无法接收链接中的其他参数。</p>
+<p>要解决这个问题，只要在重写规则里加上参数 %{QUERY_STRING} ，处理请求的页面即可收到原有链接中的所有参数，重写规则示例如下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RewriteRule ^([a-zA-Z\d]+)$ index.php?url&#x3D;$1&amp;%&#123;QUERY_STRING&#125;</span><br></pre></td></tr></table></figure> 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

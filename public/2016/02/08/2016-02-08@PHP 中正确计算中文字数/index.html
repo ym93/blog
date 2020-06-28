@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        PHP 中正确计算中文字数 
+<p>在使用 PHP 开发网站或服务端的时候，经常需要限制用户输入信息的长度。</p>
+<p>PHP 提供了 <code>strlen</code> 方法用于计算字符串的长度。早期一般用这个方法判断字数。</p>
+<a id="more"></a>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> strlen(<span class="string">'早上好'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>不过，这个方法计算的是字节数，而不是字符数（字数）。在 utf-8 编码下，一个汉字一般等于3个字节。所以用 <code>strlen</code> 计算“早上好”的长度，结果等于9。换言之，在使用 <code>strlen</code> 限制长度小于12的情况下，用户可以输入12个英文字母，或4个汉字。</p>
+<p>以前解决这种问题一般使用更宽容的长度限制，如：预计让用户输入12个中文字符，则限制 <code>strlen($s)&lt;=36</code> 。这又会导致用户能够输入36个英文字符。</p>
+<p>最好的解决办法是使用新版 PHP（通过拓展）提供的 <code>mb_strlen</code> 方法，它可以忽略编码造成中英文字节数的差别，计算字符数，也就真正实现了计算字数。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">echo</span> mb_strlen( <span class="string">'早上好'</span>, <span class="string">'utf-8'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>用 <code>mb_strlen</code> 计算“早上好”的长度，结果为3。</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

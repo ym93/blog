@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        自定义 Vim 编辑器的注释颜色 
+<p>在 Vim 编辑器中，注释默认显示为深蓝色，在黑色背景下几乎无法看清内容，一度影响了我的工作效率和心情。原来，只需简单的配置就能够自定义 Vim 的注释颜色。</p>
+<a id="more"></a>
+
+<img src="/images/posts/2018/05/vim_comment_before.png" class="" width="450" title="默认高亮效果">
+
+<p>编辑 Vim 的配置文件 <code>/etc/Vimrc</code> ，在文档最后加上一行配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">highlight Comment ctermfg&#x3D;6</span><br></pre></td></tr></table></figure>
+
+<p>这里 <code>6</code> 对应暗青色，也可以用 <code>DarkCyan</code> 达到相同的效果。保存后重启 Vim 即可看到配置生效。</p>
+<img src="/images/posts/2018/05/vim_comment_after.png" class="" width="450" title="修改后高亮效果">
+
+
+<p>除了上面使用的 #6 暗青色，还有很多颜色可供选择，下表列举了一些在 Git Bash 中测试有效的颜色。</p>
+<table>
+<thead>
+<tr>
+<th>编码</th>
+<th>名称</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>Black</td>
+<td>黑色</td>
+</tr>
+<tr>
+<td>1</td>
+<td>DarkRed</td>
+<td>暗红色</td>
+</tr>
+<tr>
+<td>2</td>
+<td>DarkGreen</td>
+<td>暗绿色</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Brown, DarkYellow</td>
+<td>暗黄色</td>
+</tr>
+<tr>
+<td>4</td>
+<td>DarkBlue</td>
+<td>暗蓝色</td>
+</tr>
+<tr>
+<td>5</td>
+<td>DarkMagenta</td>
+<td>暗紫红色</td>
+</tr>
+<tr>
+<td>6</td>
+<td>DarkCyan</td>
+<td>暗青色</td>
+</tr>
+<tr>
+<td>7</td>
+<td>LightGray, LightGrey, Gray, Grey</td>
+<td>浅灰色</td>
+</tr>
+</tbody></table>
+<p>不同 Terminal 中编码对应的颜色可能不同，具体可以参考 <a href="http://vimdoc.sourceforge.net/htmldoc/syntax.html#highlight-ctermfg" target="_blank" rel="noopener">官方文档</a> 。</p>
+<p>相关环境：Tencent Cloud CVM / CentOS 7.3 / Vim 7.4 / Git Bash</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

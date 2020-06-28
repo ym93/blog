@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        使用 CSS 实现 DIV 垂直居中 
+<p>项目中经常会用到内容相对屏幕完全居中的布局。水平居中通常写一句代码即可实现，而垂直居中就稍微麻烦一些。其实，让 DIV 垂直居中的方法有很多，我个人常用两种 DIV+CSS 的方式实现。</p>
+<a id="more"></a>
+
+<p>两种方式的 HTML 代码是一样的，类名为 content 的 DIV 是放置居中内容的容器，外层的两个 DIV 则用来辅助实现居中布局。下文使用类名表示三个不同的 DIV 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;div class&#x3D;&quot;outer-wrap&quot;&gt;</span><br><span class="line">  &lt;div class&#x3D;&quot;inner-wrap&quot;&gt;</span><br><span class="line">    &lt;div class&#x3D;&quot;content&quot;&gt;</span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">  &lt;&#x2F;div&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>第一种方法，利用 table-cell 实现垂直居中。</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.outer-wrap</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">400px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">400px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#cacaca</span>;</span><br><span class="line">  <span class="attribute">display</span>: table;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.inner-wrap</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: table-cell;</span><br><span class="line">  <span class="attribute">vertical-align</span>: middle;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.content</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#000</span>;</span><br><span class="line">  <span class="attribute">margin</span>: <span class="number">0</span> auto;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分别将 outer-wrap 和 inner-wrap 类名的 <em>display</em> 属性设为 <code>table</code> 和 <code>table-cell</code>，然后给 inner-wrap 添加 <code>vertical-align: middle</code> ，实现垂直居中。最后给 content 添加 <code>margin: 0 auto</code> ，实现水平居中。</p>
+<p>此方法不兼容过时浏览器（&lt;IE8），不过我反而用得比较多，毕竟移动端基本不需要考虑IE6/7/8的兼容问题。</p>
+<p><strong>第二种方法，利用绝对布局实现垂直居中。</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.outer-wrap</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">400px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">400px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#cacaca</span>;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.inner-wrap</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#888</span>;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">left</span>: <span class="number">50%</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.content</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">height</span>: <span class="number">100%</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#000</span>;</span><br><span class="line">  <span class="attribute">position</span>: absolute;</span><br><span class="line">  <span class="attribute">top</span>: -<span class="number">50%</span>;</span><br><span class="line">  <span class="attribute">left</span>: -<span class="number">50%</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先将 outer-wrap 设为相对布局 <code>position: relative</code> ，同时将 inner-wrap 、content 设为绝对布局 <code>position: absolute</code> 。此时，inner-wrap 将根据 outer-wrap 的位置定位，content 将相对于 inner-wrap 的位置定位。然后为 inner-wrap 添加 <code>top: 50%</code> 、 <code>left: 50%</code> ，使其（左上角）定位到 outer-wrap 的中点位置，实现大致的居中定位。最后为 content 添加 <code>top: -50%</code> 、 <code>left: -50%</code> ，实现精确的居中定位。</p>
+<p>此方法仅适用于内容容器 DIV 的宽度、高度固定的情况。</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        解决 SQLite 把空值转为字符串 
+<p>遇到一个非常诡异的问题。</p>
+<p>当服务端通过 <code>json_encode</code> 方法输出 JSON 格式数据，空值会被以明文形式输出。</p>
+<a id="more"></a>
+
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">"name"</span>: <span class="literal">null</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>客户端通过 JSONTokener、JSONObject 解析后直接存入 SQLite 数据库，null（空值）会被认为是字符串“null”。</p>
+<p>这样就导致从数据库中取出的是一个字符串，判断结果为非空。</p>
+<p>我的解决办法是写一个静态方法，从服务器返回的 JSON 里解析出的字符串，都经过此方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">fixNullValue</span><span class="params">(String string)</span></span>&#123;</span><br><span class="line">  <span class="keyword">if</span>( string.equals(<span class="string">"null"</span>) )&#123;</span><br><span class="line">    string = <span class="string">""</span>;</span><br><span class="line">    <span class="keyword">return</span> string;</span><br><span class="line">  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> string;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name = fixNullValue(name);</span><br></pre></td></tr></table></figure>
+
+<p>即如果解析到的字符串内容等于“null”，就在存入数据库前赋值为空字符串。</p>
+<p>注意，不能使用 <code>string = null</code> ，这样做的结果还是会被 SQLite 存为字符串“null”。</p>
+<p>以后从数据库里取值的时候，可以用 <code>isEmpty</code> 方法判断是否为空。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>( !name.isEmpty() )</span><br></pre></td></tr></table></figure> 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        使用 PHP 设置 Cookie 
+<p>近期使用 Cookie 实现网站的登陆保持功能，期间也遇到一些问题。</p>
+<p>1、新建</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setcookie(name,value,expire,path,domain,secure)</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+
+<p>使用 <code>setcookie</code> 方法新建 cookie 。必需参数：name ，Cookie 的名称；value ，Cookie值。可选参数：expire ，Cookie 的过期时间；path ，Cookie 的服务器路径；domain ，Cookie 的域名；secure ，是否使用安全链接。</p>
+<p>例如，创建一个名称为 email ，值为 <a href="mailto:exaple@example.com">exaple@example.com</a> ，两星期后过期的 Cookie ，网上普遍的写法是这样的：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setcookie(<span class="string">'email'</span>,<span class="string">'exaple@example.com'</span>,time()+<span class="number">2</span>*<span class="number">7</span>*<span class="number">24</span>*<span class="number">3600</span>);</span><br></pre></td></tr></table></figure>
+<p>但我在本地服务器测试时，出现 Cookie 跨页丢失问题，即同一网站A页面创建的 Cookie 只在A页面有效，在B页面无法读取值。于是我增加了第四个参数，解决了该问题。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setcookie(<span class="string">'email'</span>,<span class="string">'exaple@example.com'</span>,time()+<span class="number">2</span>*<span class="number">7</span>*<span class="number">24</span>*<span class="number">3600</span>,<span class="string">'/'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>2、读取</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$_COOKIE[<span class="string">'email'</span>];</span><br></pre></td></tr></table></figure>
+<p>没什么好说的，和读取 Session 一样。使用时最好加 isset 方法判断先该 Cookie 存在，否则容易报错。</p>
+<p>3、删除</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setcookie(&#39;email&#39;,&#39;&#39;,time()-3600,&#39;&#x2F;&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>要删除一个 Cookie ，设置其过期时间早于当前时间即可。</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

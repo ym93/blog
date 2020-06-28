@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        Git 使用命令方式实现免密码操作 
+<p>每次用 Git 操作远程仓库时都需要验证身份，反复提交账号密码不但繁琐，而且容易忙中出错、影响心情。除了用 SSH 方式访问仓库，我们还可以用命令将密码保存在本地，从频繁输入密码中解脱出来。</p>
+<a id="more"></a>
+
+<p>这种方式在只能用 https 方式使用 Git 的场景下简直救命。</p>
+<p>在需要保存登录信息的项目目录下执行以下命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git config --global credential.helper store</span><br></pre></td></tr></table></figure>
+
+<p>该命令将用户名和密码以明文的形式保存在 <code>~/.git-credentials</code> 文件中。</p>
+<p>注意，是以 <strong>明文形式</strong> 保存的密码。所以这种方式是极不安全的，只建议在少数情况下使用，并且要注意保管好 .git-credentials 文件。</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

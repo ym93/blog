@@ -1,0 +1,38 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        使 Nginx 支持 WordPress 固定链接 
+<p>昨天把博客从虚拟主机迁移到了云主机，同时也将引擎由 Apache 更换成了 Nginx 。迁移过程基本顺利，仅出现 WordPress 的“固定链接”功能无法正常使用，导致文章不能正常浏览。</p>
+<a id="more"></a>
+
+<p>在阅读官方文档后，问题已解决。编辑当前站点的 .conf 文件，在 <code>server</code> 内添加以下内容，然后重启 Web 服务即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location &#x2F; &#123;</span><br><span class="line">  try_files $uri $uri&#x2F; &#x2F;index.php?$args;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>附 WordPress 提供的 Nginx 配置示例。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">  ## Your website name goes here.</span><br><span class="line">  server_name domain.tld;</span><br><span class="line">  ## Your only path reference.</span><br><span class="line">  root &#x2F;var&#x2F;www&#x2F;wordpress;</span><br><span class="line">  ## This should be in your http block and if it is, it&#39;s not needed here.</span><br><span class="line">  index index.php;</span><br><span class="line"></span><br><span class="line">  location &#x3D; &#x2F;favicon.ico &#123;</span><br><span class="line">    log_not_found off;</span><br><span class="line">    access_log off;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  location &#x3D; &#x2F;robots.txt &#123;</span><br><span class="line">    allow all;</span><br><span class="line">    log_not_found off;</span><br><span class="line">    access_log off;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  location &#x2F; &#123;</span><br><span class="line">    # This is cool because no php is touched for static content.</span><br><span class="line">    # include the &quot;?$args&quot; part so non-default permalinks doesn&#39;t break when using query string</span><br><span class="line">    try_files $uri $uri&#x2F; &#x2F;index.php?$args;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  location ~ \.php$ &#123;</span><br><span class="line">    #NOTE: You should have &quot;cgi.fix_pathinfo &#x3D; 0;&quot; in php.ini</span><br><span class="line">    include fastcgi.conf;</span><br><span class="line">    fastcgi_intercept_errors on;</span><br><span class="line">    fastcgi_pass php;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ &#123;</span><br><span class="line">    expires max;</span><br><span class="line">    log_not_found off;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>相关环境：Aliyun ECS / CentOS 7 x64 / Nginx 1.8 / PHP 5.6 / WordPress 4.7</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

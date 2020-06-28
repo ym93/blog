@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        
+  <a href="/2018/09/02/2018-09-02@Laravel%20%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8/">
+    Laravel 快速入门
+  </a>
+  <p>上周我在团队内做了 Laravel 入门分享，希望能够帮助对这款框架不熟悉的同学快速上手，最好听完就能撸个接口。作为前端小哥的我自知对后端了解有限，于是我事先写了个 demo，围绕一个假定的需求 —— 学生信息的增删改查来讲这堂课。</p>
+
+  <a href="/2017/05/03/2017-05-03@PHP%20%E4%BD%BF%E7%94%A8%20Guzzle%20%E5%8F%91%E9%80%81%20http%20%E8%AF%B7%E6%B1%82/">
+    PHP 使用 Guzzle 发送 http 请求
+  </a>
+  <p>Guzzle 是一个开源的 PHP HTTP 客户端，同时支持同步和异步方法。使用它可以轻松发送 GET、POST 请求，实现和第三方服务器的通信。</p>
+
+  <a href="/2017/02/16/2017-02-16@%E4%BD%BF%E7%94%A8%20Laravel%20Excel%20%E5%AF%BC%E5%85%A5%E5%AF%BC%E5%87%BA%20Excel%20&%20CSV/">
+    使用 Laravel Excel 导入导出 Excel & CSV
+  </a>
+  <p>Laravel Excel 是一个开源库，使用它可以很轻易地在 Laravel 项目上实现导入和导出 Excel、CSV 文件。Laravel Excel 基于另一个开源项目 PHPExcel ，所以如果你的应用不是运行在 Laravel 上， 你也可以尝试使用 PHPExcel 。</p>
+
+  <a href="/2017/02/12/2017-02-12@%E4%BD%BF%E7%94%A8%20Intervention%20Image%20%E5%BA%93%E5%A4%84%E7%90%86%E5%9B%BE%E7%89%87/">
+    使用 Intervention Image 库处理图片
+  </a>
+  <p>Intervention Image 是一个开源图片处理库。使用它需要 PHP&gt;=5.4、FileInfo 拓展、GD 库或 Imagick 拓展。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>执行以下命令使用 Composer 安装 Intervention Image 的最新版本。</p>
+
+  <a href="/2016/12/23/2016-12-23@%E8%A7%A3%E5%86%B3%E6%97%A0%E6%B3%95%E7%94%A8%20localhost%20%E8%BF%9E%E6%8E%A5%20MySQL/">
+    解决无法用 localhost 连接 MySQL
+  </a>
+  <p>今天尝试往云主机上迁移博客，遇到不少麻烦，其中就包括无法用 localhost 连接 MySQL 。用了一个晚上才得以解决，记录一下解决过程。</p>
+<p>第一步，检查 <code>/etc/hosts</code> 文件。确认 localhost 已映射到 127.0.0.1 ，否则添加正确的映射。经检查，确定 hosts 设置没有问题。</p>
+
+  <a href="/2016/12/20/2016-12-20@%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%20PHP%20%E6%8B%93%E5%B1%95/">
+    编译安装 PHP 拓展
+  </a>
+  <p>在使用 PHP 的过程中可能用到各种拓展，包括 mbstring 等。我们可以按需安装拓展，这里以 mbstring 为例演示如何编译安装拓展。</p>
+<p>第一步，确认已安装必要依赖。</p>
+
+  <a href="/2016/12/15/2016-12-15@Linux%20%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%20PHP7.1/">
+    Linux 编译安装 PHP7.1
+  </a>
+  <p>第一步，安装相关依赖。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install –y gcc gcc++ libxml2-devel perl</span><br></pre></td></tr></table></figure>
+
+  <a href="/2016/09/29/2016-09-29@%E4%BD%BF%E7%94%A8%20PHP%20%E8%AE%BE%E7%BD%AE%20Cookie/">
+    使用 PHP 设置 Cookie
+  </a>
+  <p>近期使用 Cookie 实现网站的登陆保持功能，期间也遇到一些问题。</p>
+<p>1、新建</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setcookie(name,value,expire,path,domain,secure)</span><br></pre></td></tr></table></figure>
+
+  <a href="/2016/09/19/2016-09-19@PHP%20%E5%88%A0%E9%99%A4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E5%85%83%E7%B4%A0/">
+    PHP 删除数组中的元素
+  </a>
+  <p>删除数组元素有两种方式，第一种是使用 <code>unset</code> 方法。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unset</span>($arr[<span class="number">1</span>]);</span><br></pre></td></tr></table></figure>
+
+  <a href="/2016/09/10/2016-09-10@%E8%A7%A3%E5%86%B3%20json_encode%20%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81/">
+    解决 json_encode 中文乱码
+  </a>
+  <p>如果用 json_encode 将一个包含中文的数组转换成 JSON 格式数据，会发现中文部分全部变成了乱码。PHP 5.4+ 可以通过在使用 <code>json_encode</code> 时增加参数 JSON_UNESCAPED_UNICODE 解决。</p>
+
+
+
+
+  <a href="/tags/PHP/page/2/">下一页</a>
+
+
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

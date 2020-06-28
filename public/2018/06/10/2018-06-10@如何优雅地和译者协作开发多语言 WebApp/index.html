@@ -1,0 +1,194 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        如何优雅地和译者协作开发多语言 WebApp 
+<p>因为工作需要，未来开发的大部分 WebApp、H5 都需要国际化。现有工作流程比较简单：不同国家的译者在 Google Docs 的表格上翻译，开发者手动拷贝文本到前端项目中。对开发而言，由于看不懂文档中的大多数语言，既费时费力又容易出错。</p>
+<a id="more"></a>
+
+<p>所以我迫切需要一个能优化流程的工具。首先要使翻译的同事们不需要做太多改变 —— 总不能强求非开发人员学习 JSON 吧，又必须能让我显著减少浪费在拷贝和校对文本上的时间，专注于功能开发。</p>
+<p>于是我写了一个叫 i18nCSV 的工具，主要做几件事情：</p>
+<ul>
+<li>解析 CSV 翻译文件</li>
+<li>返回多语言 Object</li>
+<li>输出各个语言的 <code>.json</code>、<code>.yml</code> 文件</li>
+<li>字符串处理</li>
+</ul>
+<p>译者仍然在 Google Docs 上工作，我只需把表格存为 CSV 格式再用工具跑一下，就能得到我要的东西。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install i18n-csv --save-dev</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p>CSV 文件内容：</p>
+<table>
+<thead>
+<tr>
+<th>Field name</th>
+<th>en</th>
+<th>zh-cn</th>
+<th>jp</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>title</td>
+<td>Hello World</td>
+<td>你好世界</td>
+<td>こんにちは世界</td>
+</tr>
+<tr>
+<td>subtitle</td>
+<td>The weather is great !</td>
+<td>天气真好!</td>
+<td>天_はとても良いです！</td>
+</tr>
+</tbody></table>
+<p>使用 i18nCSV 解析：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> i18nCSV = <span class="built_in">require</span>(<span class="string">'i18n-csv'</span>)</span><br><span class="line">i18nCSV.parse(&#123; <span class="attr">input</span>: <span class="string">'./file1.csv'</span> &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>返回的对象：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  en: &#123;</span><br><span class="line">    title: <span class="string">'Hello World'</span>,</span><br><span class="line">    subtitle: <span class="string">'The weather is great !'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">'zh-cn'</span>: &#123;</span><br><span class="line">    title: <span class="string">'你好世界'</span>,</span><br><span class="line">    subtitle: <span class="string">'天气真好!'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  jp: &#123;</span><br><span class="line">    title: <span class="string">'こんにちは世界'</span>,</span><br><span class="line">    subtitle: <span class="string">'天_はとても良いです！'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="设置起始列"><a href="#设置起始列" class="headerlink" title="设置起始列"></a>设置起始列</h2><p>默认使用第 2 行为正文的起始行，第 2 列作为正文的起始列。</p>
+<p>有时我们需要指定正文的起始列。例如，为了和翻译人员协作，我们需要在正文前面插入两列描述内容，但是不希望这两列被当作语言解析到对象中。</p>
+<p>CSV 文件内容：</p>
+<table>
+<thead>
+<tr>
+<th>Field name</th>
+<th>Description (Chinese)</th>
+<th>Description (English)</th>
+<th>en</th>
+<th>zh-cn</th>
+<th>jp</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>title</td>
+<td>标题</td>
+<td>main title</td>
+<td>Hello World</td>
+<td>你好世界</td>
+<td>こんにちは世界</td>
+</tr>
+<tr>
+<td>subtitle</td>
+<td>副标题</td>
+<td>subtitle</td>
+<td>The weather is great !</td>
+<td>天气真好!</td>
+<td>天_はとても良いです！</td>
+</tr>
+</tbody></table>
+<p>此时可以使用 <code>startCol=4</code> 指定正文从第 4 列开始：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">i18nCSV.parse(&#123;</span><br><span class="line">  input: <span class="string">'./file2.csv'</span>,</span><br><span class="line">  startCol: <span class="number">4</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>类似的，使用 <code>startRow</code> 可以设置正文的起始行。</p>
+<h2 id="设置语言代码"><a href="#设置语言代码" class="headerlink" title="设置语言代码"></a>设置语言代码</h2><p>默认使用正文的列标题（第一行）作为语言代码：<code>en</code>、<code>zh-cn</code>、<code>jp</code>，并用作输出的文件名：<code>en.json</code>、<code>zh-cn.json</code>、<code>jp.json</code>。</p>
+<p>当需要和其他同事，比如翻译或运营人员协作时，列标题应该更加友好、通俗易懂。此时可以用 <code>#</code> 设置语言代码。列标题中包含多个 <code>#</code> 时将始终使用最后一个 <code>#</code> 后的内容作为语言代码。</p>
+<p>示例：</p>
+<table>
+<thead>
+<tr>
+<th>Field name</th>
+<th>English #en</th>
+<th>Chinese #zh-cn</th>
+<th>Japanese #jp</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>title</td>
+<td>Hello World</td>
+<td>你好世界</td>
+<td>こんにちは世界</td>
+</tr>
+<tr>
+<td>subtitle</td>
+<td>The weather is great !</td>
+<td>天气真好!</td>
+<td>天_はとても良いです！</td>
+</tr>
+</tbody></table>
+<h2 id="输出"><a href="#输出" class="headerlink" title="输出"></a>输出</h2><p>使用 <code>ouput</code> 指定输出目录，解析后会在目录下生成各个语言的 <code>.json</code> 文件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">i18nCSV.parse(&#123;</span><br><span class="line">  input: <span class="string">'./file1.csv'</span>,</span><br><span class="line">  output: <span class="string">'path/to/output'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>输出完毕打印的日志：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Multi-language files has been generated !</span><br><span class="line"></span><br><span class="line">source:  .&#x2F;file1.csv</span><br><span class="line">output:  path&#x2F;to&#x2F;output</span><br><span class="line">format:  JSON</span><br></pre></td></tr></table></figure>
+
+<p>如无意外，<code>path/to/output</code> 目录下已经新增了 <code>en.json</code> 、<code>zh-cn.json</code> 、<code>jp.json</code> 三个文件。</p>
+<p>生成的 <code>en.json</code> 文件内容：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// path/to/output/en.json</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="attr">"title"</span>: <span class="string">"Hello World"</span>,</span><br><span class="line">  <span class="attr">"subtitle"</span>: <span class="string">"The weather is great !"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用 <code>saveAsYAML=true</code> 可以输出更简洁、易于修改的 YAML 格式：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">i18nCSV.parse(&#123;</span><br><span class="line">  input: <span class="string">'./file1.csv'</span>,</span><br><span class="line">  output: <span class="string">'path/to/output'</span>,</span><br><span class="line">  saveAsYAML: <span class="literal">true</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>生成的 <code>en.yml</code> 文件内容：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># path/to/output/en.yml</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">Hello</span> <span class="string">World</span></span><br><span class="line"><span class="attr">subtitle:</span> <span class="string">The</span> <span class="string">weather</span> <span class="string">is</span> <span class="string">great</span> <span class="string">!</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="替换"><a href="#替换" class="headerlink" title="替换"></a>替换</h2><p>假设有 CSV 文件内容如下：</p>
+<table>
+<thead>
+<tr>
+<th>Field name</th>
+<th>en</th>
+<th>zh-cn</th>
+<th>jp</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>title</td>
+<td>Hello World</td>
+<td>你好世界</td>
+<td>こんにちは世界</td>
+</tr>
+<tr>
+<td>subtitle</td>
+<td>Share trips with #trips</td>
+<td>参与话题 #trips 分享旅程</td>
+<td>#trips とのシェアトリップ</td>
+</tr>
+</tbody></table>
+<p>为了自定义文本中的 <em>#trips</em>  的样式，我们需要对文本进行一些处理。</p>
+<p><code>replace</code> 用于添加 <strong>替换任务</strong>，它的每一个元素都是一个任务。任务（数组）的第一个元素是被替换内容，可以是正则表达式或字符串，第二个元素是替换内容。</p>
+<p>例如，将所有 <code>#trips</code> 用 <code>&lt;hashtag&gt;</code> 标签包裹起来：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">i18nCSV.parse(&#123;</span><br><span class="line">  input: <span class="string">'./file4.csv'</span>,</span><br><span class="line">  replace: [</span><br><span class="line">    [<span class="regexp">/(#\w+)/g</span>, <span class="string">'&lt;hashtag&gt;$1&lt;/hashtag&gt;'</span>]</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>返回的对象：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  en: &#123;</span><br><span class="line">    title: <span class="string">'Hello World'</span>,</span><br><span class="line">    subtitle: <span class="string">'Share trips with &lt;hashtag&gt;#trips&lt;/hashtag&gt;'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">'zh-cn'</span>: &#123;</span><br><span class="line">    title: <span class="string">'你好世界'</span>,</span><br><span class="line">    subtitle: <span class="string">'参与话题 &lt;hashtag&gt;#trips&lt;/hashtag&gt; 分享旅程'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  jp: &#123;</span><br><span class="line">    title: <span class="string">'こんにちは世界'</span>,</span><br><span class="line">    subtitle: <span class="string">'&lt;hashtag&gt;#trips&lt;/hashtag&gt; とのシェアトリップ'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>任务的第三个元素可以指定仅对某个字段有效：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">i18nCSV.parse(&#123;</span><br><span class="line">  input: <span class="string">'./file4.csv'</span>,</span><br><span class="line">  replace: [</span><br><span class="line">    [<span class="regexp">/(#\w+)/g</span>, <span class="string">'&lt;hashtag&gt;$1&lt;/hashtag&gt;'</span>, <span class="string">'subtitle'</span>]</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="提示"><a href="#提示" class="headerlink" title="提示"></a>提示</h2><ol>
+<li>CSV 文件的第一列始终作为每一行文本的 Key 。</li>
+<li>CSV 文件的编码必须是 UTF-8 ，否则可能出现解析后的内容包含乱码。Mac 下转换编码：使用 Numbers 打开 CSV 文件，点击菜单中的 文件 &gt; 导出到 &gt; CSV，在 <em>高级选项</em> 中将 <em>文本编码</em> 修改为 <em>UTF-8</em> 后导出。</li>
+</ol>
+<p>相关环境：macOS 10.13 / Node.js 8.11 / npm 5.6</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

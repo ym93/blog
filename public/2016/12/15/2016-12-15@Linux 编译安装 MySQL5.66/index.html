@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        Linux 编译安装 MySQL5.6 
+<p>第一步，安装依赖。包括编译工具和需要用到的库。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y install make gcc-c++ cmake bison-devel  ncurses-devel perl-Module-Install.noarch</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+
+<p>第二步，从 <a href="http://www.mysql.com/" target="_blank" rel="noopener">官网</a> 下载并解压 MySQL 源码（Source Code）的压缩包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wget http:&#x2F;&#x2F;dev.mysql.com&#x2F;get&#x2F;Downloads&#x2F;MySQL-5.6&#x2F;mysql-5.6.35.tar.gz</span><br><span class="line">tar xvf mysql-5.6.35.tar.gz</span><br><span class="line">cd mysql-5.6.35</span><br></pre></td></tr></table></figure>
+
+<p>第三步，简单配置并编译安装 MySQL 。更多配置项可参阅官方文档。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cmake \</span><br><span class="line">-DCMAKE_INSTALL_PREFIX&#x3D;&#x2F;usr&#x2F;local&#x2F;mysql5.6 \</span><br><span class="line">-DMYSQL_DATADIR&#x3D;&#x2F;usr&#x2F;local&#x2F;mysql5.6&#x2F;data \</span><br><span class="line">-DMYSQL_UNIX_ADDR&#x3D;&#x2F;usr&#x2F;local&#x2F;mysql5.6&#x2F;mysql.sock \</span><br><span class="line">-DDEFAULT_CHARSET&#x3D;utf8 \</span><br><span class="line">-DDEFAULT_COLLATION&#x3D;utf8_general_ci</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<p>第四步，创建系统账户，然后赋予数据库文件存放目录的使用权限。<code>data</code> 目录的位置可以自行修改，但必须与配置 MySQL 时设置的 <code>DMYSQL_DATADIR</code> 一致。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">groupadd mysql</span><br><span class="line">useradd -g mysql mysql</span><br><span class="line">chmod 755 &#x2F;usr&#x2F;local&#x2F;mysql5.6&#x2F;data</span><br><span class="line">chown –R mysql:mysql &#x2F;usr&#x2F;local&#x2F;mysql5.6&#x2F;data</span><br></pre></td></tr></table></figure>
+
+<p>第五步，执行 MySQL 的初始化脚本。这一步将创建一些必要的数据库和数据表。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd &#x2F;usr&#x2F;local&#x2F;mysql5.6</span><br><span class="line">scripts&#x2F;mysql_install_db --basedir&#x3D;&#x2F;usr&#x2F;local&#x2F;mysql5.6 --datadir&#x3D;&#x2F;usr&#x2F;local&#x2F;mysql5.6&#x2F;data --user&#x3D;mysql</span><br></pre></td></tr></table></figure>
+
+<p>第六步，添加服务并设置开机运行，启动 MySQL 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cp support-files&#x2F;mysql.server &#x2F;etc&#x2F;init.d&#x2F;mysql</span><br><span class="line">chkconfig mysql on</span><br><span class="line">service mysql start</span><br></pre></td></tr></table></figure>
+
+<p>第七步，配置环境变量。使用编辑器编辑 /etc/profile ，在末尾添加以下内容，保存，然后执行 <code>source /etc/profile</code> 使设置立即生效。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># MySQL</span><br><span class="line">export PATH&#x3D;$PATH:&#x2F;usr&#x2F;local&#x2F;mysql5.6&#x2F;bin</span><br></pre></td></tr></table></figure>
+
+<p>第八步，执行 <code>mysql</code> 命令登录 MySQL 。</p>
+<p>相关环境：Aliyun ECS / CentOS 7 x64</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

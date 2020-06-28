@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        CSS 自定义滚动条样式 
+<p>相比 Mac，Win 系统浏览器的默认滚动条比较粗犷，很多时候和页面设计不搭调，给用户体验减分不少。为了改善页面的整体效果，我决定用 CSS 稍微修改一下滚动条的样式。</p>
+<a id="more"></a>
+
+<p><code>-webkit-scrollbar</code> 是一个作用于滚动条样式的伪元素。它并非一个通用的 CSS 标准，只作用于部分浏览器（WebKit 内核）。目前市场上六成以上的浏览器为 WebKit 内核，所以这个特性已经足够给大部分用户呈现一致、美观的滚动条了。</p>
+<p>首先，使用 <code>-webkit-scrollbar</code> 伪元素自定义滚动条整体的宽度和背景色。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-pseudo">::-webkit-scrollbar</span> &#123;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">8px</span>;  <span class="comment">/* 纵向滚动条宽度 */</span></span><br><span class="line">  <span class="attribute">height</span>: <span class="number">8px</span>; <span class="comment">/* 横向滚动条宽度 */</span></span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#fafafa</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后，使用 <code>-webkit-scrollbar-track</code> 伪元素自定义滚动条轨道的样式，这里声明了圆角和背景色。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-pseudo">::-webkit-scrollbar-track</span> &#123;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">10px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#fafafa</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后，使用 <code>-webkit-scrollbar-thumb</code> 伪元素自定义滚动条中间拖动部分的样式。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-pseudo">::-webkit-scrollbar-thumb</span> &#123;</span><br><span class="line">  <span class="attribute">border-radius</span>: <span class="number">10px</span>;</span><br><span class="line">  <span class="attribute">background</span>: <span class="number">#c1c1c1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样就完成了简单的滚动条样式修改，页面也变得美观不少。</p>
+<p>如果不希望修改作用于全局，也可以单独定义某个元素的滚动条样式。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.element</span><span class="selector-pseudo">::-webkit-scrollbar</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: none; <span class="comment">/* 隐藏滚动条 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于大部分需求来说，这些东西已然够用了。当然，还存在 <code>-webkit-scrollbar-button</code>、<code>-webkit-scrollbar-track-piece</code>、<code>-webkit-scrollbar-corner</code> 等相关伪元素，感兴趣的话可以自行了解。</p>
+<p>相关环境：Windows 7 x64 / Chrome 60</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

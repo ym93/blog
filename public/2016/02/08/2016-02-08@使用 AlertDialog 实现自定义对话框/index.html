@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        使用 AlertDialog 实现自定义对话框 
+<p>首先创建 AlertDialog 对话框的布局文件：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">LinearLayout</span></span></span><br><span class="line"><span class="tag">  <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">android:layout_width</span>=<span class="string">"300dp"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">android:layout_height</span>=<span class="string">"200dp"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">android:paddingTop</span>=<span class="string">"@dimen/dialog_margin_top"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">android:paddingBottom</span>=<span class="string">"@dimen/dialog_margin_bottom"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">android:paddingLeft</span>=<span class="string">"@dimen/long_margin"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">android:paddingRight</span>=<span class="string">"@dimen/long_margin"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">android:layout_gravity</span>=<span class="string">"center"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">android:background</span>=<span class="string">"#ffffff"</span> &gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:id</span>=<span class="string">"@+id/textview"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+
+<p>构造 AlertDialog ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个AlertDialog对象，</span></span><br><span class="line">AlertDialog alertDialog = <span class="keyword">new</span> AlertDialog.Builder(MainActivity.<span class="keyword">this</span>).create();</span><br><span class="line">alertDialog.show();</span><br><span class="line"><span class="comment">// 设置AlertDialog的布局</span></span><br><span class="line">alertDialog.getWindow().setContentView(R.layout.dialog);</span><br><span class="line"><span class="comment">// 子控件的初始化和使用和Activity下类似</span></span><br><span class="line">TextView textview = (TextView)alertDialog.getWindow().findViewById(R.id.textview);</span><br><span class="line">title.setText(<span class="string">"example"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>AlertDialog 的关闭方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alertDialog.dismiss();</span><br></pre></td></tr></table></figure>
+
+<p>如果想要为 AlertDialog 使用自定义主题，首先在 style.xml 文件内新建一个主题。这里我继承了系统自带的 Theme.AppCompat.Light.Dialog.Alert 主题，然后一项配色，命名为 AppDialogTheme 。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span></span></span><br><span class="line"><span class="tag">  <span class="attr">name</span>=<span class="string">"AppDialogTheme"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">parent</span>=<span class="string">"Theme.AppCompat.Light.Dialog.Alert"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">item</span> <span class="attr">name</span>=<span class="string">"colorAccent"</span>&gt;</span>@color/colorRed<span class="tag">&lt;/<span class="name">item</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后在 AlertDialog 的构造方法中，增加指定主题样式的参数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AlertDialog alertDialog = <span class="keyword">new</span> AlertDialog.Builder(</span><br><span class="line">  MainActivity.<span class="keyword">this</span>, R.style.AppDialogTheme</span><br><span class="line">).create();</span><br></pre></td></tr></table></figure>
+
+<p>AlertDialog 显示时默认不可以使用输入法。如果需要在弹出的对话框中使用 EditText 、让用户输入内容，需要在执行 <code>show</code> 方法后加入另外两行代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 允许输入法弹出</span></span><br><span class="line">alertDialog.getWindow().clearFlags( WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM );</span><br><span class="line">alertDialog.getWindow().setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE );</span><br></pre></td></tr></table></figure> 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

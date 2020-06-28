@@ -1,0 +1,43 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        Android 客户端发送 GET 请求 
+<p>最近在开发涉及服务端的工程，预感到将会频繁使用客户端向服务端发送 GET 请求、服务端向客户端返回内容。</p>
+<p>于是 review 了以前写的一个雏形天气应用，重新理顺了使用方法，在此总结以备后用。</p>
+<a id="more"></a>
+
+<p>服务端我用的是 php ，功能无非是查询数据库和屏幕输出字符串，不再赘述。这里主要讲讲客户端的代码。</p>
+<p>交互顺序大致是：客户端请求 http 链接，一般是带参数的 GET 链接。服务端做出反应，并屏幕输出内容（如登录是否成功），待客户端读取。客户端读取返回内容，并做出相应动作，如显示一个密码错误的提示。</p>
+<p>这里客户端向服务端传递了2个参数，获取到服务端屏幕输出的信息，并通过 Handler 将信息发送给主线程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取要发送的参数</span></span><br><span class="line"><span class="keyword">final</span> String email = mEditEmail.getText().toString();</span><br><span class="line"><span class="keyword">final</span> String password = mEditPassword.getText().toString();</span><br><span class="line"><span class="comment">// 创建一个新线程</span></span><br><span class="line">Thread thread = <span class="keyword">new</span> Thread()&#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">    String link = <span class="string">"http://www.caiyiming.com/example.php?email="</span> + email + <span class="string">"&amp;password="</span> + password; <span class="comment">//要请求的链接</span></span><br><span class="line">      <span class="keyword">try</span>&#123;</span><br><span class="line">      <span class="comment">// 发送 http 请求</span></span><br><span class="line">      URL url = <span class="keyword">new</span> URL(link);</span><br><span class="line">      HttpURLConnection conn= (HttpURLConnection)url.openConnection(); conn.connect(); </span><br><span class="line">      <span class="comment">// 读取返回的内容</span></span><br><span class="line">      InputStream in = conn.getInputStream();</span><br><span class="line">      BufferedReader reader = <span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(in));</span><br><span class="line">      String info = reader.readLine();</span><br><span class="line">      <span class="comment">// 发送消息给主线程</span></span><br><span class="line">      Message msg = Message.obtain();</span><br><span class="line">      msg.obj = info;</span><br><span class="line">      msg.what = <span class="number">0</span>;</span><br><span class="line">      handler.sendMessage(msg);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (MalformedURLException e) &#123;</span><br><span class="line">      e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">      e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">thread.start();</span><br></pre></td></tr></table></figure>
+
+<p>假设服务端收到参数后，在数据库内比对了邮箱和密码，并屏幕输出了 <em>success</em> 或 <em>failure</em> 来向客户端反馈校验是否成功。子线程读取到信息后通过 Handler 的 <code>sendMessage</code> 向主线程发送消息。</p>
+<p>接下来我们需要在主线程中写一个 Handler ，用于接收子线程传递过来的 <em>success</em> 或 <em>failure</em> ，并在用户界面上显示简短提示。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 处理返回的内容</span></span><br><span class="line">Handler handler = <span class="keyword">new</span> Handler()&#123;</span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleMessage</span><span class="params">(Message msg)</span></span>&#123;</span><br><span class="line">  <span class="keyword">super</span>.handleMessage(msg);</span><br><span class="line">  String info = (String)msg.obj;</span><br><span class="line">  <span class="keyword">if</span>( info.equals(<span class="string">"success"</span>) )&#123;</span><br><span class="line">    Toast.makeText(getBaseContext(), <span class="string">"校验成功"</span>), Toast.LENGTH_SHORT).show();</span><br><span class="line">  &#125; <span class="keyword">else</span>( info.equals(<span class="string">"failure"</span>) )&#123;</span><br><span class="line">    Toast.makeText(getBaseContext(), <span class="string">"校验失败"</span>), Toast.LENGTH_SHORT).show();</span><br><span class="line">  &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>为什么我们不在子线程中直接显示提示呢？因为 UI 的变化只能由主线程来执行，在子线程中改变界面会导致程序崩溃。这一点我也是在经历过多次崩溃的教训后才终于理解了。</p>
+<p>在这个例子中我只让服务端输出了简短的字符串，实际使用时也可以采用 JSON 格式输出大量信息，可参考 JSON 的解析方法实现。</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

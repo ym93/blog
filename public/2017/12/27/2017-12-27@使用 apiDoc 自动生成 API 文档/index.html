@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        使用 apiDoc 自动生成 API 文档 
+<p>前段时间尝试写 API 服务器，为了方便管理数量可能越来越多的接口（未雨绸缪），必须考虑创建文档的方案。我选择了 apiDoc 作为第一款文档生成工具。apiDoc 是一个通过代码中的注释生成 API 文档的工具，它简单易用，并且支持多种常用编程语言。</p>
+<a id="more"></a>
+
+<img src="/images/posts/2017/12/apidoc_ui.png" class="" width="450" title="使用 apiDoc 生成的文档">
+
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>使用 NPM 全局安装 apiDoc ：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install apidoc -g</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>在项目根目录下新建 <code>apidoc.json</code> 配置文件。注意：<code>json</code> 文件不能包含注释，下面的注释只是为了方便解释选项含义。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"name"</span>: <span class="string">"example"</span>,  <span class="comment">// 项目名称</span></span><br><span class="line">  <span class="string">"version"</span>: <span class="string">"0.1.0"</span>,  <span class="comment">// 项目版本</span></span><br><span class="line">  <span class="string">"description"</span>: <span class="string">"apiDoc basic example"</span>,  <span class="comment">// 项目描述</span></span><br><span class="line">  <span class="string">"title"</span>: <span class="string">"Custom apiDoc browser title"</span>,  <span class="comment">// 文档标题</span></span><br><span class="line">  <span class="string">"url"</span> : <span class="string">"https://api.github.com/v1"</span>,  <span class="comment">// 链接前缀</span></span><br><span class="line">  <span class="string">"template"</span>: &#123; <span class="comment">// 模板配置</span></span><br><span class="line">    <span class="string">"forceLanguage"</span>: <span class="string">"zh_cn"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">"order"</span>: [ <span class="comment">// 排列顺序</span></span><br><span class="line">    <span class="string">"Auth"</span>,</span><br><span class="line">    <span class="string">"Users"</span>,</span><br><span class="line">    <span class="string">"Goods"</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中，<code>title</code> 是文档的主标题，留空使用 <code>name</code> 渲染。</p>
+<p><code>url</code> 是链接前缀，文档中的 API 链接都会带上这个前缀。这样做的好处是不必总是写完整的 API 链接，即使换域名也只需修改一处。</p>
+<p>模板相关配置 <code>template</code> 并不是必要的，这里我指定了渲染的语言为简体中文。</p>
+<p><code>order</code> 同样是一个可选的配置项，用于设置分组的显示顺序。</p>
+<h3 id="撰写"><a href="#撰写" class="headerlink" title="撰写"></a>撰写</h3><p>使用注释撰写 API 信息。一个简单的接口描述只需声明 <code>@api</code>、<code>@apiName</code>、<code>@apiGroup</code> 三个参数。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@api</span> &#123;get&#125; /user/:id 获取用户</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@apiName</span> GetUser</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@apiGroup</span> User</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<p><code>@api</code> 必须，声明请求类型、路径、标题（显示在文档中）。<code>@apiName</code> 声明接口显示在文档中的容器 id ，官方建议必填，实际上不声明也会自动生成。<code>@apiGroup</code> 必填，声明接口分组。</p>
+<p>在此基础上进一步声明参数和响应。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * ...</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@apiParam</span> &#123;Number&#125; id 用户 id</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@apiSuccess</span> (200) &#123;String&#125; name  用户名</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@apiSuccess</span> (200) &#123;String&#125; email 用户的邮箱地址</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@apiSuccessExample</span> &#123;json&#125; 请求成功：</span></span><br><span class="line"><span class="comment"> *     HTTP/1.1 200 OK</span></span><br><span class="line"><span class="comment"> *     &#123;</span></span><br><span class="line"><span class="comment"> *       "name": "张三",</span></span><br><span class="line"><span class="comment"> *       "email": "foo<span class="doctag">@example</span>.com"</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@apiError</span> UserNotFound 未找到指定的用户</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@apiErrorExample</span> 请求失败：</span></span><br><span class="line"><span class="comment"> *     HTTP/1.1 404 Not Found</span></span><br><span class="line"><span class="comment"> *     &#123;</span></span><br><span class="line"><span class="comment"> *       "error": "UserNotFound"</span></span><br><span class="line"><span class="comment"> *     &#125;</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<p><code>@apiParam</code> 选填，声明一个参数的类型、参数名、描述。</p>
+<p><code>@apiSuccess</code> 选填，声明请求成功后的响应分组、字段类型、字段（或成功代码）、字段描述。<code>@apiSuccessExample</code> 选填，声明请求成功后响应内容的格式、标题和示例。声明错误的 <code>@apiError</code> 和 <code>@apiSuccessExample</code> 与之类似。</p>
+<p>Tips: 分组名称不可以直接使用中文。应该用 <code>@apiDefine</code> 声明一个值为中文组名的变量，然后在声明 API 分组时使用它。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@apiDefine</span> Auth 认证</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@api</span> &#123;post&#125; /auth</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@apiGroup</span> Auth</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="生成"><a href="#生成" class="headerlink" title="生成"></a>生成</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apidoc -i ./ -o apidoc</span><br></pre></td></tr></table></figure>
+
+<p><code>-i</code> 或 <code>--input</code> 参数表示输入目录。<code>-o</code> 或 <code>--output</code> 参数表示输出目录。<code>-i ./ -o apidoc</code> 的意思是：扫描当前目录下的文件，然后在当前目录下的 <code>apidoc</code> 文件夹中生成文档。</p>
+<p>另外，可以使用 <code>-f</code> 或 <code>--file-filters</code> 参数过滤文件类型。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">apidoc -f <span class="string">".*\\.js$"</span> -f <span class="string">".*\\.ts$"</span></span><br></pre></td></tr></table></figure>
+
+<p>相关环境：Windows 7 x64 / Node.js 6.10.1 / npm 3.10.10 / apiDoc 0.17.6</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        使用 Node.js 部署静态资源到七牛云 
+<p>在最近的一个项目中，为了缩短加载时间，同时减轻服务器的压力，我们决定将前端静态资源全数放到七牛云上。更新内容时只需上传 <code>static</code> 目录下的所有文件（使用 webpack 打包），然后发布 <code>index.html</code> 到网站根目录即可。</p>
+<a id="more"></a>
+
+<p>我决定使用 Node.js 上传资源，方便之后和 webpack 的打包脚本整合到一起，优化工作流。</p>
+<p>安装七牛云 Node.js SDK：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install qiniu --save</span><br></pre></td></tr></table></figure>
+
+<p>新建一个脚本 <code>build/deploy.js</code>，引入相关包。<code>fs</code> 用于读取文件和文件夹。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>)</span><br><span class="line"><span class="keyword">const</span> qiniu = <span class="built_in">require</span>(<span class="string">'qiniu'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>声明常量：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 授权秘钥</span></span><br><span class="line"><span class="keyword">const</span> accessKey = <span class="string">'&#123;你的七牛云 AccessKey&#125;'</span></span><br><span class="line"><span class="keyword">const</span> secretKey = <span class="string">'&#123;你的七牛云 SecretKey&#125;'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 存储空间名称</span></span><br><span class="line"><span class="keyword">const</span> bucket = <span class="string">'&#123;你的 Bucket 名称&#125;'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 要上传的资源目录</span></span><br><span class="line"><span class="keyword">const</span> staticPath = <span class="string">'dist/static'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 上传后的文件前缀</span></span><br><span class="line"><span class="keyword">const</span> prefix = <span class="string">'static'</span></span><br></pre></td></tr></table></figure>
+
+<p>配置 Bucket 所在的区域，然后生成上传对象 <code>formUploader</code>，同时实例化上传时需要的 <code>mac</code>、<code>putExtra</code> 对象。<code>mac</code> 用于验证身份，<code>putExtra</code> 用于在上传时传额外参数。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建鉴权对象</span></span><br><span class="line"><span class="keyword">const</span> mac = <span class="keyword">new</span> qiniu.auth.digest.Mac(accessKey, secretKey)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建并修改配置对象(Zone_z0=华东 Zone_z1=华北 Zone_z2=华南 Zone_na0=北美)</span></span><br><span class="line"><span class="keyword">const</span> config = <span class="keyword">new</span> qiniu.conf.Config()</span><br><span class="line">config.zone = qiniu.zone.Zone_z2</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建额外内容对象</span></span><br><span class="line"><span class="keyword">const</span> putExtra = <span class="keyword">new</span> qiniu.form_up.PutExtra()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建表单上传对象</span></span><br><span class="line"><span class="keyword">const</span> formUploader = <span class="keyword">new</span> qiniu.form_up.FormUploader(config)</span><br></pre></td></tr></table></figure>
+
+
+<p>定义上传单个文件的方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 文件上传方法</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">uploadFile</span> (<span class="params">localFile</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 配置上传到七牛云的完整路径</span></span><br><span class="line">  <span class="keyword">const</span> key = localFile.replace(staticPath, prefix)</span><br><span class="line">  <span class="keyword">const</span> options = &#123;</span><br><span class="line">    scope: bucket + <span class="string">":"</span> + key</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> putPolicy = <span class="keyword">new</span> qiniu.rs.PutPolicy(options)</span><br><span class="line">  <span class="comment">// 生成上传凭证</span></span><br><span class="line">  <span class="keyword">const</span> uploadToken = putPolicy.uploadToken(mac)</span><br><span class="line">  <span class="comment">// 上传文件</span></span><br><span class="line">  formUploader.putFile(uploadToken, key, localFile, putExtra, <span class="function"><span class="keyword">function</span>(<span class="params">respErr,</span></span></span><br><span class="line"><span class="function"><span class="params">    respBody, respInfo</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (respErr) <span class="keyword">throw</span> respErr</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'已上传: '</span>, respBody.key)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义上传文件夹的方法：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 目录上传方法</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">uploadDirectory</span> (<span class="params">dirPath</span>) </span>&#123;</span><br><span class="line">  fs.readdir(dirPath, <span class="function"><span class="keyword">function</span> (<span class="params">err, files</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (err) <span class="keyword">throw</span> err</span><br><span class="line">    <span class="comment">// 遍历目录下的内容</span></span><br><span class="line">    files.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">let</span> path = <span class="string">`<span class="subst">$&#123;dirPath&#125;</span>/<span class="subst">$&#123;item&#125;</span>`</span></span><br><span class="line">      fs.stat(path, <span class="function"><span class="keyword">function</span> (<span class="params">err, stats</span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (err) <span class="keyword">throw</span> err</span><br><span class="line">        <span class="comment">// 是目录就接着遍历 否则上传</span></span><br><span class="line">        <span class="keyword">if</span> (stats.isDirectory()) uploadDirectory(path)</span><br><span class="line">        <span class="keyword">else</span> uploadFile(path, item) </span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在脚本的最后，执行 <code>uploadDirectory</code> 方法开始上传：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">fs.exists(staticPath, <span class="function"><span class="keyword">function</span> (<span class="params">exists</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (!exists) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'目录不存在！'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'开始上传...'</span>)</span><br><span class="line">    uploadDirectory(staticPath)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>运行脚本：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node build/deploy.js</span><br></pre></td></tr></table></figure>
+
+<p>相关环境：macOS 10.13 / Node.js 8.9 / npm 5.6</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

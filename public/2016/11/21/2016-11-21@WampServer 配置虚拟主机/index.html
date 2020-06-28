@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        WampServer 配置虚拟主机 
+<p>WampServer 默认创建一个站点，以 www 目录作为网站的根目录，通过 <code>http://localhost/</code> 访问。通过修改配置文件可以创建虚拟主机，即实现多站点。</p>
+<a id="more"></a>
+
+<p>第一步，启用 Apache 的 mod_rewrite 模块。打开配置文件 bin\apache\apache2.4.9\conf\httpd.conf ，找到下行并去掉前面的 <code>#</code> 号。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LoadModule rewrite_module modules&#x2F;mod_rewrite.so</span><br></pre></td></tr></table></figure>
+
+<p>第二步，启用虚拟主机配置文件。同样是在 httpd.conf 文件中，找到下行并去掉前面的 <code>#</code> 号。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Include conf&#x2F;extra&#x2F;httpd-vhosts.conf</span><br></pre></td></tr></table></figure>
+
+<p>第三步，修改虚拟主机配置文件。打开 bin\apache\apache2.4.9\conf\extra\httpd-vhosts.conf ，该文件中已包含示例，直接修改即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    DocumentRoot &quot;d:&#x2F;vhosts&#x2F;example&quot; &#x2F;&#x2F; 文件目录</span><br><span class="line">    ServerName example.com &#x2F;&#x2F; 绑定域名</span><br><span class="line">&lt;&#x2F;VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+
+<p>第四步，允许访问文件目录。如果虚拟主机的文件目录不在 www 目录下，继续编辑 httpd-vhosts.conf 文件，添加 <code>&lt;Directory&gt;</code> 标签中的内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">	DocumentRoot &quot;d:&#x2F;vhosts&#x2F;example&quot;</span><br><span class="line">	ServerName example.com</span><br><span class="line">	&lt;Directory &quot;d:&#x2F;vhosts&#x2F;example&quot;&gt;</span><br><span class="line">		Options Indexes FollowSymLinks</span><br><span class="line">		AllowOverride all</span><br><span class="line">		Require local</span><br><span class="line">	&lt;&#x2F;Directory&gt;</span><br><span class="line">&lt;&#x2F;VirtualHost&gt;</span><br></pre></td></tr></table></figure>
+
+<p>第五步，将域名指向本机。编辑 C:\Windows\System32\drivers\etc\hosts 文件，添加以下内容，表示由本机响应对 <code>example.com</code> 的访问。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1       example.com</span><br></pre></td></tr></table></figure>
+
+<p>最后，重启 WampServer 即可。</p>
+<p>相关环境：Windows 7 x64 / WampServer 2.5</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

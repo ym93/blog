@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        不用 JSSDK 自定义微信分享标题和缩略图 
+<p>微信向网页开发者提供了 JSSDK ，通常我们要自定义“分享到朋友圈”以及“发送给朋友”时显示的标题和缩略图，都是通过调用其接口实现。</p>
+<p>微信分享接口的权限仅对已认证的公众号开放 。对于手头没有认证公众号的开发者，还有其他办法可以自定义微信分享标题和缩略图吗？答案是肯定的，效果是低配的。</p>
+<a id="more"></a>
+
+<h3 id="自定义分享标题"><a href="#自定义分享标题" class="headerlink" title="自定义分享标题"></a>自定义分享标题</h3><p>如果未使用 JSSDK 设置过标题，微信默认抓取网页标题，也就是 title 标签中的内容作为分享标题。这是显而易见的。</p>
+<figure class="highlight xhtml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>我是页面标题<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>既然如此，我们可以判断当前访问的浏览器是不是微信浏览器，若是微信浏览器，就动态修改页面标题。</p>
+<p>以 PHP 为例：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (strpos($_SERVER[<span class="string">'HTTP_USER_AGENT'</span>], <span class="string">'MicroMessenger'</span>) !== <span class="keyword">false</span> )&#123;</span><br><span class="line">  <span class="keyword">echo</span> <span class="string">'&lt;script type="text/javascript"&gt; document.title = '</span>我是新标题<span class="string">'; &lt;/script&gt;'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以 JavaScript 为例：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ua = <span class="built_in">window</span>.navigator.userAgent.toLowerCase();</span><br><span class="line"><span class="keyword">if</span> (ua.match(<span class="regexp">/MicroMessenger/i</span>) == <span class="string">'micromessenger'</span>) &#123;</span><br><span class="line">  <span class="built_in">document</span>.title = <span class="string">'我是新标题'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样，用户使用微信浏览时的页面标题就是“我是新标题”，分享时自然也会以此作为分享标题，也就间接达到了自定义微信分享标题的目的。</p>
+<h3 id="自定义分享缩略图"><a href="#自定义分享缩略图" class="headerlink" title="自定义分享缩略图"></a>自定义分享缩略图</h3><p>如果未使用 JSSDK 设置过缩略图，微信默认抓取页面中尺寸大于300*300像素的第一张图片作为缩略图。</p>
+<p>既然如此，我们可以把要作为缩略图的图片放在 body 的最前面，然后隐藏它。</p>
+<p>很有人说可以给图片包一个隐藏的 div：</p>
+<figure class="highlight xhtml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">"display: none"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"/wechat.png"</span> <span class="attr">width</span>=<span class="string">"300"</span> <span class="attr">height</span>=<span class="string">"300"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这是错误的，至少在新版微信里面没有起到任何作用。</p>
+<p>我的办法是把图片移动到浏览器的可视区域之外：</p>
+<figure class="highlight xhtml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"wechat-icon"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"/wechat.png"</span> <span class="attr">width</span>=<span class="string">"300"</span> <span class="attr">height</span>=<span class="string">"300"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.wechat-icon</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: fixed;</span><br><span class="line">  <span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line">  <span class="attribute">left</span>: -<span class="number">300px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注：2017年3月29日，微信宣布未接入 JSSDK 的网站将统一显示默认缩略图，上述方法在新版微信中或已失效，建议接入 JSSDK 或继续使用微信 6.5.4 版本。</p>
+<p>相关环境：Aliyun ECS / CentOS 7 x64 / Nginx 1.8 / PHP 5.6 / WeChat 6.5.4</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

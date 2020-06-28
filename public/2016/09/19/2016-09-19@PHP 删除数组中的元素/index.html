@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        PHP 删除数组中的元素 
+<p>删除数组元素有两种方式，第一种是使用 <code>unset</code> 方法。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unset</span>($arr[<span class="number">1</span>]);</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+
+<p>此方法删除元素后，$arr[1] 为 null ，所有元素的索引值不变，也就是说元素不会重新排列，所以不是很实用。</p>
+<p>要使元素删除后重新排列顺序，使用 array_splice 方法即可。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array_splice(<span class="keyword">array</span>,start,length,<span class="keyword">array</span>);</span><br></pre></td></tr></table></figure>
+<p>array_splice 的四个参数中，array 为要删除元素的数组；start 为要开始删除元素的位置（索引值）；length 为要删除的元素数量；最后一个参数为可选参数，允许用一个新元素替代被删除的元素。</p>
+<p>使用 array_splice 删除数组中索引为1的元素：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array_splice($arr,<span class="number">1</span>,<span class="number">1</span>);</span><br></pre></td></tr></table></figure> 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

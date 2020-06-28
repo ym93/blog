@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        JavaScript 实现回到顶部 
+<p>过去，我一般用 jQuery 的 <code>scrollTop</code> 和 <code>animate</code> 方法实现回到顶部（back to top）按钮。现在基本不在项目里引入 jQuery ，只能试着用原生写了。实际上，原生 JavaScript 实现起来也很容易。</p>
+<a id="more"></a>
+
+<p>滚动 body 到顶部：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.body.scrollTop = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>平滑地滚动 body 到顶部：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">btt: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 判断当前位置距离顶部的距离</span></span><br><span class="line">  <span class="keyword">if</span> (<span class="built_in">window</span>.scrollY) &#123;</span><br><span class="line">    <span class="keyword">let</span> that = <span class="keyword">this</span></span><br><span class="line">    <span class="comment">// 每10毫秒向上滚动30像素</span></span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">document</span>.body.scrollTop = (<span class="built_in">window</span>.scrollY - <span class="number">30</span>)</span><br><span class="line">      <span class="comment">// 递归</span></span><br><span class="line">      that.scrollToTop()</span><br><span class="line">    &#125;, <span class="number">10</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>window.scrollY</code> 返回文档在垂直方向已滚动的像素值。如果返回值不等于0，就在10毫秒后向上滚动30像素，然后递归调用 <code>btt</code> 方法。如果返回值等于0，说明当前位置已位于顶部，不执行任何操作。</p>
+<p>相关环境：Windows 7 x64 / Chrome 60</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

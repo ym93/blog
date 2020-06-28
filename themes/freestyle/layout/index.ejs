@@ -1,0 +1,20 @@
+<div class="post-list">
+  <% page.posts.forEach(post => { %>
+    <div class="post-item">
+      <a class="post-item-title" href="<%- url_for(post.path) %>">
+        <%- post.title %>
+      </a>
+      <div class="post-item-content post-content"><%- post.excerpt || post.content %></div>
+      <div class="post-item-meta">
+        <%- post.date.format('YYYY-MM-DD') %>
+      </div>
+    </div>
+  <% }) %>  
+</div>
+
+<% if (page.prev_link) { %>
+  <a href="<%- config.root + page.prev_link %>">上一页</a>
+<% } %>
+<% if (page.next_link) { %>
+  <a href="<%- config.root + page.next_link %>">下一页</a>
+<% } %>

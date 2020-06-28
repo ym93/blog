@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        解决 jQuery 事件重复绑定 
+<p>昨天开发中发现一个 Bug ：前端点击事件正常执行、后端也正常响应，但数据库中的字段没有发生预期的变化。</p>
+<p>原来是 jQuery 的点击事件存在重复绑定。</p>
+<a id="more"></a>
+
+<p>若一个按钮多次绑定过点击事件，在点击时会触发其绑定的所有事件，而非最近一次绑定的事件。</p>
+<p>解决方法是先解绑事件，再绑定新的点击事件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'#example'</span>).unbind(<span class="string">'click'</span>);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'#example'</span>).unbind(<span class="string">'click'</span>).click(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="comment">// 你的点击事件</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure> 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

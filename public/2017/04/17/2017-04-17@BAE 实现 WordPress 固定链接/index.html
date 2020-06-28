@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        BAE 实现 WordPress 固定链接 
+<p>最近试用百度应用引擎（BAE）部署站点。BAE 优势非常明显，便宜、按需升降配、支持 Git ，很适合部署小项目。我试着在上面安装了 WordPress ，发现无法正常使用伪静态功能，开启固定链接后大部分页面都报404错误。</p>
+<a id="more"></a>
+
+<p>BAE 使用的 Web 引擎是 lighttpd ，站点配置文件为应用根目录下的 app.conf 文件。</p>
+<p>编辑 app.conf 文件增加适用于 WordPress 的配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">handlers:</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># 静态资源路由</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">url :</span> <span class="string">/(assets)/(.*)</span></span><br><span class="line">    <span class="attr">static_files :</span> <span class="string">assets/$2</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># 基本路由规则</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">url :</span> <span class="string">/</span></span><br><span class="line">    <span class="attr">script:</span> <span class="string">index.php</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">regex_url :</span> <span class="string">^/(wp-.+).*/?</span></span><br><span class="line">    <span class="attr">script :</span> <span class="string">$0</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">regex_url :</span> <span class="string">^/(sitemap.xml)</span></span><br><span class="line">    <span class="attr">script :</span> <span class="string">$0</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">regex_url :</span> <span class="string">^/(xmlrpc.php)</span></span><br><span class="line">    <span class="attr">script :</span> <span class="string">$0</span></span><br><span class="line">  <span class="bullet">-</span> <span class="attr">regex_url :</span> <span class="string">^/(.+)/?$</span></span><br><span class="line">    <span class="attr">script :</span> <span class="string">index.php/$1</span></span><br></pre></td></tr></table></figure>
+
+<p>部署代码后到 WordPress 后台，重新设置一次固定链接即可生效。</p>
+<p>ENV: Baidu App Engine / PHP 5.5 / WordPress 4.7</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        
+  <a href="/2016/02/07/2016-02-07@Fragment%20onResume%20%E6%96%B9%E6%B3%95%E6%97%A0%E6%95%88%E9%97%AE%E9%A2%98/">
+    Fragment onResume 方法无效问题
+  </a>
+  <p><code>onResume</code> 在 Activity 中是个非常常用的生命周期方法，它在 Activity 每次显示时都被执行，可用于刷新 UI 等操作。</p>
+<p>Fragment 和 Activity 一样存在 <code>onResume</code> 方法，但我发现直接覆写 <code>onResume</code> 方法后，当 Fragment 显示到前台时不会执行这个方法。网上有人推荐使用 <code>setUserVisibleHint</code> 方法。</p>
+
+  <a href="/2016/02/06/2016-02-06@%E8%A7%A3%E5%86%B3%20SQLite%20%E6%8A%8A%E7%A9%BA%E5%80%BC%E8%BD%AC%E4%B8%BA%E5%AD%97%E7%AC%A6%E4%B8%B2/">
+    解决 SQLite 把空值转为字符串
+  </a>
+  <p>遇到一个非常诡异的问题。</p>
+<p>当服务端通过 <code>json_encode</code> 方法输出 JSON 格式数据，空值会被以明文形式输出。</p>
+
+  <a href="/2016/01/31/2016-01-31@Android%20%E4%B8%8E%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%9A%84%20Session%20%E4%BF%9D%E6%8C%81/">
+    Android 与服务端的 Session 保持
+  </a>
+  <p>在开发联网应用的过程中，有时候会希望 php 服务端能通过 Session 保存一些信息，以便随时验证客户端的登录状态，或完成其它功能。但实际操作中发现，Android 客户端每次请求服务端都被视为一个新的请求，SessionID 都会改变，也就是说根本没办法使用 Session 存储和读取信息。</p>
+
+  <a href="/2016/01/29/2016-01-29@Android%20%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%8F%91%E9%80%81%20GET%20%E8%AF%B7%E6%B1%82/">
+    Android 客户端发送 GET 请求
+  </a>
+  <p>最近在开发涉及服务端的工程，预感到将会频繁使用客户端向服务端发送 GET 请求、服务端向客户端返回内容。</p>
+<p>于是 review 了以前写的一个雏形天气应用，重新理顺了使用方法，在此总结以备后用。</p>
+
+  <a href="/2016/01/28/2016-01-28@Android%20%E5%AE%9E%E7%8E%B0%E5%AF%BC%E8%88%AA%E6%A0%8F%E4%B8%8B%E6%8B%89%E8%8F%9C%E5%8D%95/">
+    Android 实现导航栏下拉菜单
+  </a>
+  <p>只需两步即可在导航栏实现一个下拉菜单。</p>
+<p>首先，在 res\menu 下创建子菜单的布局文件 menu_child.xml 。</p>
+
+  <a href="/2016/01/28/2016-01-28@%E4%BD%BF%E7%94%A8%20ToolBar%20%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AF%BC%E8%88%AA%E6%A0%8F/">
+    使用 ToolBar 实现自定义导航栏
+  </a>
+  <p>ToolBar 可以实现导航栏的自定义效果，如在导航上添加返回按钮、菜单按钮等。</p>
+<p>以前不会用 Android 默认提供的 ToolBar 或者 ActionBar ，每次都会自己写一个简单的顶栏。这几天尝试了用 ToolBar 实现导航栏。</p>
+
+  <a href="/2016/01/27/2016-01-27@%E9%98%BB%E6%AD%A2%E9%94%AE%E7%9B%98%E8%87%AA%E5%8A%A8%E5%BC%B9%E5%87%BA%20%E7%82%B9%E5%87%BB%E7%A9%BA%E7%99%BD%E5%A4%84%E7%BB%93%E6%9D%9F%E8%BE%93%E5%85%A5/">
+    阻止键盘自动弹出 点击空白处结束输入
+  </a>
+  <p>当一个包含 EditText 的个页面启动时，Android 将自动弹出软键盘引导用户输入内容。这样其实不太友好，有时我们希望用户能先看到整个页面，再决定点击输入框输入内容。</p>
+
+  <a href="/2016/01/08/2016-01-08@Android%20%E7%9B%91%E5%90%AC%E8%AE%BE%E5%A4%87%E7%9A%84%E5%BC%80%E5%B1%8F%E4%B8%8E%E9%94%81%E5%B1%8F%E4%BA%8B%E4%BB%B6/">
+    Android 监听设备的开屏与锁屏事件
+  </a>
+  <p>最近开发的一个小应用需要监听用户设备的开屏和锁屏事件，查了一些资料，发现普遍使用的方法是通过代码方式创建一个 BroadcastReceiver ，并监听 ACTION_SCREEN_ON 和 ACTION_SCREEN_OFF 两个意图。</p>
+
+  <a href="/2015/12/15/2015-12-15@%E4%BD%BF%E7%94%A8%20DatePickerDialog%20%E9%80%89%E6%8B%A9%E6%97%A5%E6%9C%9F/">
+    使用 DatePickerDialog 选择日期
+  </a>
+  <p>新建一个工程并命名为 DatePickerDialogDemo ，使用 LinearLayout 布局。</p>
+<p>在布局中分别添加一个 TextView 用于输出选择的日期、一个 Button 用于触发日期选择窗口。</p>
+
+  <a href="/2015/12/15/2015-12-15@%E6%A0%B9%E6%8D%AE%E7%B3%BB%E7%BB%9F%E7%89%88%E6%9C%AC%E8%AE%BE%E7%BD%AE%E4%B8%8D%E5%90%8C%E7%9A%84%E4%B8%BB%E9%A2%98/">
+    根据系统版本设置不同的主题
+  </a>
+  <p>通常情况下，Android 应用中的控件样式为系统默认主题中的样式。</p>
+<p>为了统一控件样式、使应用整体更协调美观，我们经常会指定应用的主题，比如 Holo 主题。但是 Holo 主题只能支持 Android 3.2（API 13）及以上的系统。为了兼容 Android 3.2 以下机型，有必要让 Android 3.2 及以上、Android 3.2 以下的机型使用不同的主题。</p>
+
+
+
+  <a href="/archives/page/9/">上一页</a>
+
+
+  <a href="/archives/page/11/">下一页</a>
+
+
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        Textarea 限制字符长度 
+<p>textarea 没有 maxlength 属性，不能像 input 一样直接在标签内设置最大输入字符数，只能通过 JavaScript 间接实现。</p>
+<p>用户每次按键输入时调用 <code>checkLength</code> 方法，该方法判断输入的内容是否超出限制的长度，若是则删除超出长度部分的字符。</p>
+<a id="more"></a>
+
+<p>HTML:</p>
+<figure class="highlight xhtml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">textarea</span> <span class="attr">onpropertychange</span>=<span class="string">"checkLength(this, 8)"</span> <span class="attr">oninput</span>=<span class="string">"checkLength(this, 8)"</span>&gt;</span><span class="tag">&lt;/<span class="name">textarea</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>JavaScript:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkLength</span>(<span class="params">element, maxlength</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (element.value.length &gt; maxlength) &#123;</span><br><span class="line">        element.value = element.value.substring(<span class="number">0</span>, maxlength);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

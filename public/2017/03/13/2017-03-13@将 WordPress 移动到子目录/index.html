@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        将 WordPress 移动到子目录 
+<p>WordPress 默认安装在网站的根目录，这无疑会使目录结构看起来很混乱。查阅文档后发现 WordPress 本身允许用户将其文件移动到子目录。</p>
+<a id="more"></a>
+
+<p>首先，在根目录下创建用于存放 WordPress 文件的文件夹。例如： <code>wordpress</code> 。</p>
+<p>然后，在后台修改常规选项，将“WordPress地址”修改为指向子目录的链接。保存，不需要理会错误提示。</p>
+<figure class="highlight xhtml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/wordpress</span><br></pre></td></tr></table></figure>
+
+<p>注意，“站点地址”不需要修改。</p>
+<p>最后，将 index.php 拷贝到根目录下。编辑 index.php ，修改其引用的文件路径。如果存在 .htaccess 等 Web 引擎配置文件，也要拷贝到根目录下。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">require</span>(<span class="string">'./wordpress/wp-blog-header.php'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>若设置过固定链接，需要到后台重新保存一次固定链接设置。若无法正常访问站点，检查 Rewrite 规则或目录权限。</p>
+<p>记得使用新链接登录后台。</p>
+<figure class="highlight xhtml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/wordpress/wp-admin/</span><br></pre></td></tr></table></figure> 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

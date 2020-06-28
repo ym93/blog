@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        Laravel 使用 JWT 实现用户认证 
+<p>JWT（JSON Web Token）是一个用于安全信息传输的开放标准。基于 JWT 的用户认证，用户只需登录一次，服务端生成 Token（令牌）并发送给客户端，客户端则在每次发送请求时携带该 Token ，服务端根据 Token 识别用户身份。</p>
+<a id="more"></a>
+
+<p>一个 JSON Web Token 是用 base64 编码的长字符串，包含了验证用户身份所需的必要信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaXNzIjoiaHR0cDpcL1wvbG9jYWx</span><br><span class="line">ob3N0OjgwMDFcL2F1dGhcL2xvZ2luIiwiaWF0IjoxNDUxODg4MTE5LCJleHAiOjE0NTQ1MTYxMTksIm5iZiI6MTQ1MTg4OD</span><br><span class="line">ExOSwianRpIjoiMzdjMTA3ZTQ2MDlkZGJjYzljMDk2ZWE1ZWU3NmM2NjcifQ.wyoQ95RjAyQ2FF3aj8EvCSaUmeP0KUqcCJDENNfnaT4</span><br></pre></td></tr></table></figure>
+
+<p>这里对 JWT 规范不加赘述，只讨论如何快速实现基于 JWT 的用户认证。如果想进一步了解 JWT 规范，建议阅读 <a href="https://jwt.io/" target="_blank" rel="noopener">官方文档</a> 。</p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>使用 Composer 安装 jwt-auth 依赖包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer require tymon&#x2F;jwt-auth 0.5.*</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>在 <code>config\app.php</code> 配置文件中，注册服务提供者和门面。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'providers'</span> =&gt; [</span><br><span class="line">  ...</span><br><span class="line">  Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'aliases'</span> =&gt; [</span><br><span class="line">  ...</span><br><span class="line">  <span class="string">'JWTAuth'</span> =&gt; Tymon\JWTAuth\Facades\JWTAuth::class,</span><br><span class="line">  <span class="string">'JWTFactory'</span> =&gt; Tymon\JWTAuth\Facades\JWTFactory::class</span><br><span class="line">],</span><br></pre></td></tr></table></figure>
+
+<p>执行以下命令发布 JWT 配置文件。该命令将在 <code>config</code> 目录下生成 <code>jwt.php</code> ，通常使用默认配置即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan vendor:publish --provider&#x3D;&quot;Tymon\JWTAuth\Providers\JWTAuthServiceProvider&quot;</span><br></pre></td></tr></table></figure>
+
+<p>生成用于加密数据的密钥。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">php artisan jwt:generate</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h3><p>引用 <code>JWTAuth</code> 门面和异常处理类。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">JWTAuth</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Tymon</span>\<span class="title">JWTAuth</span>\<span class="title">Exceptions</span>\<span class="title">JWTException</span>;</span><br></pre></td></tr></table></figure>
+
+<p>使用请求中的登录凭据（通常是邮箱和密码）创建 Token 。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">authenticate</span><span class="params">(Request $request)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="comment">// 获取请求中的登录凭据</span></span><br><span class="line">  $credentials = $request-&gt;only(<span class="string">'email'</span>, <span class="string">'password'</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="comment">// 验证登录凭据并创建 Token</span></span><br><span class="line">    <span class="keyword">if</span> (! $token = JWTAuth::attempt($credentials)) &#123;</span><br><span class="line">      <span class="comment">// 登录凭据无效时返回错误</span></span><br><span class="line">      <span class="keyword">return</span> response()-&gt;json([<span class="string">'error'</span> =&gt; <span class="string">'invalid_credentials'</span>], <span class="number">401</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">catch</span> (JWTException $e) &#123;</span><br><span class="line">    <span class="comment">// 无法正常生成 Token 时返回错误</span></span><br><span class="line">    <span class="keyword">return</span> response()-&gt;json([<span class="string">'error'</span> =&gt; <span class="string">'could_not_create_token'</span>], <span class="number">500</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 返回创建的 Token</span></span><br><span class="line">  <span class="keyword">return</span> response()-&gt;json(compact(<span class="string">'token'</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>登录凭据也可以是任何用户表里存在的字段，譬如手机号和密码。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$credentials = $request-&gt;only(<span class="string">'mobile'</span>, <span class="string">'password'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>我们还可以直接基于用户模型对象创建 Token ，满足更为个性化的认证需求。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$user = User::first();</span><br><span class="line">$token = JWTAuth::fromUser($user);</span><br><span class="line"><span class="keyword">return</span> $token;</span><br></pre></td></tr></table></figure>
+
+<h3 id="认证"><a href="#认证" class="headerlink" title="认证"></a>认证</h3><p>在 <code>app\Http\Kernel.php</code> 中注册 JWT 提供的认证中间件。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">protected</span> $routeMiddleware = [</span><br><span class="line">  ...</span><br><span class="line">  <span class="string">'jwt.auth'</span> =&gt; \Tymon\JWTAuth\Middleware\GetUserFromToken::class</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>对需要认证才能访问的路由启用该中间件。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Route::group([<span class="string">'middleware'</span> =&gt; <span class="string">'jwt.auth'</span>], <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><code>jwt.auth</code> 中间件将会解析请求中携带的 Token 。如果找不到 Token ，则返回“token_not_provided”错误；如果 Token 已过期，则返回“token_expired”错误。</p>
+<p>客户端在请求的头部信息或 URL 中携带有效的 Token 即可通过认证。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Authorization: Bearer &#123; Token &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;api.example.com&#x2F;example?token&#x3D;&#123; Token &#125;</span><br></pre></td></tr></table></figure>
+
+<p>服务端可以从 Token 中获得用户对象。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$user = JWTAuth::parseToken()-&gt;authenticate();</span><br></pre></td></tr></table></figure>
+
+<p>相关环境：Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.4</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

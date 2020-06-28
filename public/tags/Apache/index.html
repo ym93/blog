@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        
+  <a href="/2016/12/18/2016-12-18@Apache%20%E7%A6%81%E6%AD%A2%E4%BD%BF%E7%94%A8%20IP%20%E8%AE%BF%E9%97%AE%E7%BD%91%E7%AB%99/">
+    Apache 禁止使用 IP 访问网站
+  </a>
+  <p>Apache 默认允许使用服务器的 IP 地址访问网站。不过，无论是出于用户体验还是安全性考虑，禁止使用 IP 访问网站都是很有必要的。对我这个处女座来讲，能用 IP 访问自己写的网站是不能忍的。使用 Apache 的虚拟主机配置就可以实现禁止使用 IP 访问网站。</p>
+
+  <a href="/2016/12/13/2016-12-13@Linux%20%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85%20Apache2.4/">
+    Linux 编译安装 Apache2.4
+  </a>
+  <p>第一步，确认系统中已安装 C 、C++ 编译器，否则运行 yum 命令安装。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y gcc gcc-c++</span><br></pre></td></tr></table></figure>
+
+  <a href="/2016/09/12/2016-09-12@Rewrite%20%E5%90%8E%20GET%20%E5%8F%82%E6%95%B0%E4%B8%A2%E5%A4%B1%E7%9A%84%E5%A4%84%E7%90%86/">
+    Rewrite 后 GET 参数丢失的处理
+  </a>
+  <p>在 Apache Rewrite 中，如果定义的规则中包含了自定义 GET 参数，原有的 GET 参数就会消失。</p>
+<p>例如，下面这条规则生效后，访问 <a href="http://www.example.com/mike" target="_blank" rel="noopener">www.example.com/mike</a> 实际上是访问 <a href="http://www.example.com/index.php?url=mike" target="_blank" rel="noopener">www.example.com/index.php?url=mike</a> ，index.php 可以接收到参数 url ，这个 GET 参数实际上是我们在重写时自定义的。</p>
+
+  <a href="/2016/09/12/2016-09-12@Rewrite%20%E7%A6%81%E6%AD%A2%E8%AE%BF%E9%97%AE%E6%9F%90%E7%A7%8D%E6%96%87%E4%BB%B6/">
+    Rewrite 禁止访问某种文件
+  </a>
+  <p>当我们不希望一些服务端的文件被用户直接浏览、又必须用到这些文件时，可以通过 Apache Rewrite 禁止直接访问某些格式的文件。</p>
+<p>首先，在根目录下的 .htaccess 文件（没有则新建）中开启重写引擎。</p>
+
+  <a href="/2016/08/30/2016-08-30@WampServer%20%E5%B1%80%E5%9F%9F%E7%BD%91%E8%AE%BF%E9%97%AE%E9%85%8D%E7%BD%AE/">
+    WampServer 局域网访问配置
+  </a>
+  <p>让局域网内的其他设备（如 Pad 、手机）可以访问 WampServer 上的内容，将会非常便于测试不同设备的浏览效果。要做到这点，需要修改 Apache 配置文件，使服务器允许被局域网内的设备访问。</p>
+
+
+
+
+
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

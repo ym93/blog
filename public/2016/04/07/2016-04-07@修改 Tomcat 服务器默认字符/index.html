@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        修改 Tomcat 服务器默认字符 
+<p>在 JSP 中使用 get 方式传递中文将产生乱码，且不能用 request 对象指定字符来解决，必须配置 Tomcat 服务器的参数。</p>
+<p>1、打开 conf/server.xml 文件。</p>
+<a id="more"></a>
+
+<p>2、在 Connector 标签下添加属性 <code>URIEncoding=&quot;utf-8&quot;</code> 。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;Connector</span><br><span class="line">  port&#x3D;&quot;8080&quot;</span><br><span class="line">  protocol&#x3D;&quot;HTTP&#x2F;1.1&quot;</span><br><span class="line">  connectionTimeout&#x3D;&quot;20000&quot;</span><br><span class="line">  redirectPort&#x3D;&quot;8443&quot; </span><br><span class="line">  URIEncoding&#x3D;&quot;utf-8&quot;&#x2F;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>3、重启 Tomcat 服务器。</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

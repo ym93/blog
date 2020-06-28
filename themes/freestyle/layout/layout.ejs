@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="<%- config.root %>css/app.css">
+  </head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="<%- config.root %> ">
+          <div class="site-title">
+            <img src="<%- config.root %>images/site_title.png">
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="container">
+        <%- body %>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️<%- (new Date()).getFullYear() %> ymcai.xyz</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank"><%- theme.beian %> </a>
+      </div>
+    </div>
+    <script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
+  </body>
+</html>

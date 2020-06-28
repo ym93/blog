@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        
+  <a href="/2018/05/09/2018-05-09@%E8%87%AA%E5%AE%9A%E4%B9%89%20Vim%20%E7%BC%96%E8%BE%91%E5%99%A8%E7%9A%84%E6%B3%A8%E9%87%8A%E9%A2%9C%E8%89%B2/">
+    自定义 Vim 编辑器的注释颜色
+  </a>
+  <p>在 Vim 编辑器中，注释默认显示为深蓝色，在黑色背景下几乎无法看清内容，一度影响了我的工作效率和心情。原来，只需简单的配置就能够自定义 Vim 的注释颜色。</p>
+
+  <a href="/2018/04/03/2018-04-03@%E4%BD%BF%E7%94%A8%20Node.js%20%E9%83%A8%E7%BD%B2%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E5%88%B0%E4%B8%83%E7%89%9B%E4%BA%91/">
+    使用 Node.js 部署静态资源到七牛云
+  </a>
+  <p>在最近的一个项目中，为了缩短加载时间，同时减轻服务器的压力，我们决定将前端静态资源全数放到七牛云上。更新内容时只需上传 <code>static</code> 目录下的所有文件（使用 webpack 打包），然后发布 <code>index.html</code> 到网站根目录即可。</p>
+
+  <a href="/2018/03/20/2018-03-20@%E8%AE%B0%E5%8D%9A%E5%AE%A2%E6%9B%B4%E6%8D%A2%E5%9F%9F%E5%90%8D%E5%B9%B6%E8%BF%81%E7%A7%BB%E8%87%B3%20GitHub%20Pages/">
+    记博客更换域名并迁移至 GitHub Pages
+  </a>
+  <p>最近在 Namecheap 注册了一个新域名 <code>yiming.blog</code> ，打算单独用于博客，替换掉原有的域名。无奈目前 <code>.blog</code> 域名无法在国内备案，只能考虑迁移到境外主机。为了避免不必要的资源浪费，我决定将其迁移到 GitHub Pages，并使用 CDN 提供 HTTPS 能力。</p>
+
+  <a href="/2018/02/21/2018-02-21@%E4%BD%BF%E7%94%A8%20Certbot%20%E7%94%B3%E8%AF%B7%E5%92%8C%E9%83%A8%E7%BD%B2%20SSL%20%E8%AF%81%E4%B9%A6/">
+    使用 Certbot 申请和部署 SSL 证书
+  </a>
+  <p>去年写过一篇文章介绍 Let’s Encrypt 免费证书，以及申请和部署的过程。最近又为站点上 HTTPS，发现官方推荐的 <a href="https://certbot.eff.org/" target="_blank" rel="noopener">Certbot</a> 客户端确实更好用，几乎全自动完成证书的申请、部署和更新。</p>
+
+  <a href="/2017/12/27/2017-12-27@%E4%BD%BF%E7%94%A8%20apiDoc%20%E8%87%AA%E5%8A%A8%E7%94%9F%E6%88%90%20API%20%E6%96%87%E6%A1%A3/">
+    使用 apiDoc 自动生成 API 文档
+  </a>
+  <p>前段时间尝试写 API 服务器，为了方便管理数量可能越来越多的接口（未雨绸缪），必须考虑创建文档的方案。我选择了 apiDoc 作为第一款文档生成工具。apiDoc 是一个通过代码中的注释生成 API 文档的工具，它简单易用，并且支持多种常用编程语言。</p>
+
+  <a href="/2017/12/04/2017-12-04@%E9%98%BB%E6%AD%A2%E5%BE%AE%E4%BF%A1%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%8B%E6%8B%89%E6%9F%A5%E7%9C%8B%E7%BD%91%E5%9D%80/">
+    阻止微信浏览器下拉查看网址
+  </a>
+  <p>用过微信的人几乎都知道，在微信中浏览网页时可以下拉查看网站的网址。这确实是一项实用的功能，使用户能够追溯内容提供者，减少被仿冒、钓鱼网站欺骗的风险。不过有时候它确实也对网页的操作产生了干扰。</p>
+
+  <a href="/2017/11/15/2017-11-15@Let's%20Encrypt%EF%BC%9A%E5%85%8D%E8%B4%B9%20SSL%20%E8%AF%81%E4%B9%A6%E7%94%B3%E8%AF%B7%E4%B8%8E%E9%83%A8%E7%BD%B2/">
+    Let's Encrypt：免费 SSL 证书申请与部署
+  </a>
+  <p>为了启用网站的 HTTPS 功能，需要向证书颁发机构（CA）申请证书。<a href="https://letsencrypt.org/" target="_blank" rel="noopener">Let’s Encrypt</a> 是一家 CA，同时也是一个由公益组织运营的项目，致力于普及安全链接。其颁发的免费 SSL 证书有三个月的有效期（不限次数免费续期），目前已得到包括 Chrome、Firefox 在内的所有主流浏览器的信任。</p>
+
+  <a href="/2017/11/03/2017-11-03@JavaScript%20%E6%88%96%20Vue.js%20%E5%AE%9E%E7%8E%B0%E6%97%B6%E5%88%86%E7%A7%92%E5%80%92%E8%AE%A1%E6%97%B6/">
+    JavaScript / Vue.js 实现时分秒倒计时
+  </a>
+  <p>我们平常浏览网页的时候，经常见到“距游戏公测1天2小时3分钟4秒”这样的倒计时器。时间如沙漏般一点点的减少，不仅能挑起用户的兴趣，而且让页面提升了一点逼格，还填补掉一些尴尬的空白位置。最近写得越来越多，有用没用都让加个倒计时，干脆记录下来，免得重复造轮子。</p>
+
+  <a href="/2017/09/28/2017-09-28@%E8%A7%A3%E5%86%B3%20iOS%20%E4%B8%8B%E6%97%A5%E6%9C%9F%E5%AF%B9%E8%B1%A1%20Invalid%20Date%20%E9%94%99%E8%AF%AF/">
+    解决 iOS 下日期对象 Invalid Date 错误
+  </a>
+  <p>JavaScript 中的 Date 对象用于处理日期和时间，对前端开发而言几乎是每天都要打交道的一个东西，但它存在着一个奇葩、不易被注意到的兼容性问题。这是今天在处理产品经理提出的 bug 时偶然发现的。</p>
+
+  <a href="/2017/09/03/2017-09-03@CSS3%20%E8%87%AA%E5%AE%9A%E4%B9%89%E6%BB%9A%E5%8A%A8%E6%9D%A1%E6%A0%B7%E5%BC%8F/">
+    CSS 自定义滚动条样式
+  </a>
+  <p>相比 Mac，Win 系统浏览器的默认滚动条比较粗犷，很多时候和页面设计不搭调，给用户体验减分不少。为了改善页面的整体效果，我决定用 CSS 稍微修改一下滚动条的样式。</p>
+
+
+
+  <a href="/archives/">上一页</a>
+
+
+  <a href="/archives/page/3/">下一页</a>
+
+
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

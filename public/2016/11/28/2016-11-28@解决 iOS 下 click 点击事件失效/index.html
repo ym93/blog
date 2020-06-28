@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        解决 iOS 下 click 点击事件失效 
+<p>前段时间在写一个 Web 小游戏，使用了 jQuery 绑定元素的点击事件。测试后发现，在 PC 和 Android 上均正常运行，但是在 iOS 上需要多次触摸才勉强响应一次点击。</p>
+<a id="more"></a>
+
+<p>搜索后未能找到问题原因及解决方案。于是我尝试更换多种绑定方式，包括但不限于 <code>click()</code> 、<code>mousedown()</code> 、<code>on(&#39;click&#39;, function)</code> 、<code>on(&quot;tap&quot;, function)</code> ，均不见起色。</p>
+<p>在不断地尝试后，终于在使用了 <code>on(&#39;touchend&#39;, function)</code> 方法后解决了这个问题。</p>
+<p>据说出现这个问题是因为 click 事件在 iOS 上存在延迟，所以需要用 touchstart / touchmove / touchend 事件替代传统的点击事件。当然代价是存在的，PC 端可能不会响应 touch 事件。如果需要同时兼容 PC ，只能判断设备并采用不同的绑定方式。</p>
+ 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

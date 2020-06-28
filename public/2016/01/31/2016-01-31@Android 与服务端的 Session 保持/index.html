@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+  <meta name="generator" content="Hexo 4.2.1"></head>
+  <body>
+    <div class="head">
+      <div class="header">
+        <a href="/ ">
+          <div class="site-title">YM</div>
+        </a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="content">
+        Android 与服务端的 Session 保持 
+<p>在开发联网应用的过程中，有时候会希望 php 服务端能通过 Session 保存一些信息，以便随时验证客户端的登录状态，或完成其它功能。但实际操作中发现，Android 客户端每次请求服务端都被视为一个新的请求，SessionID 都会改变，也就是说根本没办法使用 Session 存储和读取信息。</p>
+<a id="more"></a>
+
+<p>我们可以通过保存 SessionID 、请求服务端的同时传递 SessionID 来解决这个问题，让服务器知道两次请求来自同一个客户端。</p>
+<p>发送请求并保存 SessionID ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">URL url = <span class="keyword">new</span> URL(link);</span><br><span class="line">HttpURLConnection conn= (HttpURLConnection)url.openConnection(); conn.connect();</span><br><span class="line"><span class="comment">// 获得 SessionID</span></span><br><span class="line">String cookieval = conn.getHeaderField(<span class="string">"set-cookie"</span>);</span><br><span class="line">String sessionid;</span><br><span class="line"><span class="keyword">if</span>(cookieval != <span class="keyword">null</span>) &#123;</span><br><span class="line">  sessionid = cookieval.substring(<span class="number">0</span>, cookieval.indexOf(<span class="string">";"</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以将 SesshinID 通过全局变量或者 SQLite 数据库保存下来，方便以后请求时调用。</p>
+<p>请求链接的同时发送 SessionID ：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">URL url = <span class="keyword">new</span> URL(link);</span><br><span class="line">HttpURLConnection conn= (HttpURLConnection)url.openConnection();</span><br><span class="line">conn.setRequestProperty(<span class="string">"cookie"</span>, UtilGlobalVariable.sessionId);</span><br><span class="line">conn.connect();</span><br></pre></td></tr></table></figure> 
+      </div>
+    </div>
+    <div class="foot">
+      <div class="footer">
+        <span class="copyright">©️2020 ym</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+      </div>
+    </div>
+  </body>
+</html>

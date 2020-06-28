@@ -1,0 +1,60 @@
+@import './_common/variables.styl';
+
+body
+  margin 0
+  font-size 18px
+  color color-text
+  font-family PingFang SC, sans-serif
+
+p {
+  margin 0
+}
+
+a
+  color color-link
+  text-decoration none
+
+.header, .container, .footer
+  box-sizing border-box
+  padding space-md
+  max-width container-width
+  margin 0 auto
+
+.site-title img 
+  width 80px
+
+.post-item
+  padding 2rem 0
+  position relative
+  & + .post-item::before
+    display inline-block
+    content ''
+    width 100%
+    border-top 1px dashed #000000
+    position absolute
+    top 0
+    left 0
+    transform scaleY(.5)
+.post-item-title
+  color color-text
+  font-size 1.4rem
+.post-item-content
+  margin-top: 1rem
+.post-item-meta
+  margin-top 1rem
+  font-size 0.8rem
+  color #777777
+
+.post-content
+  line-height 1.6
+  font-weight 300
+  h2
+    font-size 1.1rem
+    font-weight 500
+  h3
+    font-size 1rem
+    font-weight 500
+    
+  strong
+    font-weight 400
+
