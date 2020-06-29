@@ -80,7 +80,7 @@ Chrome 扩展经历了：
 
 首先，新建一个目录并创建清单文件 `manifest.json`。
 
-```json
+``` json
 {
   "name": "Chrome Extension Example",
   "version": "1.0",
