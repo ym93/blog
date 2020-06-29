@@ -1,18 +1,73 @@
 @import './_common/variables.styl';
 
+html, body
+  font-size 18px
+
 body
   margin 0
-  font-size 18px
   color color-text
   font-family PingFang SC, sans-serif
 
-p {
-  margin 0
-}
+p
+  margin 1rem 0
 
 a
   color color-link
   text-decoration none
+  font-weight 400
+
+ul, ol
+  margin 1rem 0
+  li
+    p
+      margin 0
+
+h2, h3, h4, h5
+  font-weight 500
+
+h1
+  font-size font-size-xl
+  font-weight 400
+h2
+  font-size font-size-lg
+h3
+  font-size font-size-md
+h4
+  font-size font-size-bs
+h5
+  font-size font-size-sm
+
+strong
+  font-weight 400
+
+pre
+  margin 0
+
+code
+  font-family Menlo, Monaco, 'Courier New', monospace
+
+.highlight
+  width 100%
+  margin 0
+  background-color #f8f8f8
+  font-family Menlo, Monaco, 'Courier New', monospace
+  border-radius 3px
+  overflow-x auto
+  table
+    width 100%
+    font-size font-size-xs
+    line-height 1.6
+.gutter
+  width 1.6rem
+  min-width 1.6rem
+  text-align center
+  background-color #f2f2f2
+
+p > code
+  padding .2em .4em
+  background-color #f1f1f1
+  font-size font-size-xs
+  border-radius 3px
 
 .header, .container, .footer
   box-sizing border-box
@@ -20,11 +75,20 @@ a
   max-width container-width
   margin 0 auto
 
+.container
+  padding-bottom space-lg
+
 .site-title img 
   width 80px
 
+.footer
+  font-size font-size-sm
+  color color-secondary-text
+  a
+    color color-secondary-text
+
 .post-item
-  padding 2rem 0
+  padding 1rem 0 2rem 0
   position relative
   & + .post-item::before
     display inline-block
@@ -37,24 +101,21 @@ a
     transform scaleY(.5)
 .post-item-title
   color color-text
-  font-size 1.4rem
+  // font-size 1.4rem
 .post-item-content
   margin-top: 1rem
 .post-item-meta
   margin-top 1rem
   font-size 0.8rem
-  color #777777
+  color color-secondary-text
 
+
+.post-header
+  margin-bottom 2rem
+  .meta
+    font-size font-size-xs
+    color color-secondary-text
 .post-content
   line-height 1.6
   font-weight 300
-  h2
-    font-size 1.1rem
-    font-weight 500
-  h3
-    font-size 1rem
-    font-weight 500
-    
-  strong
-    font-weight 400
-
+  word-break break-word

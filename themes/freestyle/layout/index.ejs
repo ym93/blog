@@ -2,7 +2,7 @@
   <% page.posts.forEach(post => { %>
     <div class="post-item">
       <a class="post-item-title" href="<%- url_for(post.path) %>">
-        <%- post.title %>
+        <h1><%- post.title %></h1>
       </a>
       <div class="post-item-content post-content"><%- post.excerpt || post.content %></div>
       <div class="post-item-meta">
