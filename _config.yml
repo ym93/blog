@@ -13,7 +13,7 @@ timezone: 'Asia/Shanghai'
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: https://ymcai.xyz
 root: /
 permalink: posts/:year:month:day:hour:minute/
 permalink_defaults:
@@ -98,4 +98,6 @@ theme: freestyle
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type: ''
+  type: git
+  repo: https://github.com/ym93/blog.git
+  branch: dist
