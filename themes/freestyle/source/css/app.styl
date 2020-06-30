@@ -1,7 +1,5 @@
 @import './_common/variables.styl';
 
-:-webkit-tap-highlight-color transparent
-
 html, body
   font-size 18px
 
@@ -9,6 +7,9 @@ body
   margin 0
   color color-text
   font-family PingFang SC, sans-serif
+
+div, span, a
+  -webkit-tap-highlight-color transparent
 
 p
   margin 1rem 0
@@ -28,7 +29,7 @@ p a
     background-color color-link-underline
     position absolute
     left 50%
-    bottom -1px
+    bottom 1px
     transform translateX(-50%)
     z-index -1
 
@@ -140,6 +141,8 @@ p > code, li > code
   margin-top: 1rem
   a
     color color-text
+    &::after
+      display none
 .post-item-meta
   margin-top 1rem
   font-size 0.8rem
@@ -165,6 +168,13 @@ p > code, li > code
     color color-text
 
 @media screen and (max-width: 768px)
+  body
+    display flex
+    flex-direction column
+  .head, .foot
+    flex 0 0 auto
+  .body
+    flex 1 1
   a
     cursor none
   p
