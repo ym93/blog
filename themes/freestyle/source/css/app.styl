@@ -1,5 +1,7 @@
 @import './_common/variables.styl';
 
+:-webkit-tap-highlight-color transparent
+
 html, body
   font-size 18px
 
@@ -12,18 +14,33 @@ p
   margin 1rem 0
 
 a
-  color color-link
   text-decoration none
+
+p a
+  color inherit
   font-weight 400
+  position relative
+  &::after
+    display inline-block
+    content ''
+    width calc(100% + 2px)
+    height 9px
+    background-color color-link-underline
+    position absolute
+    left 50%
+    bottom -1px
+    transform translateX(-50%)
+    z-index -1
 
 ul, ol
-  margin 1rem 0
+  margin 1em 0
   li
+    margin-top .5em
     p
       margin 0
 
 h1, h2, h3, h4, h5
-  margin .5em 0
+  margin 1em 0 .5em
   & + p
     margin-top 0
 h2, h3, h4, h5
@@ -43,6 +60,11 @@ h5
 
 img 
   max-width 100%
+  &.round
+    border-radius 8px
+  &.shadow
+    margin-bottom: 1em
+    box-shadow .5em .5em 1.5em rgba(0, 0, 0, .3)
 
 strong
   font-weight 400
@@ -65,44 +87,33 @@ code.hljs
   padding .5em 1em
   border-radius 5px
 
-// .highlight
-//   width 100%
-//   margin 0
-//   background-color #f8f8f8
-//   font-family Menlo, Monaco, 'Courier New', monospace
-//   border-radius 5px
-//   overflow-x auto
-//   table
-//     border-collapse collapse
-//     width 100%
-//     font-size font-size-xs
-//     line-height 1.6
 .gutter
   width 1.6rem
   min-width 1.6rem
   text-align center
   background-color #f2f2f2
 
-p > code
-  padding .3em .4em
+p > code, li > code
+  display inline-block
+  padding 0 .4em
   background-color #f1f1f1
   font-size font-size-xs
   border-radius 3px
+  vertical-align middle
 
-.header, .container, .footer
+.header, .main, .footer
   box-sizing border-box
-  padding space-md
-  max-width container-width
+  padding space-sm space-md
+  max-width max-width-container
   margin 0 auto
 
-.container
-  padding-bottom space-lg
-
-.site-title img 
-  width 80px
+.header
+  .site-title 
+    img 
+      width 4.5rem
 
 .footer
-  font-size font-size-sm
+  font-size font-size-xs
   color color-secondary-text
   a
     color color-secondary-text
@@ -110,6 +121,8 @@ p > code
 .post-item
   padding 1rem 0 2rem 0
   position relative
+  &:first-child
+    padding-top 0
   & + .post-item::before
     display inline-block
     content ''
@@ -125,6 +138,8 @@ p > code
     font-size font-size-lg
 .post-item-content
   margin-top: 1rem
+  a
+    color color-text
 .post-item-meta
   margin-top 1rem
   font-size 0.8rem
@@ -136,13 +151,12 @@ p > code
   margin-bottom 2rem
   .meta
     font-size font-size-xs
-    color color-secondary-text
+    color color-meta-text
     & span + span
       margin-left: .8em
 .post-content
-  line-height 1.6
+  line-height 1.8
   font-weight 300
-  word-break break-word
 
 .pagination
   & a + span, & span + a
@@ -151,5 +165,25 @@ p > code
     color color-text
 
 @media screen and (max-width: 768px)
+  a
+    cursor none
+  p
+    text-align justify
   p > code
-    word-break: break-all;
+    word-break break-word
+  h1
+    font-size font-size-lg
+  .footer
+    text-align center
+    background-color #f7f7f7
+  .post-content
+    word-break break-word
+    img
+      width 100%
+      display block
+      margin 0 auto
+    img.round
+      border-radius 0
+    img.shadow
+      margin-bottom 0
+      box-shadow none
