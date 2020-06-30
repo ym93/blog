@@ -152,6 +152,6 @@ public class MainActivity extends Activity {
 
 执行程序，新建一个标签为"MainActivity"的筛选，观察 LogCat 输出的日志。
 
-{% img /images/posts/2015/11/android_sqlite.png 480 控制台日志 %}
+{% img /img/posts/2015/11/android_sqlite.png 480 控制台日志 %}
 
 通过 LogCat 日志可以了解到，代码中对 SQLite 数据库的操作都已经执行了。

@@ -97,4 +97,4 @@ public class MainActivity extends FragmentActivity {
 
 运行结果：
 
-{% img /images/posts/2015/11/android_fragment.png 240  在页面中添加 Fragment %}
+{% img /img/posts/2015/11/android_fragment.png 240  在页面中添加 Fragment %}

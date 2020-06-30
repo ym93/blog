@@ -17,7 +17,7 @@ date: 2019-12-21 01:26:05
 
 **你可以理解为，扩展就是在浏览器中持续运行的网页，当你需要时随时唤醒它，而不需要等待加载。**扩展之于 Chrome 浏览器，就像小程序之于微信。
 
-{% img no-border /images/posts/2019/12/chrome_extension_adblock.png 450 Chrome 扩展 %}
+{% img no-border /img/posts/2019/12/chrome_extension_adblock.png 450 Chrome 扩展 %}
 
 Chrome 扩展经历了：
 
@@ -40,7 +40,7 @@ Chrome 扩展经历了：
 
 扩展程序由一些“组件”构成。它们都由常见的 web 技术编写，各自负责不同的工作。
 
-{% img no-border /images/posts/2019/12/chrome_extension_structure.png 580 Chrome 扩展结构 %}
+{% img no-border /img/posts/2019/12/chrome_extension_structure.png 580 Chrome 扩展结构 %}
 
 **清单**
 
@@ -93,7 +93,7 @@ Chrome 扩展经历了：
 
 接着，通过工具栏菜单或访问 `chrome://extensions` 进入扩展程序管理。启用“开发者模式”。开启后即可通过本地目录安装扩展，调试背景页。
 
-{% img no-border /images/posts/2019/12/chrome_extension_management.png 480 扩展管理 %}
+{% img no-border /img/posts/2019/12/chrome_extension_management.png 480 扩展管理 %}
 
 点击“加载已解压的扩展程序”，选择刚才创建的目录，这个什么功能都没有的扩展就被安装到了浏览器上。地址栏的右侧也新增了一个按钮。
 
@@ -134,7 +134,7 @@ chrome.runtime.onInstalled.addListener(function() {
 
 最后，重新加载扩展并点击“查看背景页”，弹出的控制台中打印出了：“Hello, World!”。
 
-{% img no-border /images/posts/2019/12/chrome_extension_debug_background.png 540 调试背景页 %}
+{% img no-border /img/posts/2019/12/chrome_extension_debug_background.png 540 调试背景页 %}
 
 ### 添加弹窗
 
@@ -165,7 +165,7 @@ chrome.runtime.onInstalled.addListener(function() {
 
 重新加载扩展并点击图标，图标下方出现自定义弹窗。
 
-{% img no-border /images/posts/2019/12/chrome_extension_popup.png 450 扩展的弹窗 %}
+{% img no-border /img/posts/2019/12/chrome_extension_popup.png 450 扩展的弹窗 %}
 
 ### 自定义图标
 

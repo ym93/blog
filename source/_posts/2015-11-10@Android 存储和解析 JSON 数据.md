@@ -230,6 +230,6 @@ protected void onCreate(Bundle savedInstanceState) {
 
 运行应用，LogCat 中打印了 JSON 数据，说明 `JSONWrite` 方法执行成功，Activity 输出格式化的内容，说明 `JSONRead` 方法执行成功。
 
-{% img /images/posts/2015/11/android_json_1.png 480 控制台日志 %}
+{% img /img/posts/2015/11/android_json_1.png 480 控制台日志 %}
 
-{% img /images/posts/2015/11/android_json_2.png 240 屏幕输出内容 %}
+{% img /img/posts/2015/11/android_json_2.png 240 屏幕输出内容 %}

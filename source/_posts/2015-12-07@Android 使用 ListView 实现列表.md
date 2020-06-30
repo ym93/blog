@@ -140,8 +140,8 @@ public class MainActivity extends Activity {
 
 实现效果：
 
-{% img side-by-side /images/posts/2015/12/android_list_view_1.png 220 列表 %}
+{% img side-by-side /img/posts/2015/12/android_list_view_1.png 220 列表 %}
 
-{% img side-by-side /images/posts/2015/12/android_list_view_2.png 220 点击事件 %}
+{% img side-by-side /img/posts/2015/12/android_list_view_2.png 220 点击事件 %}
 
-{% img side-by-side /images/posts/2015/12/android_list_view_3.png 220 长按事件 %}
+{% img side-by-side /img/posts/2015/12/android_list_view_3.png 220 长按事件 %}

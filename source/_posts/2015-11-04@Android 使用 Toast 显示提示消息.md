@@ -60,9 +60,9 @@ public class MainActivity extends ActionBarActivity {
 
 程序运行效果：
 
-{% img side-by-side /images/posts/2015/11/android_toast_1.png 220 点击按钮 %}
+{% img side-by-side /img/posts/2015/11/android_toast_1.png 220 点击按钮 %}
 
-{% img side-by-side /images/posts/2015/11/android_toast_2.png 220 显示 Toast %}
+{% img side-by-side /img/posts/2015/11/android_toast_2.png 220 显示 Toast %}
 
 
 `makeText` 方法的第三个参数用于设置 Toast 出现的时长。Toast.LENGTH_SHORT 相当于2-3秒时长，使用 Toast.LENGTH_LONG 将使 Toast 显示更久。

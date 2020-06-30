@@ -9,7 +9,7 @@ categories:
 
 <!-- more -->
 
-{% img /images/posts/2017/12/apidoc_ui.png 450 使用 apiDoc 生成的文档 %}
+{% img /img/posts/2017/12/apidoc_ui.png 450 使用 apiDoc 生成的文档 %}
 
 ### 安装
 

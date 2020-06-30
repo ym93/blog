@@ -152,8 +152,8 @@ public class MainActivity extends FragmentActivity {
 
 运行应用，可以看到已经实现了三屏滑动切换。
 
-{% img side-by-side /images/posts/2015/11/android_view_pager_1.png 220 当前页 %}
+{% img side-by-side /img/posts/2015/11/android_view_pager_1.png 220 当前页 %}
 
-{% img side-by-side /images/posts/2015/11/android_view_pager_2.png 220 切换上一页 %}
+{% img side-by-side /img/posts/2015/11/android_view_pager_2.png 220 切换上一页 %}
 
-{% img side-by-side /images/posts/2015/11/android_view_pager_3.png 220 切换下一页 %}
+{% img side-by-side /img/posts/2015/11/android_view_pager_3.png 220 切换下一页 %}
