@@ -124,7 +124,7 @@ binary-extensions@^2.0.0:
   resolved "https://r.cnpmjs.org/binary-extensions/download/binary-extensions-2.1.0.tgz#30fa40c9e7fe07dbc895678cd287024dea241dd9"
   integrity sha1-MPpAyef+B9vIlWeM0ocCTeokHdk=
 
-bluebird@^3.2.2, bluebird@^3.5.1, bluebird@^3.5.2, bluebird@^3.5.5:
+bluebird@^3.2.2, bluebird@^3.5.0, bluebird@^3.5.1, bluebird@^3.5.2, bluebird@^3.5.5:
   version "3.7.2"
   resolved "https://r.cnpmjs.org/bluebird/download/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
   integrity sha1-nyKcFb4nJFT/qXOs4NvueaGww28=
@@ -148,14 +148,6 @@ bytes@3.0.0:
   version "3.0.0"
   resolved "https://r.cnpmjs.org/bytes/download/bytes-3.0.0.tgz#d32815404d689699f85a4ea4fa8755dd13a96048"
   integrity sha1-0ygVQE1olpn4Wk6k+odV3ROpYEg=
-
-camel-case@^3.0.0:
-  version "3.0.0"
-  resolved "https://r.cnpmjs.org/camel-case/download/camel-case-3.0.0.tgz#ca3c3688a4e9cf3a4cda777dc4dcbc713249cf73"
-  integrity sha1-yjw2iKTpzzpM2nd9xNy8cTJJz3M=
-  dependencies:
-    no-case "^2.2.0"
-    upper-case "^1.1.1"
 
 camel-case@^4.0.0:
   version "4.1.1"
@@ -296,17 +288,6 @@ connect@^3.7.0:
     finalhandler "1.1.2"
     parseurl "~1.3.3"
     utils-merge "1.0.1"
-
-cross-spawn@^6.0.5:
-  version "6.0.5"
-  resolved "https://r.cnpmjs.org/cross-spawn/download/cross-spawn-6.0.5.tgz#4a5ec7c64dfae22c3a14124dbacdee846d80cbc4"
-  integrity sha1-Sl7Hxk364iw6FBJNus3uhG2Ay8Q=
-  dependencies:
-    nice-try "^1.0.4"
-    path-key "^2.0.1"
-    semver "^5.5.0"
-    shebang-command "^1.2.0"
-    which "^1.2.9"
 
 cross-spawn@^7.0.0:
   version "7.0.3"
@@ -599,6 +580,18 @@ hexo-cli@^3.0.0:
     resolve "^1.11.0"
     tildify "^2.0.0"
 
+hexo-deployer-git@^2.1.0:
+  version "2.1.0"
+  resolved "https://r.cnpmjs.org/hexo-deployer-git/download/hexo-deployer-git-2.1.0.tgz#2e72f05d7b318dbe29929d156ea13f9132354ff1"
+  integrity sha1-LnLwXXsxjb4pkp0VbqE/kTI1T/E=
+  dependencies:
+    bluebird "^3.5.0"
+    chalk "^3.0.0"
+    hexo-fs "^2.0.0"
+    hexo-util "^1.0.0"
+    moment "^2.18.0"
+    swig-templates "^2.0.2"
+
 hexo-front-matter@^1.0.0:
   version "1.0.0"
   resolved "https://r.cnpmjs.org/hexo-front-matter/download/hexo-front-matter-1.0.0.tgz#0b48b1c1ed143e8cb25b3b223a9037385d910655"
@@ -671,14 +664,13 @@ hexo-renderer-ejs@^1.0.0:
   dependencies:
     ejs "^2.6.1"
 
-hexo-renderer-marked@^2.0.0:
-  version "2.0.0"
-  resolved "https://r.cnpmjs.org/hexo-renderer-marked/download/hexo-renderer-marked-2.0.0.tgz#458540b014141e7cf72145a82ec591be359cdba1"
-  integrity sha1-RYVAsBQUHnz3IUWoLsWRvjWc26E=
+hexo-renderer-marked@^3.0.0:
+  version "3.0.0"
+  resolved "https://r.cnpmjs.org/hexo-renderer-marked/download/hexo-renderer-marked-3.0.0.tgz#4c9c5ff7d2e7887057891b2db9df9c39187e1fe5"
+  integrity sha1-TJxf99LniHBXiRstud+cORh+H+U=
   dependencies:
-    hexo-util "1.0.0"
-    marked "^0.7.0"
-    strip-indent "^3.0.0"
+    hexo-util "^2.1.0"
+    marked "^1.0.0"
 
 hexo-renderer-stylus@^1.1.0:
   version "1.1.0"
@@ -702,19 +694,7 @@ hexo-server@^1.0.0:
     open "^6.3.0"
     serve-static "^1.14.1"
 
-hexo-util@1.0.0:
-  version "1.0.0"
-  resolved "https://r.cnpmjs.org/hexo-util/download/hexo-util-1.0.0.tgz#2545efcd66e345ef92fe48a73a35470cd65f0b2a"
-  integrity sha1-JUXvzWbjRe+S/kinOjVHDNZfCyo=
-  dependencies:
-    bluebird "^3.5.2"
-    camel-case "^3.0.0"
-    cross-spawn "^6.0.5"
-    highlight.js "^9.13.1"
-    html-entities "^1.2.1"
-    striptags "^3.1.1"
-
-hexo-util@^1.4.0, hexo-util@^1.9.1:
+hexo-util@^1.0.0, hexo-util@^1.4.0, hexo-util@^1.9.1:
   version "1.9.1"
   resolved "https://r.cnpmjs.org/hexo-util/download/hexo-util-1.9.1.tgz#15dc10d0dca474c978cdba9c20e8d0417ac993de"
   integrity sha1-FdwQ0NykdMl4zbqcIOjQQXrJk94=
@@ -727,6 +707,21 @@ hexo-util@^1.4.0, hexo-util@^1.9.1:
     htmlparser2 "^4.0.0"
     prismjs "^1.17.1"
     punycode.js "^2.1.0"
+    strip-indent "^3.0.0"
+    striptags "^3.1.1"
+
+hexo-util@^2.1.0:
+  version "2.1.0"
+  resolved "https://r.cnpmjs.org/hexo-util/download/hexo-util-2.1.0.tgz#2c691a034a05d4ed254696c2e99d7cb686fdd350"
+  integrity sha1-LGkaA0oF1O0lRpbC6Z18tob901A=
+  dependencies:
+    bluebird "^3.5.2"
+    camel-case "^4.0.0"
+    cross-spawn "^7.0.0"
+    deepmerge "^4.2.2"
+    highlight.js "^10.0.0"
+    htmlparser2 "^4.0.0"
+    prismjs "^1.17.1"
     strip-indent "^3.0.0"
     striptags "^3.1.1"
 
@@ -762,15 +757,15 @@ hexo@^4.2.1:
     titlecase "^1.1.2"
     warehouse "^3.0.1"
 
+highlight.js@^10.0.0:
+  version "10.1.1"
+  resolved "https://r.cnpmjs.org/highlight.js/download/highlight.js-10.1.1.tgz#691a2148a8d922bf12e52a294566a0d993b94c57"
+  integrity sha1-aRohSKjZIr8S5SopRWag2ZO5TFc=
+
 highlight.js@^9.13.1:
   version "9.18.1"
   resolved "https://r.cnpmjs.org/highlight.js/download/highlight.js-9.18.1.tgz#ed21aa001fe6252bb10a3d76d47573c6539fe13c"
   integrity sha1-7SGqAB/mJSuxCj121HVzxlOf4Tw=
-
-html-entities@^1.2.1:
-  version "1.3.1"
-  resolved "https://r.cnpmjs.org/html-entities/download/html-entities-1.3.1.tgz#fb9a1a4b5b14c5daba82d3e34c6ae4fe701a0e44"
-  integrity sha1-+5oaS1sUxdq6gtPjTGrk/nAaDkQ=
 
 htmlparser2@^4.0.0:
   version "4.1.0"
@@ -885,11 +880,6 @@ longest@^1.0.1:
   resolved "https://r.cnpmjs.org/longest/download/longest-1.0.1.tgz#30a0b2da38f73770e8294a0d22e6625ed77d0097"
   integrity sha1-MKCy2jj3N3DoKUoNIuZiXtd9AJc=
 
-lower-case@^1.1.1:
-  version "1.1.4"
-  resolved "https://r.cnpmjs.org/lower-case/download/lower-case-1.1.4.tgz#9a2cabd1b9e8e0ae993a4bf7d5875c39c42e8eac"
-  integrity sha1-miyr0bno4K6ZOkv31YdcOcQujqw=
-
 lower-case@^2.0.1:
   version "2.0.1"
   resolved "https://r.cnpmjs.org/lower-case/download/lower-case-2.0.1.tgz#39eeb36e396115cc05e29422eaea9e692c9408c7"
@@ -904,10 +894,10 @@ markdown@~0.5.0:
   dependencies:
     nopt "~2.1.1"
 
-marked@^0.7.0:
-  version "0.7.0"
-  resolved "https://r.cnpmjs.org/marked/download/marked-0.7.0.tgz#b64201f051d271b1edc10a04d1ae9b74bb8e5c0e"
-  integrity sha1-tkIB8FHScbHtwQoE0a6bdLuOXA4=
+marked@^1.0.0:
+  version "1.1.1"
+  resolved "https://r.cnpmjs.org/marked/download/marked-1.1.1.tgz#e5d61b69842210d5df57b05856e0c91572703e6a"
+  integrity sha1-5dYbaYQiENXfV7BYVuDJFXJwPmo=
 
 micromatch@^4.0.2:
   version "4.0.2"
@@ -975,7 +965,7 @@ moment-timezone@^0.5.21:
   dependencies:
     moment ">= 2.9.0"
 
-"moment@>= 2.9.0", moment@^2.10.6, moment@^2.22.2:
+"moment@>= 2.9.0", moment@^2.10.6, moment@^2.18.0, moment@^2.22.2:
   version "2.27.0"
   resolved "https://r.cnpmjs.org/moment/download/moment-2.27.0.tgz#8bff4e3e26a236220dfe3e36de756b6ebaa0105d"
   integrity sha1-i/9OPiaiNiIN/j423nVrbrqgEF0=
@@ -1031,18 +1021,6 @@ nib@^1.1.2:
   integrity sha1-amnt5AgblcDe+L4CSkyK4MLLtsc=
   dependencies:
     stylus "0.54.5"
-
-nice-try@^1.0.4:
-  version "1.0.5"
-  resolved "https://r.cnpmjs.org/nice-try/download/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
-  integrity sha1-ozeKdpbOfSI+iPybdkvX7xCJ42Y=
-
-no-case@^2.2.0:
-  version "2.3.2"
-  resolved "https://r.cnpmjs.org/no-case/download/no-case-2.3.2.tgz#60b813396be39b3f1288a4c1ed5d1e7d28b464ac"
-  integrity sha1-YLgTOWvjmz8SiKTB7V0efSi0ZKw=
-  dependencies:
-    lower-case "^1.1.1"
 
 no-case@^3.0.3:
   version "3.0.3"
@@ -1126,11 +1104,6 @@ path-is-absolute@^1.0.0:
   version "1.0.1"
   resolved "https://r.cnpmjs.org/path-is-absolute/download/path-is-absolute-1.0.1.tgz#174b9268735534ffbc7ace6bf53a5a9e1b5c5f5f"
   integrity sha1-F0uSaHNVNP+8es5r9TpanhtcX18=
-
-path-key@^2.0.1:
-  version "2.0.1"
-  resolved "https://r.cnpmjs.org/path-key/download/path-key-2.0.1.tgz#411cadb574c5a140d3a4b1910d40d80cc9f40b40"
-  integrity sha1-QRyttXTFoUDTpLGRDUDYDMn0C0A=
 
 path-key@^3.1.0:
   version "3.1.1"
@@ -1242,11 +1215,6 @@ select@^1.1.2:
   resolved "https://r.cnpmjs.org/select/download/select-1.1.2.tgz#0e7350acdec80b1108528786ec1d4418d11b396d"
   integrity sha1-DnNQrN7ICxEIUoeG7B1EGNEbOW0=
 
-semver@^5.5.0:
-  version "5.7.1"
-  resolved "https://r.cnpmjs.org/semver/download/semver-5.7.1.tgz#a954f931aeba508d307bbf069eff0c01c96116f7"
-  integrity sha1-qVT5Ma66UI0we78Gnv8MAclhFvc=
-
 semver@^6.0.0:
   version "6.3.0"
   resolved "https://r.cnpmjs.org/semver/download/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
@@ -1286,24 +1254,12 @@ setprototypeof@1.1.1:
   resolved "https://r.cnpmjs.org/setprototypeof/download/setprototypeof-1.1.1.tgz#7e95acb24aa92f5885e0abef5ba131330d4ae683"
   integrity sha1-fpWsskqpL1iF4KvvW6ExMw1K5oM=
 
-shebang-command@^1.2.0:
-  version "1.2.0"
-  resolved "https://r.cnpmjs.org/shebang-command/download/shebang-command-1.2.0.tgz#44aac65b695b03398968c39f363fee5deafdf1ea"
-  integrity sha1-RKrGW2lbAzmJaMOfNj/uXer98eo=
-  dependencies:
-    shebang-regex "^1.0.0"
-
 shebang-command@^2.0.0:
   version "2.0.0"
   resolved "https://r.cnpmjs.org/shebang-command/download/shebang-command-2.0.0.tgz#ccd0af4f8835fbdc265b82461aaf0c36663f34ea"
   integrity sha1-zNCvT4g1+9wmW4JGGq8MNmY/NOo=
   dependencies:
     shebang-regex "^3.0.0"
-
-shebang-regex@^1.0.0:
-  version "1.0.0"
-  resolved "https://r.cnpmjs.org/shebang-regex/download/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
-  integrity sha1-2kL0l0DAtC2yypcoVxyxkMmO/qM=
 
 shebang-regex@^3.0.0:
   version "3.0.0"
@@ -1429,7 +1385,7 @@ swig-extras@0.0.1:
   dependencies:
     markdown "~0.5.0"
 
-swig-templates@^2.0.3:
+swig-templates@^2.0.2, swig-templates@^2.0.3:
   version "2.0.3"
   resolved "https://r.cnpmjs.org/swig-templates/download/swig-templates-2.0.3.tgz#6b4c43b462175df2a8da857a2043379ec6ea6fd0"
   integrity sha1-a0xDtGIXXfKo2oV6IEM3nsbqb9A=
@@ -1499,11 +1455,6 @@ unpipe@~1.0.0:
   resolved "https://r.cnpmjs.org/unpipe/download/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
   integrity sha1-sr9O6FFKrmFltIF4KdIbLvSZBOw=
 
-upper-case@^1.1.1:
-  version "1.1.3"
-  resolved "https://r.cnpmjs.org/upper-case/download/upper-case-1.1.3.tgz#f6b4501c2ec4cdd26ba78be7222961de77621598"
-  integrity sha1-9rRQHC7EzdJrp4vnIilh3ndiFZg=
-
 urix@^0.1.0:
   version "0.1.0"
   resolved "https://r.cnpmjs.org/urix/download/urix-0.1.0.tgz#da937f7a62e21fec1fd18d49b35c2935067a6c72"
@@ -1530,13 +1481,6 @@ warehouse@^3.0.1:
     graceful-fs "^4.1.3"
     is-plain-object "^3.0.0"
     rfdc "^1.1.4"
-
-which@^1.2.9:
-  version "1.3.1"
-  resolved "https://r.cnpmjs.org/which/download/which-1.3.1.tgz#a45043d54f5805316da8d62f9f50918d3da70b0a"
-  integrity sha1-pFBD1U9YBTFtqNYvn1CRjT2nCwo=
-  dependencies:
-    isexe "^2.0.0"
 
 which@^2.0.1:
   version "2.0.2"
