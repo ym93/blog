@@ -12,7 +12,7 @@ div, span, a
   -webkit-tap-highlight-color transparent
 
 p
-  margin 1rem 0
+  margin 1em 0
 
 a
   text-decoration none
@@ -40,7 +40,7 @@ ul a::after {
 ul, ol
   margin 1em 0
   li
-    margin-top .5em
+    margin-top .2em
     p
       margin 0
 
@@ -67,11 +67,16 @@ h5
 
 img 
   max-width 100%
+  &.center
+    display: block
+    margin: 0 auto
   &.round
     border-radius 8px
   &.shadow
     margin-bottom: 1em
     box-shadow .5em .5em 1.5em rgba(0, 0, 0, .3)
+pre + img
+  margin-top: 1rem
 
 strong
   font-weight 400
@@ -81,18 +86,9 @@ blockquote
   padding-left .5em
   border-left 5px solid #eaeaea
 
-pre
-  margin 0
-
-code
+code[class*="language-"], pre[class*="language-"]
   font-family Menlo, Monaco, 'Courier New', monospace
-
-pre > code
   font-size font-size-xs
-
-code.hljs
-  padding .5em 1em
-  border-radius 5px
 
 .gutter
   width 1.6rem
@@ -100,7 +96,7 @@ code.hljs
   text-align center
   background-color #f2f2f2
 
-p > code, li > code
+p > code, strong > code, li > code
   padding .2em .4em
   background-color #f1f1f1
   font-size font-size-xs
@@ -146,8 +142,6 @@ p > code, li > code
     transform scaleY(.5)
 .post-item-title
   color color-text
-  h1
-    font-size font-size-lg
 .post-item-content
   margin-top: 1rem
   a
@@ -202,11 +196,5 @@ p > code, li > code
   .post-content
     word-break break-word
     img
-      width 100%
       display block
       margin 0 auto
-    img.round
-      border-radius 0
-    img.shadow
-      margin-bottom 0
-      box-shadow none
