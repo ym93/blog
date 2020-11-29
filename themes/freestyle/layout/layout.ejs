@@ -1,34 +1,20 @@
+<% // 布局 %> 
 <html>
   <head>
     <title><%- page.title || 'ym' %></title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-    <link rel="stylesheet" href="<%- config.root %>css/prism.default.css">
-    <link rel="stylesheet" href="<%- config.root %>css/app.css">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="<%- config.root %>libs/prism/prism.default.css">
+    <link rel="stylesheet" href="<%- config.root %>css/index.css">
     <!-- <link rel="stylesheet" href="<%- config.root %>libs/highlight.js/styles/github.min.css"> -->
   </head>
-  <body>
-    <div class="head">
-      <div class="header">
-        <div class="site-title">
-          <a href="<%- config.root %>">
-            <img src="<%- config.root %>img/site_title.png">
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="body">
-      <div class="main">
-        <%- body %>
-      </div>
-    </div>
-    <div class="foot">
-      <div class="footer">
-        <span class="copyright">©️<%- (new Date()).getFullYear() %> ymcai.xyz</span>
-        <a href="http://www.beian.miit.gov.cn" target="_blank"><%- theme.beian %> </a>
-      </div>
-    </div>
+  <body ontouchstart="">
+    <%- include('./_partials/layout/head') %>
+    <%- include('./_partials/layout/body') %>
+    <%- include('./_partials/layout/foot') %>
+    
     <!-- <script src="<%- config.root %>libs/highlight.js/highlight.min.js"></script>
     <script type="text/javascript">
       hljs.initHighlightingOnLoad()

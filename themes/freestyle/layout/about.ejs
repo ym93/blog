@@ -1,0 +1,59 @@
+<%
+const getWorkingYears = () => {
+  const date = new Date()
+  const y = date.getFullYear()
+  const m = date.getMonth() + 1
+  let years = y - 2016
+  if (m < 6) years -= 1
+  return years
+}
+
+const experienceList = [
+  {
+    time: '2019-至今',
+    city: '深圳',
+    organization: '微众银行'
+  },
+  {
+    time: '2018-2019',
+    city: '厦门',
+    organization: '美图公司'
+  },
+  {
+    time: '2016-2018',
+    city: '厦门',
+    organization: '文杉科技'
+  }
+]
+%> 
+
+<div class="page-about">
+  <img class="avatar" src="<%- url_for('/img/avatar.png') %>">
+  <div class="title">
+    <span class="name">ym</span>
+    <span class="job-title">前端开发工作者</span>
+  </div>
+  <div class="intro">
+    Hi~ 我叫 YM，福建人，现居深圳，从事前端开发工作<%- getWorkingYears() %>年。<br>我主要负责开发网页应用和小程序，同时沉淀工具帮助团队成员更高效地工作。<br>业余时间我喜欢吃喝，看剧，爬山。
+  </div>
+  <div class="experience">
+    <div class="steps">
+      <% experienceList.forEach(item => { %>
+        <div class="steps-item">
+          <div class="steps-item-lt">
+            <div class="steps-item-node"></div>
+            <div class="steps-item-tail"></div>
+          </div>
+          <div class="steps-item-rt">
+            <div class="experience-item-content">
+              <span class="time"><%- item.time %></span>
+              <span class="city"><%- item.city %></span>
+              <span class="org"><%- item.organization %></span>
+            </div>
+          </div>
+        </div>
+      <% }) %> 
+    </div>
+  </div>
+  
+</div>

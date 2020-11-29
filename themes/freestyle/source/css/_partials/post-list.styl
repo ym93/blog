@@ -1,0 +1,65 @@
+@import '../_common/variables'
+@import '../_common/mixins'
+
+.post-list
+  h1
+    margin .2rem 0
+
+.post-list-header
+  h1
+    text-align center
+
+.post-item
+  padding 1.5rem 0
+  position relative
+  display flex
+  & + .post-item
+    slim-border(position: top, parent-position: null)
+
+.post-item:first-child
+  padding-top 0
+
+.post-item-lt
+  width 10rem
+
+.post-item-rt
+  flex 1 1
+  overflow hidden
+
+.post-item-date
+  font-size font-size-md
+  font-weight 300
+
+.post-item-title
+  font-size font-size-md
+  color color-text
+  letter-spacing: .1rem
+
+.post-item-excerpt
+  font-size font-size-sm
+  color: color-text-secondary
+  letter-spacing .08rem
+  a
+    color color-text
+    &::after
+      display none
+  code
+    margin 0 -0.1em
+    transform scale(.9)
+
+.post-list-footer
+  padding-top 1.5rem
+  font-size font-size-sm
+  slim-border(position: top)
+  .desc, .link-prev, .link-next, .link-back
+    color color-text
+  .desc
+    letter-spacing 0
+    .slash
+      display inline-block
+      font-weight 300
+      transform scaleY(.7)
+  .link-prev, .link-next
+    letter-spacing .1rem
+  .link-prev + .desc, .desc + .link-next, .link-back
+    margin-left 1rem

@@ -1,1 +1,29 @@
+categories:
+  - 
+    id: web-front-end
+    title: Web 前端
+    icon: html5
+    icon_color: '#ff5722'
+    path: /categories/Front-end
+  -
+    id: android
+    title: Android
+    icon: android
+    icon_color: '#4caf50'
+  -
+    id: ios
+    title: iOS
+    icon: ios
+    icon_color: '#607d8b'
+  -
+    id: back-end
+    title: 后端
+    icon: cloud
+    icon_color: '#2196f3'
+  -
+    id: others
+    title: 其他
+    icon: more
+    icon_colro: '#9e9e9e'
+
 beian: 粤ICP备20041235

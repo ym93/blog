@@ -1,0 +1,13 @@
+<div class="page-categories">
+  <div class="category-list">
+    <% theme.categories.forEach(item => { %>
+      <a class="category-item" href="<%- url_for('categories/' + item.id) %>">
+        <div class="category-item-avatar">
+          <i class="icon icon-<%- item.icon %>" style="color:<%- item.icon_color %>"></i>
+          <!-- <img src="<%- item.avatar %>"> -->
+        </div>
+        <div class="category-item-title"><%- item.title %></div>
+      </a>
+    <% }) %>
+  </div>
+</div>

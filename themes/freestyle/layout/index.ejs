@@ -1,25 +1,2 @@
-<div class="post-list">
-  <% page.posts.forEach(post => { %>
-    <div class="post-item">
-      <a class="post-item-title" href="<%- url_for(post.path) %>">
-        <h1><%- post.title %></h1>
-      </a>
-      <div class="post-item-content post-content">
-        <%- post.excerpt.replace(/<h[1-5]{1}.+?<\/h[1-5]{1}>/g, '') || post.content %>
-      </div>
-      <div class="post-item-meta">
-        <%- post.date.format('YYYY-MM-DD') %>
-      </div>
-    </div>
-  <% }) %>  
-</div>
-
-<div class="pagination">
-  <% if (page.prev_link) { %>
-    <a class="prev" href="<%- config.url + page.prev_link %>">上一页</a>
-  <% } %>
-  <span><%- page.current %>/<%- page.total %></span>
-  <% if (page.next_link) { %>
-    <a class="next" href="<%- config.url + page.next_link %>">下一页</a>
-  <% } %>  
-</div>
+<% // 首页 %>
+<%- include('./_partials/post-list') %>

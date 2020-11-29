@@ -1,0 +1,75 @@
+@import '../_common/variables'
+@import '../_common/mixins'
+
+.page-about
+  .avatar
+    display block
+    margin 0 auto
+    width 7rem
+    height 7rem
+    border-radius 50%
+    pointer-events none
+  .title
+    margin-top .5rem
+    font-size font-size-sm
+    text-align center
+    .name
+      text-transform uppercase
+      letter-spacing .2rem
+      transform scaleY(.8)
+    .job-title
+      padding-left .5rem
+      slim-border(position: left, length: 75%, color: color-text)
+  .intro
+    margin-top 1.5rem
+    text-align center
+
+.steps
+  display inline-block
+  margin 2rem auto
+  font-size font-size-sm
+.steps-item
+  display flex
+  width min-content
+.steps-item-lt
+  flex 0 0 auto
+  margin-right 1.5rem
+  position relative
+  transform translateY(.2rem)
+.steps-item-rt
+  flex 1 1
+  padding-bottom 2rem
+.steps-item-node
+  flex 1 1
+  width .8rem
+  height .8rem
+  background-color #ffffff
+  border 2px solid #777777
+  border-radius 50%
+  position absolute
+  top 0
+  left 50%
+  transform translateX(-50%)
+  z-index 1
+.steps-item-tail
+  width 1px
+  height 100%
+  background-color #999999
+  position absolute
+  top 0
+  left 50%
+  transform translateX(-50%)
+.steps-item:last-child
+  .steps-item-tail
+    display none
+
+.experience
+  text-align center
+.experience-item-content
+  white-space nowrap
+  span
+    display inline-block
+  .time
+    width 4.2rem
+  .city
+    width 2.5rem

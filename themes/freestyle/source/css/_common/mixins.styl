@@ -1,0 +1,44 @@
+@import './variables'
+
+slim-border(
+  position = bottom,
+  color = color-devider,
+  length = 100%,
+  scale = .3,
+  pseudo-el = null,
+  parent-position = relative
+)
+  pseudo-el = after
+  direction = horizontal
+
+  if position == left || position == right
+    direction = vertical
+  if parent-position != null
+    position parent-position
+  if position == top || position == left
+    pseudo-el = before
+
+  &::{pseudo-el}
+    display inline-block
+    content ''
+    background-color color-devider
+    position absolute
+    if direction == horizontal
+      width length
+      height 1px
+      transform scaleY(scale) translateX(-50%)
+      left 50%
+      if position == top
+        top 0
+      else
+        bottom 0
+    else
+      width 1px
+      height length
+      transform scaleX(scale) translateY(-50%)
+      top 50%
+      if position == left
+        left 0
+      else
+        right 0
+    
