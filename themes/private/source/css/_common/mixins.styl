@@ -3,6 +3,7 @@
 slim-border(
   position = bottom,
   color = color-devider,
+  width = 1px,
   length = 100%,
   scale = .3,
   pseudo-el = null,
@@ -21,11 +22,11 @@ slim-border(
   &::{pseudo-el}
     display inline-block
     content ''
-    background-color color-devider
+    background-color color
     position absolute
     if direction == horizontal
       width length
-      height 1px
+      height width
       transform scaleY(scale) translateX(-50%)
       left 50%
       if position == top
@@ -33,7 +34,7 @@ slim-border(
       else
         bottom 0
     else
-      width 1px
+      width width
       height length
       transform scaleX(scale) translateY(-50%)
       top 50%

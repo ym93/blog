@@ -1,7 +1,14 @@
+<%
+  let category
+  if (page.category) {
+    category = theme.categories.find(item => item.id === page.category)
+  }
+%> 
+
 <div class="post-list">
-  <% if (page.category) { %>
+  <% if (category) { %>
     <div class="post-list-header">
-      <h1 class="post-list-title"><%- page.category %></h1>
+      <h1 class="post-list-title"><%- category.title %></h1>
     </div>
   <% } %>
   <div class="post-list-body">
@@ -13,36 +20,33 @@
         <div class="post-item-rt">
           <a href="<%- url_for(post.path) %>">
             <h1 class="post-item-title"><%- post.title %></h1>
+            <div class="post-item-excerpt">
+              <%- post.excerpt.replace(/<h[1-5]{1}.+?<\/h[1-5]{1}>/g, '') || post.content %>
+            </div>
           </a>
-          <div class="post-item-excerpt">
-            <%- post.excerpt.replace(/<h[1-5]{1}.+?<\/h[1-5]{1}>/g, '') || post.content %>
-          </div>
         </div>
-        
-        <!-- <div class="post-item-meta">
-          <%- post.date.format('YYYY-MM-DD') %>
-        </div> -->
       </div>
     <% }) %>
   </div>
-  <div class="post-list-footer">
-    <% if (page.prev_link) { %>
-      <a class="link-prev" href="<%- url_for(page.prev_link) %>">上一页</a>
-    <% } %>
-    <span class="desc">
-      <span><%- page.current %></span>
-      <span class="slash">/</span>
-      <span><%- page.total %></span>
-    </span>
-    <% if (page.next_link) { %>
-      <a class="link-next" href="<%- url_for(page.next_link) %>">下一页</a>
-    <% } %>
-    <% if (page.current !== 1) { %>
-      <% if (page.category) { %> 
-        <a class="link-back" href="<%- url_for('categories/' + page.category + '/') %>">返回第一页</a>
-      <% } else { %>
-        <a class="link-back" href="<%- url_for('/') %>">返回首页</a>
-      <% } %> 
-    <% } %>
-  </div>
+</div>
+
+<div class="page-footer">
+  <span class="page-footer-pagination">
+    <span><%- page.current %></span>
+    <span class="page-footer-pagination-slash">/</span>
+    <span><%- page.total %></span>
+  </span>
+  <% if (page.prev_link) { %>
+    <a class="page-footer-link" href="<%- url_for(page.prev_link) %>">上一页</a>
+  <% } %>
+  <% if (page.next_link) { %>
+    <a class="page-footer-link" href="<%- url_for(page.next_link) %>">下一页</a>
+  <% } %>
+  <% if (page.current !== 1) { %>
+    <% if (page.category) { %> 
+      <a class="page-footer-link" href="<%- url_for('categories/' + page.category + '/') %>">返回第一页</a>
+    <% } else { %>
+      <a class="page-footer-link" href="<%- url_for('/') %>">返回首页</a>
+    <% } %> 
+  <% } %>
 </div>
