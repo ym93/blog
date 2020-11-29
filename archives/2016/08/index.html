@@ -1,0 +1,237 @@
+ 
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-list">
+  
+  <div class="post-list-body">
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-30</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608301340/">
+            <h1 class="post-item-title">CSS3 实现全屏背景图片</h1>
+            <div class="post-item-excerpt">
+              <p>Web 开发时经常用到背景图片铺满整个屏幕，需要能够自适应各种设备。CSS3 新增的 <code>background-size</code> 可以实现这个效果，在 html 标签上添加 CSS 代码，这里用 <code>fixed</code> 和 <code>center</code> 定位背景图，然后用 <code>background-size</code> 来使图片铺满。具体代码如下，这段代码摘自互联网。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-30</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608301211/">
+            <h1 class="post-item-title">WampServer 局域网访问配置</h1>
+            <div class="post-item-excerpt">
+              <p>让局域网内的其他设备（如 Pad 、手机）可以访问 WampServer 上的内容，将会非常便于测试不同设备的浏览效果。要做到这点，需要修改 Apache 配置文件，使服务器允许被局域网内的设备访问。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-28</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608282347/">
+            <h1 class="post-item-title">Canvas 不支持使用 CSS 设置尺寸</h1>
+            <div class="post-item-excerpt">
+              <p>如果用 Canvas 画一个图形（我这里生成的是用户头像），生成 DataUrl 后把图片保存到本地，就会发现图形增加了不必要的宽度和高度。如果保存的格式是 jpg ，那么多余的部分就会表现为黑边。如果保存的格式是 png ，那么多余的部分就会表现为透明但仍占用宽高的图像。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-28</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608282314/">
+            <h1 class="post-item-title">Cropper + Canvas 实现用户头像裁剪与上传</h1>
+            <div class="post-item-excerpt">
+              <p>第一步：使用 Github 上的开源项目 <a target="_blank" rel="noopener" href="https://github.com/fengyuanchen/cropper">cropper</a> 实现选择被裁剪图片、裁剪操作和不同大小头像的预览，这个项目可以返回（被裁减图片上）需要裁出的部分的坐标和尺寸。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-28</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608282310/">
+            <h1 class="post-item-title">检测浏览器是否支持 H5</h1>
+            <div class="post-item-excerpt">
+              <p>通过全局对象检测：</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token operator">&lt;</span>script<span class="token operator">></span>
+  window<span class="token punctuation">.</span><span class="token function-variable function">onload</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>window<span class="token punctuation">.</span>applicationCache<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      document<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token string">"Yes, your browser can use offline web applications."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+      document<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token string">"No, your browser cannot use offline web applications."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>script<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-21</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608211150/">
+            <h1 class="post-item-title">Textarea 的换行符处理</h1>
+            <div class="post-item-excerpt">
+              <p>用户使用 textarea 控件输入的包含回车换行的内容，后端获取后存储到数据库会变成一整段文本，存在换行符丢失的问题。为了保留换行符，需要在前后端通信的过程中做一些必要的处理。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-14</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608141814/">
+            <h1 class="post-item-title">PHP 中实现 URL 跳转</h1>
+            <div class="post-item-excerpt">
+              <p>JavaScrip 方式：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$link</span><span class="token operator">=</span><span class="token double-quoted-string string">"target.html"</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token double-quoted-string string">"&lt;script type = \"text/javascript\">window.location.href='"</span><span class="token punctuation">.</span><span class="token variable">$link</span><span class="token punctuation">.</span><span class="token double-quoted-string string">"'&lt;/script>"</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-11</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608112242/">
+            <h1 class="post-item-title">使用 jQuery 实现 AJAX 异步请求</h1>
+            <div class="post-item-excerpt">
+              <p>引用 jQuery 库文件。</p>
+<pre class="line-numbers language-xhtml" data-language="xhtml"><code class="language-xhtml">&lt;script type&#x3D;&quot;text&#x2F;javascript&quot; src&#x3D;&quot;js&#x2F;jquery-3.1.0.min.js&quot;&gt;&lt;&#x2F;script&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-11</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608112105/">
+            <h1 class="post-item-title">JS 倒计时代码</h1>
+            <div class="post-item-excerpt">
+              <p>网站发送验证码后，通常需要有一个倒计时器。在倒计时期间关闭“获取验证码”按钮，以防用户频繁地获取验证码。</p>
+<p>我是利用 JS 的 setTimeout 方法实现倒计时的，基本示例如下，加上更新前端的代码即可完成倒数。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-10</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608101917/">
+            <h1 class="post-item-title">通过 CSS 引用外部字体</h1>
+            <div class="post-item-excerpt">
+              <p>引用文件：</p>
+<pre class="line-numbers language-css" data-language="css"><code class="language-css"><span class="token atrule"><span class="token rule">@font-face</span></span> <span class="token punctuation">&#123;</span> 
+  <span class="token property">font-family</span><span class="token punctuation">:</span> MyFont<span class="token punctuation">;</span> <span class="token comment">/*字体名字*/</span> 
+  <span class="token property">src</span><span class="token punctuation">:</span> <span class="token url"><span class="token function">url</span><span class="token punctuation">(</span>MyFont.ttf<span class="token punctuation">)</span></span><span class="token punctuation">;</span> <span class="token comment">/*文件路径*/</span> 
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+  </div>
+</div>
+
+<div class="page-footer">
+  <span class="page-footer-pagination">
+    <span>1</span>
+    <span class="page-footer-pagination-slash">/</span>
+    <span>2</span>
+  </span>
+  
+  
+    <a class="page-footer-link" href="/archives/2016/08/page/2/">下一页</a>
+  
+  
+</div>
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

@@ -1,0 +1,132 @@
+ 
+<html>
+  <head>
+    <title>不用 JSSDK 自定义微信分享标题和缩略图</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">不用 JSSDK 自定义微信分享标题和缩略图</h1>
+  <div class="post-meta">
+    <span>2017-02-23</span>
+    
+    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>微信向网页开发者提供了 JSSDK ，通常我们要自定义“分享到朋友圈”以及“发送给朋友”时显示的标题和缩略图，都是通过调用其接口实现。</p>
+<p>微信分享接口的权限仅对已认证的公众号开放 。对于手头没有认证公众号的开发者，还有其他办法可以自定义微信分享标题和缩略图吗？答案是肯定的，效果是低配的。</p>
+<a id="more"></a>
+
+<h3 id="自定义分享标题"><a href="#自定义分享标题" class="headerlink" title="自定义分享标题"></a>自定义分享标题</h3><p>如果未使用 JSSDK 设置过标题，微信默认抓取网页标题，也就是 title 标签中的内容作为分享标题。这是显而易见的。</p>
+<pre class="line-numbers language-xhtml" data-language="xhtml"><code class="language-xhtml">&lt;title&gt;我是页面标题&lt;&#x2F;title&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>既然如此，我们可以判断当前访问的浏览器是不是微信浏览器，若是微信浏览器，就动态修改页面标题。</p>
+<p>以 PHP 为例：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">strpos</span><span class="token punctuation">(</span><span class="token variable">$_SERVER</span><span class="token punctuation">[</span><span class="token single-quoted-string string">'HTTP_USER_AGENT'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token single-quoted-string string">'MicroMessenger'</span><span class="token punctuation">)</span> <span class="token operator">!==</span> <span class="token boolean constant">false</span> <span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token keyword">echo</span> <span class="token single-quoted-string string">'&lt;script type="text/javascript"> document.title = '</span>我是新标题<span class="token single-quoted-string string">'; &lt;/script>'</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>以 JavaScript 为例：</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token keyword">var</span> ua <span class="token operator">=</span> window<span class="token punctuation">.</span>navigator<span class="token punctuation">.</span>userAgent<span class="token punctuation">.</span><span class="token function">toLowerCase</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>ua<span class="token punctuation">.</span><span class="token function">match</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">MicroMessenger</span><span class="token regex-delimiter">/</span><span class="token regex-flags">i</span></span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token string">'micromessenger'</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  document<span class="token punctuation">.</span>title <span class="token operator">=</span> <span class="token string">'我是新标题'</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这样，用户使用微信浏览时的页面标题就是“我是新标题”，分享时自然也会以此作为分享标题，也就间接达到了自定义微信分享标题的目的。</p>
+<h3 id="自定义分享缩略图"><a href="#自定义分享缩略图" class="headerlink" title="自定义分享缩略图"></a>自定义分享缩略图</h3><p>如果未使用 JSSDK 设置过缩略图，微信默认抓取页面中尺寸大于300*300像素的第一张图片作为缩略图。</p>
+<p>既然如此，我们可以把要作为缩略图的图片放在 body 的最前面，然后隐藏它。</p>
+<p>很有人说可以给图片包一个隐藏的 div：</p>
+<pre class="line-numbers language-xhtml" data-language="xhtml"><code class="language-xhtml">&lt;div style&#x3D;&quot;display: none&quot;&gt;
+  &lt;img src&#x3D;&quot;&#x2F;wechat.png&quot; width&#x3D;&quot;300&quot; height&#x3D;&quot;300&quot;&gt;
+&lt;&#x2F;div&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+<p>这是错误的，至少在新版微信里面没有起到任何作用。</p>
+<p>我的办法是把图片移动到浏览器的可视区域之外：</p>
+<pre class="line-numbers language-xhtml" data-language="xhtml"><code class="language-xhtml">&lt;div class&#x3D;&quot;wechat-icon&quot;&gt;
+  &lt;img src&#x3D;&quot;&#x2F;wechat.png&quot; width&#x3D;&quot;300&quot; height&#x3D;&quot;300&quot;&gt;
+&lt;&#x2F;div&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-css" data-language="css"><code class="language-css"><span class="token selector">.wechat-icon</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">position</span><span class="token punctuation">:</span> fixed<span class="token punctuation">;</span>
+  <span class="token property">top</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+  <span class="token property">left</span><span class="token punctuation">:</span> -300px<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>注：2017年3月29日，微信宣布未接入 JSSDK 的网站将统一显示默认缩略图，上述方法在新版微信中或已失效，建议接入 JSSDK 或继续使用微信 6.5.4 版本。</p>
+<p>相关环境：Aliyun ECS / CentOS 7 x64 / Nginx 1.8 / PHP 5.6 / WeChat 6.5.4</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：为你的网站开启 HTTPS
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">微信</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

@@ -1,0 +1,134 @@
+ 
+<html>
+  <head>
+    <title>Linux 编译安装 MySQL5.6</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">Linux 编译安装 MySQL5.6</h1>
+  <div class="post-meta">
+    <span>2016-12-15</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>第一步，安装依赖。包括编译工具和需要用到的库。</p>
+<pre class="line-numbers language-none"><code class="language-none">yum -y install make gcc-c++ cmake bison-devel  ncurses-devel perl-Module-Install.noarch<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<a id="more"></a>
+
+<p>第二步，从 <a target="_blank" rel="noopener" href="http://www.mysql.com/">官网</a> 下载并解压 MySQL 源码（Source Code）的压缩包。</p>
+<pre class="line-numbers language-none"><code class="language-none">wget http:&#x2F;&#x2F;dev.mysql.com&#x2F;get&#x2F;Downloads&#x2F;MySQL-5.6&#x2F;mysql-5.6.35.tar.gz
+tar xvf mysql-5.6.35.tar.gz
+cd mysql-5.6.35<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>第三步，简单配置并编译安装 MySQL 。更多配置项可参阅官方文档。</p>
+<pre class="line-numbers language-none"><code class="language-none">cmake \
+-DCMAKE_INSTALL_PREFIX&#x3D;&#x2F;usr&#x2F;local&#x2F;mysql5.6 \
+-DMYSQL_DATADIR&#x3D;&#x2F;usr&#x2F;local&#x2F;mysql5.6&#x2F;data \
+-DMYSQL_UNIX_ADDR&#x3D;&#x2F;usr&#x2F;local&#x2F;mysql5.6&#x2F;mysql.sock \
+-DDEFAULT_CHARSET&#x3D;utf8 \
+-DDEFAULT_COLLATION&#x3D;utf8_general_ci
+make
+make install<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>第四步，创建系统账户，然后赋予数据库文件存放目录的使用权限。<code>data</code> 目录的位置可以自行修改，但必须与配置 MySQL 时设置的 <code>DMYSQL_DATADIR</code> 一致。</p>
+<pre class="line-numbers language-none"><code class="language-none">groupadd mysql
+useradd -g mysql mysql
+chmod 755 &#x2F;usr&#x2F;local&#x2F;mysql5.6&#x2F;data
+chown –R mysql:mysql &#x2F;usr&#x2F;local&#x2F;mysql5.6&#x2F;data<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>第五步，执行 MySQL 的初始化脚本。这一步将创建一些必要的数据库和数据表。</p>
+<pre class="line-numbers language-none"><code class="language-none">cd &#x2F;usr&#x2F;local&#x2F;mysql5.6
+scripts&#x2F;mysql_install_db --basedir&#x3D;&#x2F;usr&#x2F;local&#x2F;mysql5.6 --datadir&#x3D;&#x2F;usr&#x2F;local&#x2F;mysql5.6&#x2F;data --user&#x3D;mysql<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>第六步，添加服务并设置开机运行，启动 MySQL 。</p>
+<pre class="line-numbers language-none"><code class="language-none">cp support-files&#x2F;mysql.server &#x2F;etc&#x2F;init.d&#x2F;mysql
+chkconfig mysql on
+service mysql start<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>第七步，配置环境变量。使用编辑器编辑 /etc/profile ，在末尾添加以下内容，保存，然后执行 <code>source /etc/profile</code> 使设置立即生效。</p>
+<pre class="line-numbers language-none"><code class="language-none"># MySQL
+export PATH&#x3D;$PATH:&#x2F;usr&#x2F;local&#x2F;mysql5.6&#x2F;bin<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>第八步，执行 <code>mysql</code> 命令登录 MySQL 。</p>
+<p>相关环境：Aliyun ECS / CentOS 7 x64</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Linux 编译安装 Apache2.4
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">MySQL</a>
+    
+      <a class="post-tag">Linux</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

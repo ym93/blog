@@ -1,0 +1,123 @@
+ 
+<html>
+  <head>
+    <title>WampServer 配置虚拟主机</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">WampServer 配置虚拟主机</h1>
+  <div class="post-meta">
+    <span>2016-11-21</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>WampServer 默认创建一个站点，以 www 目录作为网站的根目录，通过 <code>http://localhost/</code> 访问。通过修改配置文件可以创建虚拟主机，即实现多站点。</p>
+<a id="more"></a>
+
+<p>第一步，启用 Apache 的 mod_rewrite 模块。打开配置文件 bin\apache\apache2.4.9\conf\httpd.conf ，找到下行并去掉前面的 <code>#</code> 号。</p>
+<pre class="line-numbers language-none"><code class="language-none">LoadModule rewrite_module modules&#x2F;mod_rewrite.so<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>第二步，启用虚拟主机配置文件。同样是在 httpd.conf 文件中，找到下行并去掉前面的 <code>#</code> 号。</p>
+<pre class="line-numbers language-none"><code class="language-none">Include conf&#x2F;extra&#x2F;httpd-vhosts.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>第三步，修改虚拟主机配置文件。打开 bin\apache\apache2.4.9\conf\extra\httpd-vhosts.conf ，该文件中已包含示例，直接修改即可。</p>
+<pre class="line-numbers language-none"><code class="language-none">&lt;VirtualHost *:80&gt;
+    DocumentRoot &quot;d:&#x2F;vhosts&#x2F;example&quot; &#x2F;&#x2F; 文件目录
+    ServerName example.com &#x2F;&#x2F; 绑定域名
+&lt;&#x2F;VirtualHost&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>第四步，允许访问文件目录。如果虚拟主机的文件目录不在 www 目录下，继续编辑 httpd-vhosts.conf 文件，添加 <code>&lt;Directory&gt;</code> 标签中的内容。</p>
+<pre class="line-numbers language-none"><code class="language-none">&lt;VirtualHost *:80&gt;
+2DocumentRoot &quot;d:&#x2F;vhosts&#x2F;example&quot;
+2ServerName example.com
+2&lt;Directory &quot;d:&#x2F;vhosts&#x2F;example&quot;&gt;
+22Options Indexes FollowSymLinks
+22AllowOverride all
+22Require local
+2&lt;&#x2F;Directory&gt;
+&lt;&#x2F;VirtualHost&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>第五步，将域名指向本机。编辑 C:\Windows\System32\drivers\etc\hosts 文件，添加以下内容，表示由本机响应对 <code>example.com</code> 的访问。</p>
+<pre class="line-numbers language-none"><code class="language-none">127.0.0.1       example.com<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>最后，重启 WampServer 即可。</p>
+<p>相关环境：Windows 7 x64 / WampServer 2.5</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Laravel 使用 SMTP 发送邮件
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">WampServer</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

@@ -1,0 +1,101 @@
+ 
+<html>
+  <head>
+    <title>PHP 删除数组中的元素</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">PHP 删除数组中的元素</h1>
+  <div class="post-meta">
+    <span>2016-09-19</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>删除数组元素有两种方式，第一种是使用 <code>unset</code> 方法。</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">unset</span><span class="token punctuation">(</span><span class="token variable">$arr</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<a id="more"></a>
+
+<p>此方法删除元素后，$arr[1] 为 null ，所有元素的索引值不变，也就是说元素不会重新排列，所以不是很实用。</p>
+<p>要使元素删除后重新排列顺序，使用 array_splice 方法即可。</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token function">array_splice</span><span class="token punctuation">(</span><span class="token keyword">array</span><span class="token punctuation">,</span>start<span class="token punctuation">,</span>length<span class="token punctuation">,</span><span class="token keyword">array</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>array_splice 的四个参数中，array 为要删除元素的数组；start 为要开始删除元素的位置（索引值）；length 为要删除的元素数量；最后一个参数为可选参数，允许用一个新元素替代被删除的元素。</p>
+<p>使用 array_splice 删除数组中索引为1的元素：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token function">array_splice</span><span class="token punctuation">(</span><span class="token variable">$arr</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：文字溢出时隐藏并加省略号
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">PHP</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

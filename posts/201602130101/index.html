@@ -1,0 +1,102 @@
+ 
+<html>
+  <head>
+    <title>EditText 光标定位到最后</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">EditText 光标定位到最后</h1>
+  <div class="post-meta">
+    <span>2016-02-13</span>
+    
+    <a class="post-meta-category" href="/categories/android">Android</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>有时候我们需要把 EditText 的光标定位到内容的最末尾。</p>
+<p>比如让用户修改某些信息的时候，为了对用户更友好，我们把用户之前设置的内容填充进入。Android 并不会自动把光标移动到内容的末端，需要手动完成。</p>
+<a id="more"></a>
+
+<pre class="line-numbers language-js" data-language="js"><code class="language-js">edittext<span class="token punctuation">.</span><span class="token function">setText</span><span class="token punctuation">(</span><span class="token string">"example"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+edittext<span class="token punctuation">.</span><span class="token function">setSelection</span><span class="token punctuation">(</span>edittext<span class="token punctuation">.</span><span class="token function">getText</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>使用 EditText 的 setSelection 方法，设置光标定位的位置为 EditText 的内容长度，就这么简单。</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：使用 AlertDialog 实现自定义对话框
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Android</a>
+    
+      <a class="post-tag">Java</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

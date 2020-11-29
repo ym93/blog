@@ -1,0 +1,238 @@
+ 
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-list">
+  
+  <div class="post-list-body">
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-12-13</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201612131044/">
+            <h1 class="post-item-title">解决 jQuery 事件重复绑定</h1>
+            <div class="post-item-excerpt">
+              <p>昨天开发中发现一个 Bug ：前端点击事件正常执行、后端也正常响应，但数据库中的字段没有发生预期的变化。</p>
+<p>原来是 jQuery 的点击事件存在重复绑定。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-11-28</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201611282340/">
+            <h1 class="post-item-title">解决 iOS 下 click 点击事件失效</h1>
+            <div class="post-item-excerpt">
+              <p>前段时间在写一个 Web 小游戏，使用了 jQuery 绑定元素的点击事件。测试后发现，在 PC 和 Android 上均正常运行，但是在 iOS 上需要多次触摸才勉强响应一次点击。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-09-19</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201609191328/">
+            <h1 class="post-item-title">Textarea 限制字符长度</h1>
+            <div class="post-item-excerpt">
+              <p>textarea 没有 maxlength 属性，不能像 input 一样直接在标签内设置最大输入字符数，只能通过 JavaScript 间接实现。</p>
+<p>用户每次按键输入时调用 <code>checkLength</code> 方法，该方法判断输入的内容是否超出限制的长度，若是则删除超出长度部分的字符。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-09-10</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201609101555/">
+            <h1 class="post-item-title">Textarea 禁用回车换行</h1>
+            <div class="post-item-excerpt">
+              <p>在使用 textarea 控件时，某些场景下需要禁止用户使用回车换行。这时可以用 JavaScript 监听用户输入事件，判断按键为回车后返回 false 即可。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-09-03</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201609031820/">
+            <h1 class="post-item-title">一个小技巧强制刷新浏览器缓存的图片</h1>
+            <div class="post-item-excerpt">
+              <p>在服务器上的图片文件发生改变，但 img 的 src 保持不变的情况下，浏览器会直接读取缓存的图片文件，而不会重新加载图片。</p>
+<p>虽然缓存有利于减少页面打开时间，但这在一些场景下是不适用的。比如用户修改了自己的头像，同一用户的头像文件的路径是固定的，由于浏览器使用了缓存，此时用户仍然只能看到之前的头像。那么该如何强制浏览器重新加载图片呢？</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-09-01</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201609011252/">
+            <h1 class="post-item-title">判断页面是否在 iFrame 中</h1>
+            <div class="post-item-excerpt">
+              <p>如果我们不判断某页面是否在 iFrame 中执行，进而对页面做出一些修改，很可能会出现一些用户体验不佳的 BUG 。例如，我们在A页面中的 iFrame 中显示了B页面内容、B页面中存在链接跳转到A页面，当点击B页面中的链接后等于是在 iFrame 中打开了A页面，如此循环就变成了A页面不断嵌套A页面的效果，这显然不会是我们想要呈现给用户的。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-28</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608282347/">
+            <h1 class="post-item-title">Canvas 不支持使用 CSS 设置尺寸</h1>
+            <div class="post-item-excerpt">
+              <p>如果用 Canvas 画一个图形（我这里生成的是用户头像），生成 DataUrl 后把图片保存到本地，就会发现图形增加了不必要的宽度和高度。如果保存的格式是 jpg ，那么多余的部分就会表现为黑边。如果保存的格式是 png ，那么多余的部分就会表现为透明但仍占用宽高的图像。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-28</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608282314/">
+            <h1 class="post-item-title">Cropper + Canvas 实现用户头像裁剪与上传</h1>
+            <div class="post-item-excerpt">
+              <p>第一步：使用 Github 上的开源项目 <a target="_blank" rel="noopener" href="https://github.com/fengyuanchen/cropper">cropper</a> 实现选择被裁剪图片、裁剪操作和不同大小头像的预览，这个项目可以返回（被裁减图片上）需要裁出的部分的坐标和尺寸。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-28</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608282310/">
+            <h1 class="post-item-title">检测浏览器是否支持 H5</h1>
+            <div class="post-item-excerpt">
+              <p>通过全局对象检测：</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token operator">&lt;</span>script<span class="token operator">></span>
+  window<span class="token punctuation">.</span><span class="token function-variable function">onload</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>window<span class="token punctuation">.</span>applicationCache<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      document<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token string">"Yes, your browser can use offline web applications."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+      document<span class="token punctuation">.</span><span class="token function">write</span><span class="token punctuation">(</span><span class="token string">"No, your browser cannot use offline web applications."</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>script<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-21</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608211150/">
+            <h1 class="post-item-title">Textarea 的换行符处理</h1>
+            <div class="post-item-excerpt">
+              <p>用户使用 textarea 控件输入的包含回车换行的内容，后端获取后存储到数据库会变成一整段文本，存在换行符丢失的问题。为了保留换行符，需要在前后端通信的过程中做一些必要的处理。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+  </div>
+</div>
+
+<div class="page-footer">
+  <span class="page-footer-pagination">
+    <span>2</span>
+    <span class="page-footer-pagination-slash">/</span>
+    <span>3</span>
+  </span>
+  
+    <a class="page-footer-link" href="/tags/JavaScript/">上一页</a>
+  
+  
+    <a class="page-footer-link" href="/tags/JavaScript/page/3/">下一页</a>
+  
+  
+    
+      <a class="page-footer-link" href="/">返回首页</a>
+     
+  
+</div>
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

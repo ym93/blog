@@ -1,0 +1,105 @@
+ 
+<html>
+  <head>
+    <title>将 WordPress 移动到子目录</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">将 WordPress 移动到子目录</h1>
+  <div class="post-meta">
+    <span>2017-03-13</span>
+    
+    <a class="post-meta-category" href="/categories/others">其他</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>WordPress 默认安装在网站的根目录，这无疑会使目录结构看起来很混乱。查阅文档后发现 WordPress 本身允许用户将其文件移动到子目录。</p>
+<a id="more"></a>
+
+<p>首先，在根目录下创建用于存放 WordPress 文件的文件夹。例如： <code>wordpress</code> 。</p>
+<p>然后，在后台修改常规选项，将“WordPress地址”修改为指向子目录的链接。保存，不需要理会错误提示。</p>
+<pre class="line-numbers language-xhtml" data-language="xhtml"><code class="language-xhtml">http:&#x2F;&#x2F;example.com&#x2F;wordpress<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>注意，“站点地址”不需要修改。</p>
+<p>最后，将 index.php 拷贝到根目录下。编辑 index.php ，修改其引用的文件路径。如果存在 .htaccess 等 Web 引擎配置文件，也要拷贝到根目录下。</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">require</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'./wordpress/wp-blog-header.php'</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>若设置过固定链接，需要到后台重新保存一次固定链接设置。若无法正常访问站点，检查 Rewrite 规则或目录权限。</p>
+<p>记得使用新链接登录后台。</p>
+<pre class="line-numbers language-xhtml" data-language="xhtml"><code class="language-xhtml">http:&#x2F;&#x2F;example.com&#x2F;wordpress&#x2F;wp-admin&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：解决移动端 ES6 兼容问题
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">WordPress</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

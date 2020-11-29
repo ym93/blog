@@ -1,0 +1,126 @@
+ 
+<html>
+  <head>
+    <title>Android 实现“再按一次退出程序”</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">Android 实现“再按一次退出程序”</h1>
+  <div class="post-meta">
+    <span>2015-11-29</span>
+    
+    <a class="post-meta-category" href="/categories/android">Android</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>我们经常会在 APP 中看到用连按两次返回键来退出应用的设计。</p>
+<p>通常，用户在打开应用的首个 Activity 上按下返回键，得到类似“再按一次退出程序”的短提示，用户再次按下返回键，应用退出。</p>
+<a id="more"></a>
+
+<p>这样的设计，一方面尊重了用户长期以来自发形成的操作习惯、使得退出应用更加简便，另一方面节省了视图空间，界面上无需提供一个退出按钮。</p>
+<p>实际上要实现按两次返回键退出应用是很容易的。Activity 中有一个 <code>onKeyUp</code> 方法用来监听按键事件，覆写这个方法并添加对返回键的处理。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 该变量用于存储上一次按键时间</span>
+<span class="token keyword">private</span> <span class="token keyword">long</span> mFirstTime <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@Override</span>  
+<span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">onKeyUp</span><span class="token punctuation">(</span><span class="token keyword">int</span> keyCode<span class="token punctuation">,</span> <span class="token class-name">KeyEvent</span> event<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">switch</span><span class="token punctuation">(</span>keyCode<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  
+    <span class="token keyword">case</span> <span class="token class-name">KeyEvent</span><span class="token punctuation">.</span>KEYCODE_BACK <span class="token operator">:</span>
+      <span class="token keyword">long</span> mSecondTime <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   
+      <span class="token comment">// 当按键间隔大于2秒时弹出提示</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span> mSecondTime <span class="token operator">-</span> mFirstTime <span class="token operator">></span> <span class="token number">2000</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  
+        <span class="token class-name">Toast</span><span class="token punctuation">.</span><span class="token function">makeText</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token string">"再按一次退出程序"</span><span class="token punctuation">,</span> <span class="token class-name">Toast</span><span class="token punctuation">.</span>LENGTH_SHORT<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 更新上一次按键时间</span>
+        mFirstTime <span class="token operator">=</span> mSecondTime<span class="token punctuation">;</span> 
+        <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span> 
+      <span class="token punctuation">&#125;</span>
+      <span class="token comment">// 当按键间隔小于2秒时退出程序</span>
+      <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>   
+      <span class="token keyword">break</span><span class="token punctuation">;</span>  
+  <span class="token punctuation">&#125;</span>  
+<span class="token keyword">return</span> <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onKeyUp</span><span class="token punctuation">(</span>keyCode<span class="token punctuation">,</span> event<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>当用户第一次按下返回键，两个变量之差显然大于2000毫秒，应用弹出“再按一次退出程序”提示并将当前时间（即 mSecondTime 的值）赋予 mFirstTime 。</p>
+<p>当用户第二次按下返回键，如果两次按键时间小于2000毫秒，应用退出；如果两次按键时间大于2000毫秒，再次弹出提示并更新 mFirstTime 。</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：使用 Intent 实现页面跳转与传值
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Android</a>
+    
+      <a class="post-tag">Java</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

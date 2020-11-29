@@ -1,0 +1,192 @@
+ 
+<html>
+  <head>
+    <title>Android 上传文件到 PHP 服务端</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">Android 上传文件到 PHP 服务端</h1>
+  <div class="post-meta">
+    <span>2016-02-07</span>
+    
+    <a class="post-meta-category" href="/categories/android">Android</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>最近练习的小项目中用到了文件上传功能，从 Android 客户端向 PHP 服务端上传文件。</p>
+<p>查了不少资料，看过很多 demo ，结果照搬过来都以失败告终了。经过阅读、思考和尝试后终于改出了能用的代码。</p>
+<a id="more"></a>
+
+<p>实际上实现的方法都差不多，客户端发送 POST 请求向服务端上传文件，服务端判断、接收。</p>
+<p>先谈一谈几点需要特别注意的地方。</p>
+<p>① SD 卡的路径要用 <code>Environment.getExternalStorageDirectory</code> 获取，因为不同手机默认的 SD 卡路径可能不同。</p>
+<p>② 在每次测试之前，确保本地文件确实存在且可读，用 PC 确定服务端链接可以访问。</p>
+<p>③ 客户端设置的文件键名 name 必须和服务端一致。</p>
+<p>客户端：</p>
+<pre class="line-numbers language-none"><code class="language-none">&#x2F;&#x2F; 文件路径 建议用 Environment.getExternalStorageDirectory 方法获取 SD 卡路径
+private String filePath &#x3D; &quot;&#x2F;sdcard&#x2F;example&#x2F;image.jpg&quot;;
+
+&#x2F;**
+ * 上传图片到服务端
+ * @param targetUrl 服务端链接
+ *&#x2F;
+private void uploadFile(final String targetUrl) &#123;
+  Thread thread &#x3D; new Thread() &#123;
+    @Override
+    public void run() &#123;
+      String end &#x3D; &quot;\r\n&quot;;
+      String twoHyphens &#x3D; &quot;--&quot;;
+      String boundary &#x3D; &quot;******&quot;;
+      try &#123;
+        URL url &#x3D; new URL(targetUrl);
+        HttpURLConnection httpURLConnection &#x3D; (HttpURLConnection)url.openConnection();
+        &#x2F;&#x2F; 设置每次传输的流大小
+        httpURLConnection.setChunkedStreamingMode(128 * 1024); &#x2F;&#x2F;128K
+        &#x2F;&#x2F; 允许输入输出流
+        httpURLConnection.setDoInput(true);
+        httpURLConnection.setDoOutput(true);
+        httpURLConnection.setUseCaches(false);
+        &#x2F;&#x2F; 使用 POST 方法
+        httpURLConnection.setRequestMethod(&quot;POST&quot;);
+        httpURLConnection.setRequestProperty(&quot;Connection&quot;, &quot;Keep-Alive&quot;);
+        httpURLConnection.setRequestProperty(&quot;Charset&quot;, &quot;UTF-8&quot;);
+        httpURLConnection.setRequestProperty(&quot;Content-Type&quot;,
+            &quot;multipart&#x2F;form-data;boundary&#x3D;&quot; + boundary);
+        DataOutputStream dos &#x3D; new DataOutputStream(httpURLConnection.getOutputStream());
+        dos.writeBytes(twoHyphens + boundary + end);
+        &#x2F;&#x2F; 设置 name 为 file
+        dos.writeBytes(&quot;Content-Disposition: form-data; name&#x3D;\&quot;file\&quot;; filename&#x3D;\&quot;&quot;
+            + filePath.substring(filePath.lastIndexOf(&quot;&#x2F;&quot;) + 1)
+            + &quot;\&quot;&quot;
+            + end);
+        dos.writeBytes(end);
+        FileInputStream fis &#x3D; new FileInputStream(filePath);
+        byte[] buffer &#x3D; new byte[8192]; &#x2F;&#x2F; 8k
+        int count &#x3D; 0;
+        &#x2F;&#x2F; 读取文件
+        while ((count &#x3D; fis.read(buffer)) !&#x3D; -1) &#123;
+          dos.write(buffer, 0, count);
+        &#125;
+        fis.close();
+        dos.writeBytes(end);
+        dos.writeBytes(twoHyphens + boundary + twoHyphens + end);
+        dos.flush();
+        &#x2F;&#x2F; ResponseCode 可以用来判断错误类型
+        &#x2F;&#x2F; int status &#x3D; httpURLConnection.getResponseCode();
+        InputStream is &#x3D; httpURLConnection.getInputStream();
+        InputStreamReader isr &#x3D; new InputStreamReader(is, &quot;utf-8&quot;);
+        BufferedReader br &#x3D; new BufferedReader(isr);
+        &#x2F;&#x2F; 获取返回内容
+        String info &#x3D; br.readLine();
+        dos.close();
+        is.close();
+      &#125; catch (Exception e) &#123;
+        e.printStackTrace();
+      &#125;
+    &#125;
+  &#125;;
+  thread.start();
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>服务端：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token comment">// 定义 ROOT 为当前目录</span>
+<span class="token function">define</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'ROOT'</span><span class="token punctuation">,</span> <span class="token function">dirname</span><span class="token punctuation">(</span><span class="token constant">__FILE__</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token single-quoted-string string">'/'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  
+
+<span class="token comment">// 限制拓展名为 jpg 且文件大小在5KB以内。</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token function">pathinfo</span><span class="token punctuation">(</span><span class="token variable">$_FILES</span><span class="token punctuation">[</span><span class="token double-quoted-string string">"file"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token double-quoted-string string">"name"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token constant">PATHINFO_EXTENSION</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token double-quoted-string string">"jpg"</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span><span class="token variable">$_FILES</span><span class="token punctuation">[</span><span class="token double-quoted-string string">"file"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token double-quoted-string string">"size"</span><span class="token punctuation">]</span> <span class="token operator">&lt;</span> <span class="token number">5000</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token comment">// 上传文件失败</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token variable">$_FILES</span><span class="token punctuation">[</span><span class="token double-quoted-string string">"file"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token double-quoted-string string">"error"</span><span class="token punctuation">]</span> <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">echo</span> <span class="token double-quoted-string string">"错误代码："</span> <span class="token punctuation">.</span> <span class="token variable">$_FILES</span><span class="token punctuation">[</span><span class="token double-quoted-string string">"file"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token double-quoted-string string">"error"</span><span class="token punctuation">]</span> <span class="token punctuation">.</span> <span class="token double-quoted-string string">"&lt;br />"</span><span class="token punctuation">;</span> 
+  <span class="token punctuation">&#125;</span>
+  <span class="token comment">// 上传文件成功</span>
+  <span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span> <span class="token operator">!</span><span class="token punctuation">(</span> <span class="token function">file_exists</span><span class="token punctuation">(</span><span class="token constant">ROOT</span><span class="token punctuation">.</span> <span class="token variable">$_FILES</span><span class="token punctuation">[</span><span class="token double-quoted-string string">"file"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token double-quoted-string string">"name"</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token punctuation">)</span> <span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+      <span class="token comment">// 将临文件移动到指定路径</span>
+      <span class="token function">move_uploaded_file</span><span class="token punctuation">(</span><span class="token variable">$_FILES</span><span class="token punctuation">[</span><span class="token double-quoted-string string">"file"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token double-quoted-string string">"tmp_name"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token constant">ROOT</span> <span class="token punctuation">.</span> <span class="token variable">$_FILES</span><span class="token punctuation">[</span><span class="token double-quoted-string string">"file"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token double-quoted-string string">"name"</span><span class="token punctuation">]</span>  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token delimiter important">?></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>建议先写服务端代码，确定接口可用后再用客户端发送请求。</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Fragment onResume 方法无效问题
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Android</a>
+    
+      <a class="post-tag">Java</a>
+    
+      <a class="post-tag">PHP</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

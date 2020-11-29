@@ -1,0 +1,141 @@
+ 
+<html>
+  <head>
+    <title>阻止微信浏览器下拉查看网址</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">阻止微信浏览器下拉查看网址</h1>
+  <div class="post-meta">
+    <span>2017-12-04</span>
+    
+    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>用过微信的人几乎都知道，在微信中浏览网页时可以下拉查看网站的网址。这确实是一项实用的功能，使用户能够追溯内容提供者，减少被仿冒、钓鱼网站欺骗的风险。不过有时候它确实也对网页的操作产生了干扰。</p>
+<a id="more"></a>
+
+<p>举个例子，我想要给页面增加一个下拉刷新的功能，但是用户的手指在屏幕上滑动的时候会同时触发整个页面的下拉（显示网址）。这显然不是我想要的效果，必须想办法禁用或者阻止下拉显示网址这一默认动作。</p>
+<p>有人建议这么做：</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js">document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'touchmove'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+  event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>确实，这样做能够取消 <code>touchmove</code> 事件（手指滑动）的全部默认动作，但页面的滚动也被一并禁用掉了。如果你的页面不需要滚动，当然可以这么做。我的想法是，只需要在页面滚动到最顶部，且用户的触摸操作为下拉时取消默认动作即可。</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token comment">// 滑动起始点坐标</span>
+<span class="token keyword">let</span> coordStart <span class="token operator">=</span> <span class="token keyword">null</span>
+
+<span class="token comment">// 滑动结束点坐标</span>
+<span class="token keyword">let</span> coordEnd   <span class="token operator">=</span> <span class="token keyword">null</span>
+
+<span class="token comment">// 滚动的像素数</span>
+<span class="token keyword">let</span> scrollTop  <span class="token operator">=</span> <span class="token keyword">null</span>
+
+<span class="token keyword">function</span> <span class="token function">preventWxPullDown</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// 监听 body 的 touchstart 事件</span>
+  document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'touchstart'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 触摸屏幕时保存一次起始点坐标和滚动像素数</span>
+    coordStart <span class="token operator">=</span> <span class="token punctuation">[</span>event<span class="token punctuation">.</span>changedTouches<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>pageX<span class="token punctuation">,</span> event<span class="token punctuation">.</span>changedTouches<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>pageY<span class="token punctuation">]</span>
+    scrollTop <span class="token operator">=</span> window<span class="token punctuation">.</span>pageYOffset
+  <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+  <span class="token comment">// 监听 body 的 touchmove 事件</span>
+  document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'touchmove'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">event</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 保存结束点坐标</span>
+    coordEnd <span class="token operator">=</span> <span class="token punctuation">[</span>event<span class="token punctuation">.</span>changedTouches<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>pageX<span class="token punctuation">,</span> event<span class="token punctuation">.</span>changedTouches<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>pageY<span class="token punctuation">]</span>
+    <span class="token comment">// 计算X轴和Y轴移动的距离</span>
+    <span class="token keyword">const</span> distance <span class="token operator">=</span> <span class="token punctuation">[</span>coordEnd<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">-</span> coordStart<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> coordEnd<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">-</span> coordStart<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+    <span class="token comment">// 符合条件时取消默认动作</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>scrollTop <span class="token operator">==</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> Math<span class="token punctuation">.</span><span class="token function">abs</span><span class="token punctuation">(</span>distance<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> Math<span class="token punctuation">.</span><span class="token function">abs</span><span class="token punctuation">(</span>distance<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> distance<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      event<span class="token punctuation">.</span><span class="token function">preventDefault</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">// 更新起始点坐标和滚动像素数</span>
+    coordStart <span class="token operator">=</span> <span class="token punctuation">[</span>event<span class="token punctuation">.</span>changedTouches<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>pageX<span class="token punctuation">,</span> event<span class="token punctuation">.</span>changedTouches<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>pageY<span class="token punctuation">]</span>
+    scrollTop <span class="token operator">=</span> window<span class="token punctuation">.</span>pageYOffset
+  <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token function">preventWxPullDown</span> <span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>preventWxPullDown</code> 方法尝试在页面滚动到最顶部（即 <code>scrollTop</code> 等于0），且手指向屏幕下方滑动（即 Y 轴移动距离为正数且 Y 轴移动距离大于 X 轴移动距离）时取消默认动作。实测在阻止下拉显示网址的同时确实不会影响到页面的正常滚动，刚好满足我的需要。</p>
+<p>Tips: 当手势为先上滑再下拉时无效。</p>
+<p>相关环境：Windows 7 x64 / WeChat 6.5.16</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Let's Encrypt：免费 SSL 证书申请与部署
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">JavaScript</a>
+    
+      <a class="post-tag">微信</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

@@ -1,0 +1,177 @@
+ 
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-list">
+  
+    <div class="post-list-header">
+      <h1 class="post-list-title">后端</h1>
+    </div>
+  
+  <div class="post-list-body">
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-09-10</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201609101729/">
+            <h1 class="post-item-title">解决 json_encode 中文乱码</h1>
+            <div class="post-item-excerpt">
+              <p>如果用 json_encode 将一个包含中文的数组转换成 JSON 格式数据，会发现中文部分全部变成了乱码。PHP 5.4+ 可以通过在使用 <code>json_encode</code> 时增加参数 JSON_UNESCAPED_UNICODE 解决。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-09-09</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201609091146/">
+            <h1 class="post-item-title">PHP中 使用 JSON 数据</h1>
+            <div class="post-item-excerpt">
+              <p>php5.2+ 提供了 <code>json_encode</code> 和 <code>json_decode</code> 方法进行 JSON 的编码和解码。</p>
+<p><code>json_encode</code> 可将数组或对象转换成 JSON 格式数据，一般用到数组。下面是在数组中编辑好用户信息，然后转换成 JSON 格式数据。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-30</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608301211/">
+            <h1 class="post-item-title">WampServer 局域网访问配置</h1>
+            <div class="post-item-excerpt">
+              <p>让局域网内的其他设备（如 Pad 、手机）可以访问 WampServer 上的内容，将会非常便于测试不同设备的浏览效果。要做到这点，需要修改 Apache 配置文件，使服务器允许被局域网内的设备访问。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-08-14</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201608141814/">
+            <h1 class="post-item-title">PHP 中实现 URL 跳转</h1>
+            <div class="post-item-excerpt">
+              <p>JavaScrip 方式：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$link</span><span class="token operator">=</span><span class="token double-quoted-string string">"target.html"</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token double-quoted-string string">"&lt;script type = \"text/javascript\">window.location.href='"</span><span class="token punctuation">.</span><span class="token variable">$link</span><span class="token punctuation">.</span><span class="token double-quoted-string string">"'&lt;/script>"</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-04-07</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201604072243/">
+            <h1 class="post-item-title">修改 Tomcat 服务器默认字符</h1>
+            <div class="post-item-excerpt">
+              <p>在 JSP 中使用 get 方式传递中文将产生乱码，且不能用 request 对象指定字符来解决，必须配置 Tomcat 服务器的参数。</p>
+<p>1、打开 conf/server.xml 文件。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-02-08</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201602081412/">
+            <h1 class="post-item-title">PHP 中正确计算中文字数</h1>
+            <div class="post-item-excerpt">
+              <p>在使用 PHP 开发网站或服务端的时候，经常需要限制用户输入信息的长度。</p>
+<p>PHP 提供了 <code>strlen</code> 方法用于计算字符串的长度。早期一般用这个方法判断字数。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+  </div>
+</div>
+
+<div class="page-footer">
+  <span class="page-footer-pagination">
+    <span>4</span>
+    <span class="page-footer-pagination-slash">/</span>
+    <span>4</span>
+  </span>
+  
+    <a class="page-footer-link" href="/categories/back-end/page/3/">上一页</a>
+  
+  
+  
+     
+      <a class="page-footer-link" href="/categories/back-end/">返回第一页</a>
+     
+  
+</div>
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

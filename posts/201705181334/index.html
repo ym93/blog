@@ -1,0 +1,114 @@
+ 
+<html>
+  <head>
+    <title>JavaScript 实现回到顶部</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">JavaScript 实现回到顶部</h1>
+  <div class="post-meta">
+    <span>2017-05-18</span>
+    
+    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>过去，我一般用 jQuery 的 <code>scrollTop</code> 和 <code>animate</code> 方法实现回到顶部（back to top）按钮。现在基本不在项目里引入 jQuery ，只能试着用原生写了。实际上，原生 JavaScript 实现起来也很容易。</p>
+<a id="more"></a>
+
+<p>滚动 body 到顶部：</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js">document<span class="token punctuation">.</span>body<span class="token punctuation">.</span>scrollTop <span class="token operator">=</span> <span class="token number">0</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>平滑地滚动 body 到顶部：</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token function-variable function">btt</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// 判断当前位置距离顶部的距离</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>window<span class="token punctuation">.</span>scrollY<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">let</span> that <span class="token operator">=</span> <span class="token keyword">this</span>
+    <span class="token comment">// 每10毫秒向上滚动30像素</span>
+    <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      document<span class="token punctuation">.</span>body<span class="token punctuation">.</span>scrollTop <span class="token operator">=</span> <span class="token punctuation">(</span>window<span class="token punctuation">.</span>scrollY <span class="token operator">-</span> <span class="token number">30</span><span class="token punctuation">)</span>
+      <span class="token comment">// 递归</span>
+      that<span class="token punctuation">.</span><span class="token function">scrollToTop</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>window.scrollY</code> 返回文档在垂直方向已滚动的像素值。如果返回值不等于0，就在10毫秒后向上滚动30像素，然后递归调用 <code>btt</code> 方法。如果返回值等于0，说明当前位置已位于顶部，不执行任何操作。</p>
+<p>相关环境：Windows 7 x64 / Chrome 60</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：使用 Hexo 搭建静态博客
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">JavaScript</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

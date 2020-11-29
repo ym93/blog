@@ -1,0 +1,112 @@
+ 
+<html>
+  <head>
+    <title>Linux 编译安装 PHP7.1</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">Linux 编译安装 PHP7.1</h1>
+  <div class="post-meta">
+    <span>2016-12-15</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>第一步，安装相关依赖。</p>
+<pre class="line-numbers language-none"><code class="language-none">yum install –y gcc gcc++ libxml2-devel perl<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<a id="more"></a>
+
+<p>第二步，添加 PHP 支持。如果你使用的是 Apache 引擎，稍后编译 PHP 时需要加一个 <code>--with-apxs2</code> 参数使 Apache 添加 PHP 支持（依赖Perl），编辑 Apache 目录下的 <code>/bin/apxs </code> 文件，找到 <code>#!/replace/with/path/to/perl/interpreter –w</code> 修改成 <code>#!/usr/bin/perl -w</code> ，即 Perl 的安装路径。</p>
+<p>第三步，下载并解压 Tar 包。</p>
+<pre class="line-numbers language-none"><code class="language-none">wget http:&#x2F;&#x2F;cn2.php.net&#x2F;get&#x2F;php-7.1.0.tar.gz&#x2F;from&#x2F;this&#x2F;mirror 
+tar xvf mirror
+cd php-7.1.0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>第四步，编译安装 PHP7.1 。</p>
+<pre class="line-numbers language-none"><code class="language-none">.&#x2F;configure --prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;php7.1 --enable-fpm --with-apxs2&#x3D;&#x2F;usr&#x2F;local&#x2F;apache2.4&#x2F;bin&#x2F;apxs --enable-mysqlnd --with-pdo-mysql&#x3D;mysqlnd --disable-fileinfo 
+make
+make install<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p><code>-disable-fileinfo</code> 参数并不是必要的。如果服务器内存不大（一般认为小于1G），并且在编译时报错，加上该参数可能会解决问题。</p>
+<p>第五步，添加配置文件。拷贝一份 php.ini-production 到 /usr/local/php7.1/lib/ 目录下，并将文件名修改为 php.ini ，该文件将作为 PHP 的配置文件。路径必须与安装时配置的一致，即 PHP 安装目录下的 lib 目录。虽然无需这一步 PHP 也可以正常使用，但考虑后续总会用到配置文件，最好在安装时就拷贝。</p>
+<p>相关环境：Aliyun ECS / CentOS 7 x64 / Apache 2.4</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Linux 编译安装 MySQL5.6
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">PHP</a>
+    
+      <a class="post-tag">Linux</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

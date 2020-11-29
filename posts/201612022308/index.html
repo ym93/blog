@@ -1,0 +1,149 @@
+ 
+<html>
+  <head>
+    <title>使用 CSS 实现 DIV 垂直居中</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">使用 CSS 实现 DIV 垂直居中</h1>
+  <div class="post-meta">
+    <span>2016-12-02</span>
+    
+    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>项目中经常会用到内容相对屏幕完全居中的布局。水平居中通常写一句代码即可实现，而垂直居中就稍微麻烦一些。其实，让 DIV 垂直居中的方法有很多，我个人常用两种 DIV+CSS 的方式实现。</p>
+<a id="more"></a>
+
+<p>两种方式的 HTML 代码是一样的，类名为 content 的 DIV 是放置居中内容的容器，外层的两个 DIV 则用来辅助实现居中布局。下文使用类名表示三个不同的 DIV 。</p>
+<pre class="line-numbers language-none"><code class="language-none">&lt;div class&#x3D;&quot;outer-wrap&quot;&gt;
+  &lt;div class&#x3D;&quot;inner-wrap&quot;&gt;
+    &lt;div class&#x3D;&quot;content&quot;&gt;
+    &lt;&#x2F;div&gt;
+  &lt;&#x2F;div&gt;
+&lt;&#x2F;div&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>第一种方法，利用 table-cell 实现垂直居中。</strong></p>
+<pre class="line-numbers language-css" data-language="css"><code class="language-css"><span class="token selector">.outer-wrap</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 400px<span class="token punctuation">;</span>
+  <span class="token property">height</span><span class="token punctuation">:</span> 400px<span class="token punctuation">;</span>
+  <span class="token property">background</span><span class="token punctuation">:</span> #cacaca<span class="token punctuation">;</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> table<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token selector">.inner-wrap</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> table-cell<span class="token punctuation">;</span>
+  <span class="token property">vertical-align</span><span class="token punctuation">:</span> middle<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token selector">.content</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 100px<span class="token punctuation">;</span>
+  <span class="token property">height</span><span class="token punctuation">:</span> 100px<span class="token punctuation">;</span>
+  <span class="token property">background</span><span class="token punctuation">:</span> #000<span class="token punctuation">;</span>
+  <span class="token property">margin</span><span class="token punctuation">:</span> 0 auto<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>分别将 outer-wrap 和 inner-wrap 类名的 <em>display</em> 属性设为 <code>table</code> 和 <code>table-cell</code>，然后给 inner-wrap 添加 <code>vertical-align: middle</code> ，实现垂直居中。最后给 content 添加 <code>margin: 0 auto</code> ，实现水平居中。</p>
+<p>此方法不兼容过时浏览器（&lt;IE8），不过我反而用得比较多，毕竟移动端基本不需要考虑IE6/7/8的兼容问题。</p>
+<p><strong>第二种方法，利用绝对布局实现垂直居中。</strong></p>
+<pre class="line-numbers language-css" data-language="css"><code class="language-css"><span class="token selector">.outer-wrap</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 400px<span class="token punctuation">;</span>
+  <span class="token property">height</span><span class="token punctuation">:</span> 400px<span class="token punctuation">;</span>
+  <span class="token property">background</span><span class="token punctuation">:</span> #cacaca<span class="token punctuation">;</span>
+  <span class="token property">position</span><span class="token punctuation">:</span> relative<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token selector">.inner-wrap</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 100px<span class="token punctuation">;</span>
+  <span class="token property">height</span><span class="token punctuation">:</span> 100px<span class="token punctuation">;</span>
+  <span class="token property">background</span><span class="token punctuation">:</span> #888<span class="token punctuation">;</span>
+  <span class="token property">position</span><span class="token punctuation">:</span> absolute<span class="token punctuation">;</span>
+  <span class="token property">top</span><span class="token punctuation">:</span> 50%<span class="token punctuation">;</span>
+  <span class="token property">left</span><span class="token punctuation">:</span> 50%<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token selector">.content</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span>
+  <span class="token property">height</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span>
+  <span class="token property">background</span><span class="token punctuation">:</span> #000<span class="token punctuation">;</span>
+  <span class="token property">position</span><span class="token punctuation">:</span> absolute<span class="token punctuation">;</span>
+  <span class="token property">top</span><span class="token punctuation">:</span> -50%<span class="token punctuation">;</span>
+  <span class="token property">left</span><span class="token punctuation">:</span> -50%<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>首先将 outer-wrap 设为相对布局 <code>position: relative</code> ，同时将 inner-wrap 、content 设为绝对布局 <code>position: absolute</code> 。此时，inner-wrap 将根据 outer-wrap 的位置定位，content 将相对于 inner-wrap 的位置定位。然后为 inner-wrap 添加 <code>top: 50%</code> 、 <code>left: 50%</code> ，使其（左上角）定位到 outer-wrap 的中点位置，实现大致的居中定位。最后为 content 添加 <code>top: -50%</code> 、 <code>left: -50%</code> ，实现精确的居中定位。</p>
+<p>此方法仅适用于内容容器 DIV 的宽度、高度固定的情况。</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：解决 iOS 下 click 点击事件失效
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">CSS</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

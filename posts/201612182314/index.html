@@ -1,0 +1,113 @@
+ 
+<html>
+  <head>
+    <title>Apache 禁止使用 IP 访问网站</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">Apache 禁止使用 IP 访问网站</h1>
+  <div class="post-meta">
+    <span>2016-12-18</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>Apache 默认允许使用服务器的 IP 地址访问网站。不过，无论是出于用户体验还是安全性考虑，禁止使用 IP 访问网站都是很有必要的。对我这个处女座来讲，能用 IP 访问自己写的网站是不能忍的。使用 Apache 的虚拟主机配置就可以实现禁止使用 IP 访问网站。</p>
+<a id="more"></a>
+
+<p>第一步，启用虚拟主机配置文件。编辑 /conf/httpd.conf ，去掉 <code># Include conf/extra/httpd-vhosts.conf</code> 前面的 # 号。</p>
+<p>第二步，禁止使用 IP 访问网站。编辑 /conf/extra/httpd-vhosts.conf  ，添加以下内容，注意将 127.0.0.1 修改为你的服务器的 IP 地址。这一步将无条件禁止使用 IP 地址访问。</p>
+<pre class="line-numbers language-none"><code class="language-none">&lt;VirtualHost *:80&gt;
+  ServerName 127.0.0.1
+  &lt;Location &#x2F;&gt;
+    Order Allow,Deny
+    Deny from all
+  &lt;&#x2F;Location&gt;
+&lt;&#x2F;VirtualHost&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>第三步，允许用域名访问网站。仍然编辑 httpd-vhosts.conf 文件，添加以下内容，ServerName 填写网站域名，DocumentRoot 填写网站的根目录。</p>
+<pre class="line-numbers language-none"><code class="language-none">&lt;VirtualHost *:80&gt;
+  DocumentRoot &quot;&#x2F;usr&#x2F;local&#x2F;apache&#x2F;htdocs&quot;
+  ServerName www.example.com
+&lt;&#x2F;VirtualHost&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>现在，使用 IP 访问将提示 Forbidden，使用域名访问将正常显示根目录下的主页。如果觉得前者不够友好，你也可以将 IP 的访问指向一个目录，显示一个友好的错误页面。</p>
+<p>相关环境：Aliyun ECS / CentOS 7 x64 / Apache 2.4</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Linux 编译安装 PHP7.1
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Apache</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

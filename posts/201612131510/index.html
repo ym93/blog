@@ -1,0 +1,136 @@
+ 
+<html>
+  <head>
+    <title>Linux 编译安装 Apache2.4</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">Linux 编译安装 Apache2.4</h1>
+  <div class="post-meta">
+    <span>2016-12-13</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>第一步，确认系统中已安装 C 、C++ 编译器，否则运行 yum 命令安装。</p>
+<pre class="line-numbers language-none"><code class="language-none">yum install -y gcc gcc-c++<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<a id="more"></a>
+
+<p>第二步，编译安装依赖。包括 APR、APR-Util、PCRE 。</p>
+<pre class="line-numbers language-none"><code class="language-none">wget http:&#x2F;&#x2F;mirrors.ustc.edu.cn&#x2F;apache&#x2F;apr&#x2F;apr-1.5.2.tar.gz
+tar xvf apr-1.5.2.tar.gz
+cd apr-1.5.2
+.&#x2F;configure --prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;apr
+make
+make install<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">wget http:&#x2F;&#x2F;mirrors.ustc.edu.cn&#x2F;apache&#x2F;apr&#x2F;apr-util-1.5.4.tar.gz
+tar xvf apr-util-1.5.4.tar.gz
+cd apr-util-1.5.4
+.&#x2F;configure --prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;apr-util -with-apr&#x3D;&#x2F;usr&#x2F;local&#x2F;apr&#x2F;bin
+make
+make install<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">wget ftp:&#x2F;&#x2F;ftp.csx.cam.ac.uk&#x2F;pub&#x2F;software&#x2F;programming&#x2F;pcre&#x2F;pcre-8.38.tar.gz
+tar xvf pcre-8.38.tar.gz
+cd pcre-8.38
+.&#x2F;configure --prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;pcre
+make 
+make install<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>第三步，编译安装 Apache 。</p>
+<pre class="line-numbers language-none"><code class="language-none">wget http:&#x2F;&#x2F;mirrors.ustc.edu.cn&#x2F;apache&#x2F;httpd&#x2F;httpd-2.4.23.tar.gz
+tar xvf httpd-2.4.23.tar.gz
+cd httpd-2.4.23
+.&#x2F;configure --prefix&#x3D;&#x2F;usr&#x2F;local&#x2F;apache2.4 --with-apr&#x3D;&#x2F;usr&#x2F;local&#x2F;apr --with-apr-util&#x3D;&#x2F;usr&#x2F;local&#x2F;apr-util&#x2F; --with-pcre&#x3D;&#x2F;usr&#x2F;local&#x2F;pcre
+make
+make install<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>第四步，修改配置文件。使用编辑器打开 Apache 的配置文件 httpd.conf ，搜索关键字 <code>#ServerName</code>，添加域名并去除注释。</p>
+<pre class="line-numbers language-none"><code class="language-none">vim &#x2F;usr&#x2F;local&#x2F;apache2.4&#x2F;conf&#x2F;httpd.conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">ServerName localhost:80<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>第五步，测试是否安装成功。执行以下代码，若提示 <em>httpd already running</em> ，表示安装成功。此时使用浏览器访问服务器的 IP 地址，屏幕将输出 <em>It works!</em> 。</p>
+<pre class="line-numbers language-none"><code class="language-none">&#x2F;usr&#x2F;local&#x2F;apache2.4&#x2F;bin&#x2F;apachectl -k start<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>相关环境：Aliyun ECS / CentOS 7 x64</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：解决 jQuery 事件重复绑定
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Apache</a>
+    
+      <a class="post-tag">Linux</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

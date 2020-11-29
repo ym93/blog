@@ -1,0 +1,142 @@
+ 
+<html>
+  <head>
+    <title>使 Nginx 支持 WordPress 固定链接</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">使 Nginx 支持 WordPress 固定链接</h1>
+  <div class="post-meta">
+    <span>2016-12-29</span>
+    
+    <a class="post-meta-category" href="/categories/others">其他</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>昨天把博客从虚拟主机迁移到了云主机，同时也将引擎由 Apache 更换成了 Nginx 。迁移过程基本顺利，仅出现 WordPress 的“固定链接”功能无法正常使用，导致文章不能正常浏览。</p>
+<a id="more"></a>
+
+<p>在阅读官方文档后，问题已解决。编辑当前站点的 .conf 文件，在 <code>server</code> 内添加以下内容，然后重启 Web 服务即可。</p>
+<pre class="line-numbers language-none"><code class="language-none">location &#x2F; &#123;
+  try_files $uri $uri&#x2F; &#x2F;index.php?$args;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>附 WordPress 提供的 Nginx 配置示例。</p>
+<pre class="line-numbers language-none"><code class="language-none">server &#123;
+  ## Your website name goes here.
+  server_name domain.tld;
+  ## Your only path reference.
+  root &#x2F;var&#x2F;www&#x2F;wordpress;
+  ## This should be in your http block and if it is, it&#39;s not needed here.
+  index index.php;
+
+  location &#x3D; &#x2F;favicon.ico &#123;
+    log_not_found off;
+    access_log off;
+  &#125;
+
+  location &#x3D; &#x2F;robots.txt &#123;
+    allow all;
+    log_not_found off;
+    access_log off;
+  &#125;
+
+  location &#x2F; &#123;
+    # This is cool because no php is touched for static content.
+    # include the &quot;?$args&quot; part so non-default permalinks doesn&#39;t break when using query string
+    try_files $uri $uri&#x2F; &#x2F;index.php?$args;
+  &#125;
+
+  location ~ \.php$ &#123;
+    #NOTE: You should have &quot;cgi.fix_pathinfo &#x3D; 0;&quot; in php.ini
+    include fastcgi.conf;
+    fastcgi_intercept_errors on;
+    fastcgi_pass php;
+  &#125;
+
+  location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ &#123;
+    expires max;
+    log_not_found off;
+  &#125;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>相关环境：Aliyun ECS / CentOS 7 x64 / Nginx 1.8 / PHP 5.6 / WordPress 4.7</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：解决无法用 localhost 连接 MySQL
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">WordPress</a>
+    
+      <a class="post-tag">Nginx</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

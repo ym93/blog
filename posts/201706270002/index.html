@@ -1,0 +1,144 @@
+ 
+<html>
+  <head>
+    <title>在移动端实现 0.5 像素细边框</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">在移动端实现 0.5 像素细边框</h1>
+  <div class="post-meta">
+    <span>2017-06-27</span>
+    
+    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>在移动端，1px 的直线在物理屏幕上通常会显示成 2px（甚至更粗）。这是因为手机屏幕的物理分辨率（硬件支持的）通常是其逻辑分辨率（软件支持的）的数倍。</p>
+<a id="more"></a>
+
+<p>以 iPhone 6 为例，其逻辑分辨率为 667×375 ，物理分辨率为 1334x750 。这意味着物理屏幕使用 2x2 个像素点显示 1 像素的内容。换言之，如果我们希望在物理屏幕上显示 1 像素的边框，就必须在逻辑上实现 0.5 像素的边框。</p>
+<p>除了 iPhone（iOS8以上），目前绝大多数的移动设备并不支持直接渲染 0.5px 的边框。</p>
+<pre class="line-numbers language-css" data-language="css"><code class="language-css"><span class="token comment">/* 兼容性差 */</span>
+<span class="token property">border</span><span class="token punctuation">:</span> 0.5px solid #e6e6e6<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>事实上，存在不止一种方法用于在移动端实现 0.5px 的细边框。思路基本上还是先渲染 1px 边框，然后设法将线条的宽度减少或隐藏 50% 。下面推荐两种我在移动端 Web 和小程序中常用、兼容性较优的方法。</p>
+<h3 id="缩放法"><a href="#缩放法" class="headerlink" title="缩放法"></a>缩放法</h3><p>假设存在一个列表，其中的每一条项目都要有一个灰色下边框。</p>
+<p>我们使用 <code>after</code> 选择器在每个 item 后面插入一个宽度 100% ，高度 1px ，灰色背景的伪元素，先在视觉上实现 1 像素的下边框。然后使用 <code>transform</code> 属性的 <code>scale</code> 缩放，将伪元素的高度缩放到原来的 50% ，就可以在视觉上得到 0.5 像素的下边框。</p>
+<pre class="line-numbers language-css" data-language="css"><code class="language-css"><span class="token comment">/* 项目 */</span>
+<span class="token selector">.item</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">height</span><span class="token punctuation">:</span> 50px<span class="token punctuation">;</span>
+  <span class="token property">line-height</span><span class="token punctuation">:</span> 50px<span class="token punctuation">;</span>
+  <span class="token property">position</span><span class="token punctuation">:</span> relative<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">/* 下边框 */</span>
+<span class="token selector">.item::after</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">position</span><span class="token punctuation">:</span> absolute<span class="token punctuation">;</span>
+  <span class="token property">content</span><span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span>
+  <span class="token property">left</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+  <span class="token property">bottom</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+  <span class="token property">height</span><span class="token punctuation">:</span> 1px<span class="token punctuation">;</span>
+  <span class="token property">background</span><span class="token punctuation">:</span> #e6e6e6<span class="token punctuation">;</span>
+  <span class="token property">transform</span><span class="token punctuation">:</span> <span class="token function">scaleY</span><span class="token punctuation">(</span>0.5<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="渐变法"><a href="#渐变法" class="headerlink" title="渐变法"></a>渐变法</h3><p>类似的，先使用伪元素实现 1 像素的下边框。然后使用 <code>linear-gradient</code> 声明一个渐变色背景，由透明色（transparent）以及灰色组成。由于灰色只占这条 1 像素的下边框的一半，在视觉上也就得到了 0.5 像素的下边框。</p>
+<pre class="line-numbers language-css" data-language="css"><code class="language-css"><span class="token comment">/* 项目 */</span>
+<span class="token selector">.item</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">height</span><span class="token punctuation">:</span> 50px<span class="token punctuation">;</span>
+  <span class="token property">line-height</span><span class="token punctuation">:</span> 50px<span class="token punctuation">;</span>
+  <span class="token property">position</span><span class="token punctuation">:</span> relative<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">/* 下边框 */</span>
+<span class="token selector">.item::after</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">position</span><span class="token punctuation">:</span> absolute<span class="token punctuation">;</span>
+  <span class="token property">content</span><span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span>
+  <span class="token property">left</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+  <span class="token property">bottom</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+  <span class="token property">height</span><span class="token punctuation">:</span> 1px<span class="token punctuation">;</span>
+  <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">linear-gradient</span><span class="token punctuation">(</span>transparent 0%<span class="token punctuation">,</span> #e6e6e6 50%<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>相关环境：Windows 7 x64 / WeChat Web DevTools 0.18 / WeChat 6.5.8</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Laravel 使用 JWT 实现用户认证
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">CSS</a>
+    
+      <a class="post-tag">小程序</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

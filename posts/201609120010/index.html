@@ -1,0 +1,105 @@
+ 
+<html>
+  <head>
+    <title>Rewrite 禁止访问某种文件</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">Rewrite 禁止访问某种文件</h1>
+  <div class="post-meta">
+    <span>2016-09-12</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>当我们不希望一些服务端的文件被用户直接浏览、又必须用到这些文件时，可以通过 Apache Rewrite 禁止直接访问某些格式的文件。</p>
+<p>首先，在根目录下的 .htaccess 文件（没有则新建）中开启重写引擎。</p>
+<a id="more"></a>
+
+<pre class="line-numbers language-none"><code class="language-none">RewriteEngine on<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>然后，添加以下规则。这里禁止了用户访问 XML 格式的文件。</p>
+<pre class="line-numbers language-none"><code class="language-none">&lt;FilesMatch &quot;\.(xml)$&quot;&gt;
+  order deny,allow  
+  deny from all
+&lt;&#x2F;FilesMatch&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>实测 XML 被禁止访问后，仍然可以正常用 PHP 解析文件内部的数据。</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：解决 json_encode 中文乱码
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Apache</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

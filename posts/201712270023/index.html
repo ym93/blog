@@ -1,0 +1,167 @@
+ 
+<html>
+  <head>
+    <title>使用 apiDoc 自动生成 API 文档</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">使用 apiDoc 自动生成 API 文档</h1>
+  <div class="post-meta">
+    <span>2017-12-27</span>
+    
+    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>前段时间尝试写 API 服务器，为了方便管理数量可能越来越多的接口（未雨绸缪），必须考虑创建文档的方案。我选择了 apiDoc 作为第一款文档生成工具。apiDoc 是一个通过代码中的注释生成 API 文档的工具，它简单易用，并且支持多种常用编程语言。</p>
+<a id="more"></a>
+
+<img src="/img/posts/2017/12/apidoc_ui.png" class="" width="450" title="使用 apiDoc 生成的文档">
+
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>使用 NPM 全局安装 apiDoc ：</p>
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">npm install apidoc -g<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>在项目根目录下新建 <code>apidoc.json</code> 配置文件。注意：<code>json</code> 文件不能包含注释，下面的注释只是为了方便解释选项含义。</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token punctuation">&#123;</span>
+  <span class="token string">"name"</span><span class="token operator">:</span> <span class="token string">"example"</span><span class="token punctuation">,</span>  <span class="token comment">// 项目名称</span>
+  <span class="token string">"version"</span><span class="token operator">:</span> <span class="token string">"0.1.0"</span><span class="token punctuation">,</span>  <span class="token comment">// 项目版本</span>
+  <span class="token string">"description"</span><span class="token operator">:</span> <span class="token string">"apiDoc basic example"</span><span class="token punctuation">,</span>  <span class="token comment">// 项目描述</span>
+  <span class="token string">"title"</span><span class="token operator">:</span> <span class="token string">"Custom apiDoc browser title"</span><span class="token punctuation">,</span>  <span class="token comment">// 文档标题</span>
+  <span class="token string">"url"</span> <span class="token operator">:</span> <span class="token string">"https://api.github.com/v1"</span><span class="token punctuation">,</span>  <span class="token comment">// 链接前缀</span>
+  <span class="token string">"template"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span> <span class="token comment">// 模板配置</span>
+    <span class="token string">"forceLanguage"</span><span class="token operator">:</span> <span class="token string">"zh_cn"</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+  <span class="token string">"order"</span><span class="token operator">:</span> <span class="token punctuation">[</span> <span class="token comment">// 排列顺序</span>
+    <span class="token string">"Auth"</span><span class="token punctuation">,</span>
+    <span class="token string">"Users"</span><span class="token punctuation">,</span>
+    <span class="token string">"Goods"</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>其中，<code>title</code> 是文档的主标题，留空使用 <code>name</code> 渲染。</p>
+<p><code>url</code> 是链接前缀，文档中的 API 链接都会带上这个前缀。这样做的好处是不必总是写完整的 API 链接，即使换域名也只需修改一处。</p>
+<p>模板相关配置 <code>template</code> 并不是必要的，这里我指定了渲染的语言为简体中文。</p>
+<p><code>order</code> 同样是一个可选的配置项，用于设置分组的显示顺序。</p>
+<h3 id="撰写"><a href="#撰写" class="headerlink" title="撰写"></a>撰写</h3><p>使用注释撰写 API 信息。一个简单的接口描述只需声明 <code>@api</code>、<code>@apiName</code>、<code>@apiGroup</code> 三个参数。</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token comment">/**
+ * @api &#123;get&#125; /user/:id 获取用户
+ * @apiName GetUser
+ * @apiGroup User
+ */</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>@api</code> 必须，声明请求类型、路径、标题（显示在文档中）。<code>@apiName</code> 声明接口显示在文档中的容器 id ，官方建议必填，实际上不声明也会自动生成。<code>@apiGroup</code> 必填，声明接口分组。</p>
+<p>在此基础上进一步声明参数和响应。</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token comment">/**
+ * ...
+ *
+ * @apiParam &#123;Number&#125; id 用户 id
+ *
+ * @apiSuccess (200) &#123;String&#125; name  用户名
+ * @apiSuccess (200) &#123;String&#125; email 用户的邮箱地址
+ *
+ * @apiSuccessExample &#123;json&#125; 请求成功：
+ *     HTTP/1.1 200 OK
+ *     &#123;
+ *       "name": "张三",
+ *       "email": "foo@example.com"
+ *     &#125;
+ *
+ * @apiError UserNotFound 未找到指定的用户
+ *
+ * @apiErrorExample 请求失败：
+ *     HTTP/1.1 404 Not Found
+ *     &#123;
+ *       "error": "UserNotFound"
+ *     &#125;
+ */</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>@apiParam</code> 选填，声明一个参数的类型、参数名、描述。</p>
+<p><code>@apiSuccess</code> 选填，声明请求成功后的响应分组、字段类型、字段（或成功代码）、字段描述。<code>@apiSuccessExample</code> 选填，声明请求成功后响应内容的格式、标题和示例。声明错误的 <code>@apiError</code> 和 <code>@apiSuccessExample</code> 与之类似。</p>
+<p>Tips: 分组名称不可以直接使用中文。应该用 <code>@apiDefine</code> 声明一个值为中文组名的变量，然后在声明 API 分组时使用它。</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token comment">/**
+ * @apiDefine Auth 认证
+ */</span>
+
+<span class="token comment">/**
+ * @api &#123;post&#125; /auth
+ * @apiGroup Auth
+ */</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="生成"><a href="#生成" class="headerlink" title="生成"></a>生成</h3><pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">apidoc -i .&#x2F; -o apidoc<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><code>-i</code> 或 <code>--input</code> 参数表示输入目录。<code>-o</code> 或 <code>--output</code> 参数表示输出目录。<code>-i ./ -o apidoc</code> 的意思是：扫描当前目录下的文件，然后在当前目录下的 <code>apidoc</code> 文件夹中生成文档。</p>
+<p>另外，可以使用 <code>-f</code> 或 <code>--file-filters</code> 参数过滤文件类型。</p>
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">apidoc -f &quot;.*\\.js$&quot; -f &quot;.*\\.ts$&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>相关环境：Windows 7 x64 / Node.js 6.10.1 / npm 3.10.10 / apiDoc 0.17.6</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：阻止微信浏览器下拉查看网址
+      </a>
+     
+  </div>
+  <!--  -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

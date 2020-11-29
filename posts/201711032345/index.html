@@ -1,0 +1,168 @@
+ 
+<html>
+  <head>
+    <title>JavaScript / Vue.js 实现时分秒倒计时</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">JavaScript / Vue.js 实现时分秒倒计时</h1>
+  <div class="post-meta">
+    <span>2017-11-03</span>
+    
+    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>我们平常浏览网页的时候，经常见到“距游戏公测1天2小时3分钟4秒”这样的倒计时器。时间如沙漏般一点点的减少，不仅能挑起用户的兴趣，而且让页面提升了一点逼格，还填补掉一些尴尬的空白位置。最近写得越来越多，有用没用都让加个倒计时，干脆记录下来，免得重复造轮子。</p>
+<a id="more"></a>
+
+
+<p>实现的方法并不复杂，关键是理解如何计算，尤其对我这种数学不好的人而言。下面两个 demo 将分别用纯 JavaScript 、基于 Vue.js 的 JavaScript 实现。注，代码中可能包含部分 ES6 语法，但相信很容易理解。</p>
+<h3 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h3><p>创建一个 <code>countdown</code> 方法，用于计算并在控制台打印距目标时间的日、时、分、秒数，每隔一秒递归执行一次。</p>
+<p><code>msec</code> 是当前时间距目标时间的毫秒数，由时间戳相减得到，我们将以这个数为基础计算。我们都知道1天等于24小时，1小时等于60分钟，1分钟等于60秒，1秒等于1000毫秒。所以，<code>msec / 1000 / 60 / 60 / 24</code> 保留整数就是天数。如果换用 <code>%</code> 取余数，再保留整数后得到的就是小时数。以此类推就能算出其他所有数。</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">countdown</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// 目标日期时间戳</span>
+  <span class="token keyword">const</span> end <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token string">'2017-12-01'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token comment">// 当前时间戳</span>
+  <span class="token keyword">const</span> now <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token comment">// 相差的毫秒数</span>
+  <span class="token keyword">const</span> msec <span class="token operator">=</span> end <span class="token operator">-</span> now
+  <span class="token comment">// 计算时分秒数</span>
+  <span class="token keyword">let</span> day <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>msec <span class="token operator">/</span> <span class="token number">1000</span> <span class="token operator">/</span> <span class="token number">60</span> <span class="token operator">/</span> <span class="token number">60</span> <span class="token operator">/</span> <span class="token number">24</span><span class="token punctuation">)</span>
+  <span class="token keyword">let</span> hr <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>msec <span class="token operator">/</span> <span class="token number">1000</span> <span class="token operator">/</span> <span class="token number">60</span> <span class="token operator">/</span> <span class="token number">60</span> <span class="token operator">%</span> <span class="token number">24</span><span class="token punctuation">)</span>
+  <span class="token keyword">let</span> min <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>msec <span class="token operator">/</span> <span class="token number">1000</span> <span class="token operator">/</span> <span class="token number">60</span> <span class="token operator">%</span> <span class="token number">60</span><span class="token punctuation">)</span>
+  <span class="token keyword">let</span> sec <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>msec <span class="token operator">/</span> <span class="token number">1000</span> <span class="token operator">%</span> <span class="token number">60</span><span class="token punctuation">)</span>
+  <span class="token comment">// 个位数前补零</span>
+  hr <span class="token operator">=</span> hr <span class="token operator">></span> <span class="token number">9</span> <span class="token operator">?</span> hr <span class="token operator">:</span> <span class="token string">'0'</span> <span class="token operator">+</span> hr
+  min <span class="token operator">=</span> min <span class="token operator">></span> <span class="token number">9</span> <span class="token operator">?</span> min <span class="token operator">:</span> <span class="token string">'0'</span> <span class="token operator">+</span> min
+  sec <span class="token operator">=</span> sec <span class="token operator">></span> <span class="token number">9</span> <span class="token operator">?</span> sec <span class="token operator">:</span> <span class="token string">'0'</span> <span class="token operator">+</span> sec
+  <span class="token comment">// 控制台打印</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>day<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">天 </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>hr<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">小时 </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>min<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">分钟 </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>sec<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">秒</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+  <span class="token comment">// 一秒后递归</span>
+  <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token function">countdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>控制台打印结果：</p>
+<pre class="line-numbers language-none"><code class="language-none">27天 07小时 49分钟 10秒
+27天 07小时 49分钟 09秒
+27天 07小时 49分钟 08秒
+...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="Vue-js"><a href="#Vue-js" class="headerlink" title="Vue.js"></a>Vue.js</h3><p>如果单纯使用 JavaScript ，我们需要在每次计算后手动更新 DOM 元素（将数据显示给用户），既不方便又难以维护。实际项目中更多的是配合前端框架，将计算结果实时渲染到页面上。</p>
+<p>页面结构中的数据来自 Vue 实例的 <code>data</code> 对象。</p>
+<pre class="line-numbers language-html" data-language="html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>app<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>&#123;&#123; `$&#123;day&#125;天 $&#123;hr&#125;小时 $&#123;min&#125;分钟 $&#123;sec&#125;分钟` &#125;&#125;<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p><code>mounted</code> 是 Vue 的生命周期方法，可以理解为在页面加载完毕后执行 <code>countdown</code> 方法。<code>countdown</code> 方法每隔一秒会执行一次，并将计算结果分别赋予变量 <code>day</code>、<code>hr</code>、<code>min</code>、<code>sec</code>，同时改变的还有页面上显示的内容。</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token keyword">new</span> <span class="token class-name">Vue</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+  el<span class="token operator">:</span> <span class="token string">'#app'</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">data</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">&#123;</span>
+      day<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> hr<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> min<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> sec<span class="token operator">:</span> <span class="token number">0</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">mounted</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">countdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+  methods<span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token function-variable function">countdown</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">const</span> end <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token string">'2017-12-01'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token keyword">const</span> now <span class="token operator">=</span> Date<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token keyword">const</span> msec <span class="token operator">=</span> end <span class="token operator">-</span> now
+      <span class="token keyword">let</span> day <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>msec <span class="token operator">/</span> <span class="token number">1000</span> <span class="token operator">/</span> <span class="token number">60</span> <span class="token operator">/</span> <span class="token number">60</span> <span class="token operator">/</span> <span class="token number">24</span><span class="token punctuation">)</span>
+      <span class="token keyword">let</span> hr <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>msec <span class="token operator">/</span> <span class="token number">1000</span> <span class="token operator">/</span> <span class="token number">60</span> <span class="token operator">/</span> <span class="token number">60</span> <span class="token operator">%</span> <span class="token number">24</span><span class="token punctuation">)</span>
+      <span class="token keyword">let</span> min <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>msec <span class="token operator">/</span> <span class="token number">1000</span> <span class="token operator">/</span> <span class="token number">60</span> <span class="token operator">%</span> <span class="token number">60</span><span class="token punctuation">)</span>
+      <span class="token keyword">let</span> sec <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>msec <span class="token operator">/</span> <span class="token number">1000</span> <span class="token operator">%</span> <span class="token number">60</span><span class="token punctuation">)</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>day <span class="token operator">=</span> day
+      <span class="token keyword">this</span><span class="token punctuation">.</span>hr <span class="token operator">=</span> hr <span class="token operator">></span> <span class="token number">9</span> <span class="token operator">?</span> hr <span class="token operator">:</span> <span class="token string">'0'</span> <span class="token operator">+</span> hr
+      <span class="token keyword">this</span><span class="token punctuation">.</span>min <span class="token operator">=</span> min <span class="token operator">></span> <span class="token number">9</span> <span class="token operator">?</span> min <span class="token operator">:</span> <span class="token string">'0'</span> <span class="token operator">+</span> min
+      <span class="token keyword">this</span><span class="token punctuation">.</span>sec <span class="token operator">=</span> sec <span class="token operator">></span> <span class="token number">9</span> <span class="token operator">?</span> sec <span class="token operator">:</span> <span class="token string">'0'</span> <span class="token operator">+</span> sec
+      <span class="token keyword">const</span> that <span class="token operator">=</span> <span class="token keyword">this</span>
+      <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        that<span class="token punctuation">.</span><span class="token function">countdown</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+      <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token number">1000</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>相关环境：Windows 7 x64 / Vue.js 2.4.4</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：解决 iOS 下日期对象 Invalid Date 错误
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">JavaScript</a>
+    
+      <a class="post-tag">Vue.js</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

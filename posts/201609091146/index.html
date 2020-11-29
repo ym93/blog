@@ -1,0 +1,115 @@
+ 
+<html>
+  <head>
+    <title>PHP中 使用 JSON 数据</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">PHP中 使用 JSON 数据</h1>
+  <div class="post-meta">
+    <span>2016-09-09</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>php5.2+ 提供了 <code>json_encode</code> 和 <code>json_decode</code> 方法进行 JSON 的编码和解码。</p>
+<p><code>json_encode</code> 可将数组或对象转换成 JSON 格式数据，一般用到数组。下面是在数组中编辑好用户信息，然后转换成 JSON 格式数据。</p>
+<a id="more"></a>
+
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$arr</span> <span class="token operator">=</span> <span class="token keyword">array</span> <span class="token punctuation">(</span><span class="token single-quoted-string string">'name'</span><span class="token operator">=</span><span class="token operator">></span><span class="token single-quoted-string string">'mike'</span><span class="token punctuation">,</span><span class="token single-quoted-string string">'age'</span><span class="token operator">=</span><span class="token operator">></span><span class="token single-quoted-string string">'20'</span><span class="token punctuation">,</span><span class="token single-quoted-string string">'from'</span><span class="token operator">=</span><span class="token operator">></span><span class="token single-quoted-string string">'USA'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token variable">$json</span> <span class="token operator">=</span>  <span class="token function">json_encode</span><span class="token punctuation">(</span><span class="token variable">$arr</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">echo</span> <span class="token variable">$json</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 输出内容</span>
+<span class="token punctuation">&#123;</span><span class="token double-quoted-string string">"name"</span><span class="token punctuation">:</span><span class="token double-quoted-string string">"mike"</span><span class="token punctuation">,</span><span class="token double-quoted-string string">"age"</span><span class="token punctuation">:</span><span class="token double-quoted-string string">"20"</span><span class="token punctuation">,</span><span class="token double-quoted-string string">"from"</span><span class="token punctuation">:</span><span class="token double-quoted-string string">"USA"</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>json_decode</code> 方法可将 JSON 格式数据转换成对象或数组，进而使用里面的数据。下面是两种方式输出用户名。</p>
+<pre class="line-numbers language-none"><code class="language-none">&#x2F;&#x2F; 解析为对象
+$obj &#x3D; json_decode($json);
+echo $obj-&gt;name;
+
+&#x2F;&#x2F; 解析为数组
+$arr &#x3D; json_decode($json,true);
+echo $arr[&#39;name&#39;];<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>需要注意的是，如果是自己手写的 JSON 格式的字符串，在使用 <code>json_decode</code> 解析时可能会返回 null ，这基本上是因为 JSON 格式错误导致的，仔细检查字符串的格式即可。</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：一个小技巧强制刷新浏览器缓存的图片
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">JSON</a>
+    
+      <a class="post-tag">PHP</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

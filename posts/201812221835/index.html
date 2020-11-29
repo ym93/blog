@@ -1,0 +1,181 @@
+ 
+<html>
+  <head>
+    <title>Android 应用接入微信分享</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">Android 应用接入微信分享</h1>
+  <div class="post-meta">
+    <span>2018-12-22</span>
+    
+    <a class="post-meta-category" href="/categories/android">Android</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="在微信开放平台注册"><a href="#在微信开放平台注册" class="headerlink" title="在微信开放平台注册"></a>在微信开放平台注册</h3><p>登陆 <a target="_blank" rel="noopener" href="https://open.weixin.qq.com/">微信开放平台</a> 创建一个移动应用，正确填写应用 <strong>名称</strong>，<strong>包名</strong> 和 <strong>签名</strong>，得到一个 <code>AppID</code> 。</p>
+<a id="more"></a>
+
+<ul>
+<li><p>移动应用名称，将显示在用户分享的信息中。</p>
+</li>
+<li><p>应用包名，相信接触过 Android 的开发者都已经很熟悉了，它是项目中的基础软件包的名称。包名的格式是域名的反写，例如，微信客户端的包名是 <code>com.tencent.mm</code> 。</p>
+</li>
+<li><p>应用签名，是签名所用密钥的 MD5 指纹。Android 要求应用必须先使用证书进行签名，然后才能安装。所以你生成的，可供任意用户安装的应用，必然可以查询到一个密钥指纹。许多人在接入后无法调起分享，仅仅是因为获取指纹的姿势不对。为了少走弯路，建议直接通过微信提供的 <a target="_blank" rel="noopener" href="https://res.wx.qq.com/open/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android.apk">签名获取工具</a> 查询。</p>
+</li>
+</ul>
+<h3 id="配置-debug-版本签名"><a href="#配置-debug-版本签名" class="headerlink" title="配置 debug 版本签名"></a>配置 debug 版本签名</h3><p>默认情况下，通过开发工具直接运行在模拟器上的应用是不包含签名的。这也是签名校验失败的可能原因之一。为了方便在开发时调用微信接口，需要配置 debug 版本签名。</p>
+<ol>
+<li>右击项目，选择 <code>Open Module Settings</code> ，打开项目结构配置。</li>
+<li>在 <code>Signing</code> 选项卡下添加一个签名，填好密钥信息。</li>
+<li>在 <code>Build Types</code> 选项卡下修改 debug 版本的 <code>Signing Config</code> ，选择第二步中添加的签名。</li>
+</ol>
+<img src="/img/posts/2018/12/android_project_structure.png" class="no-border" width="480" title="Android Project Structure">
+
+<h2 id="接入微信-SDK"><a href="#接入微信-SDK" class="headerlink" title="接入微信 SDK"></a>接入微信 SDK</h2><p>接入 SDK 的过程非常简单。</p>
+<p>第一步，在 Gradle 的配置文件中添加依赖，等待 SDK 下载完毕。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// build.gradle (Module: app)</span>
+dependencies <span class="token punctuation">&#123;</span>
+  implementation <span class="token string">'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>第二步，在清单文件中声明必要的权限。</p>
+<pre class="line-numbers language-xml" data-language="xml"><code class="language-xml"><span class="token comment">&lt;!-- AndroidManifest.xml --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>uses-permission</span> <span class="token attr-name"><span class="token namespace">android:</span>name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>android.permission.INTERNET<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>uses-permission</span> <span class="token attr-name"><span class="token namespace">android:</span>name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>android.permission.ACCESS_NETWORK_STATE<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>uses-permission</span> <span class="token attr-name"><span class="token namespace">android:</span>name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>android.permission.ACCESS_WIFI_STATE<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>uses-permission</span> <span class="token attr-name"><span class="token namespace">android:</span>name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>android.permission.READ_PHONE_STATE<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>uses-permission</span> <span class="token attr-name"><span class="token namespace">android:</span>name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>android.permission.WRITE_EXTERNAL_STORAGE<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="注册到微信"><a href="#注册到微信" class="headerlink" title="注册到微信"></a>注册到微信</h2><p>在调用微信客户端的功能之前，需要先使用 <code>registerApp</code> 注册你申请到的 <code>AppID</code> 。这一步的目的是确认当前应用的包名、签名与微信开放平台上登记的一致。常量 <code>APP_ID</code> 的值应该是你的 <code>AppID</code> 。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">api <span class="token operator">=</span> <span class="token class-name">WXAPIFactory</span><span class="token punctuation">.</span><span class="token function">createWXAPI</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> APP_ID<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+api<span class="token punctuation">.</span><span class="token function">registerApp</span><span class="token punctuation">(</span>APP_ID<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h2 id="分享内容到微信"><a href="#分享内容到微信" class="headerlink" title="分享内容到微信"></a>分享内容到微信</h2><p>要分享内容到微信，你的 APP 应该向微信客户端发送一个包含 <strong>微信媒体消息</strong>（WXMediaMessage）的发信请求。微信媒体消息通常包含基础的标题、描述、缩略图，和一个媒体对象。</p>
+<p>分享的媒体可以是网页、文件、小程序等，微信 SDK 提供了 <a target="_blank" rel="noopener" href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&id=open1419317340">丰富的对象</a> 以便发送不同类型的内容。</p>
+<p>以分享一个网页到朋友圈为例：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 设置网址</span>
+<span class="token class-name">WXWebpageObject</span> webpage <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WXWebpageObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+webpage<span class="token punctuation">.</span>webpageUrl <span class="token operator">=</span> <span class="token string">"https://example.blog"</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 设置标题</span>
+<span class="token class-name">WXMediaMessage</span> msg <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WXMediaMessage</span><span class="token punctuation">(</span>webpage<span class="token punctuation">)</span><span class="token punctuation">;</span>
+msg<span class="token punctuation">.</span>title <span class="token operator">=</span> <span class="token string">"My Blog"</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 设置缩略图</span>
+<span class="token class-name">Bitmap</span> thumb <span class="token operator">=</span> <span class="token class-name">BitmapFactory</span><span class="token punctuation">.</span><span class="token function">decodeResource</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span><span class="token function">getResources</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token class-name">R</span><span class="token punctuation">.</span>mipmap<span class="token punctuation">.</span>ic_thumb<span class="token punctuation">)</span><span class="token punctuation">;</span>
+msg<span class="token punctuation">.</span>thumbData <span class="token operator">=</span> <span class="token class-name">Image</span><span class="token punctuation">.</span><span class="token function">bitmapToByteArray</span><span class="token punctuation">(</span>thumb<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 构造一个发信请求</span>
+<span class="token class-name">SendMessageToWX</span><span class="token punctuation">.</span><span class="token class-name">Req</span> req <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SendMessageToWX</span><span class="token punctuation">.</span><span class="token class-name">Req</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+req<span class="token punctuation">.</span>transaction <span class="token operator">=</span> <span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span><span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+req<span class="token punctuation">.</span>message <span class="token operator">=</span> msg<span class="token punctuation">;</span>
+req<span class="token punctuation">.</span>scene <span class="token operator">=</span> <span class="token class-name">WXSceneTimeline</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 发送请求给微信客户端</span>
+api<span class="token punctuation">.</span><span class="token function">sendReq</span><span class="token punctuation">(</span>req<span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>消息中的缩略图 <code>thumbData</code> 应该是字节数据。下面是一个将位图转换成字节数据的示例方法：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">byte</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token function">bitmapToByteArray</span><span class="token punctuation">(</span><span class="token class-name">Bitmap</span> bitmap<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token class-name">ByteArrayOutputStream</span> output <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ByteArrayOutputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  bitmap<span class="token punctuation">.</span><span class="token function">compress</span><span class="token punctuation">(</span><span class="token class-name">Bitmap</span><span class="token punctuation">.</span><span class="token class-name">CompressFormat</span><span class="token punctuation">.</span>JPEG<span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">,</span> output<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> output<span class="token punctuation">.</span><span class="token function">toByteArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>一个发信请求还应该包括场景和事务ID：</p>
+<ul>
+<li><p>分享场景 <code>scene</code> 可选对话 <code>WXSceneSession</code>、朋友圈 <code>WXSceneTimeline</code> 和收藏 <code>WXSceneFavorite</code> 三种。</p>
+</li>
+<li><p>事务ID  <code>transaction</code> 用于唯一标识一个请求。</p>
+</li>
+</ul>
+<p>相关环境：macOS 10.14 / Android Studio 3.2 / WeChat SDK for Android 5.1</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Swift 语言入门学习笔记
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Android</a>
+    
+      <a class="post-tag">Java</a>
+    
+      <a class="post-tag">微信</a>
+    
+      <a class="post-tag">分享</a>
+    
+      <a class="post-tag">Android Studio</a>
+    
+      <a class="post-tag">APP</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

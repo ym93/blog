@@ -1,0 +1,123 @@
+ 
+<html>
+  <head>
+    <title>ym</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-list">
+  
+  <div class="post-list-body">
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-12-23</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201612230017/">
+            <h1 class="post-item-title">解决无法用 localhost 连接 MySQL</h1>
+            <div class="post-item-excerpt">
+              <p>今天尝试往云主机上迁移博客，遇到不少麻烦，其中就包括无法用 localhost 连接 MySQL 。用了一个晚上才得以解决，记录一下解决过程。</p>
+<p>第一步，检查 <code>/etc/hosts</code> 文件。确认 localhost 已映射到 127.0.0.1 ，否则添加正确的映射。经检查，确定 hosts 设置没有问题。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-12-15</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201612151531/">
+            <h1 class="post-item-title">Linux 编译安装 MySQL5.6</h1>
+            <div class="post-item-excerpt">
+              <p>第一步，安装依赖。包括编译工具和需要用到的库。</p>
+<pre class="line-numbers language-none"><code class="language-none">yum -y install make gcc-c++ cmake bison-devel  ncurses-devel perl-Module-Install.noarch<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+      <div class="post-item">
+        <div class="post-item-lt">
+          <h1 class="post-item-date">2016-11-05</h1>
+        </div>
+        <div class="post-item-rt">
+          <a href="/posts/201611051552/">
+            <h1 class="post-item-title">Laravel 框架操作数据库</h1>
+            <div class="post-item-excerpt">
+              <p>Laravel 提供 DB Facade 、Query Builder 和 Eloquent ORM 三种操作数据库的方式。</p>
+<p>原始查找（DB Facade）直接使用 SQL 语句操作数据库。</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    
+  </div>
+</div>
+
+<div class="page-footer">
+  <span class="page-footer-pagination">
+    <span>1</span>
+    <span class="page-footer-pagination-slash">/</span>
+    <span>1</span>
+  </span>
+  
+  
+  
+</div>
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

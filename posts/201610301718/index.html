@@ -1,0 +1,200 @@
+ 
+<html>
+  <head>
+    <title>使用 Vue.js 实现模态窗口</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">使用 Vue.js 实现模态窗口</h1>
+  <div class="post-meta">
+    <span>2016-10-30</span>
+    
+    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>Vue.js 是一个前端 MVVM 框架。由于公司的项目中有用到这个框架，我也开始接触和学习它。在阅读了官方文档后，我着手尝试用 Vue.js 实现模态窗口。</p>
+<a id="more"></a>
+
+<p>第一步，将必要的样式表添加到页面中。（代码位于文末）</p>
+<p>第二步，添加模态窗口的模板。什么是模板？可以理解为基本、通用的结构代码。每个弹窗的内容可能不同，但结构是一致的，这些一致的部分就是模板。<br>注意模板中的预留的 <code>&lt;slot&gt;</code> 标签，在生成模态窗口时，可以在 <code>&lt;slot&gt;</code> 标签的位置插入不同的内容。下面这个模板把模态窗口分成上中下三个区域。</p>
+<pre class="line-numbers language-none"><code class="language-none">&lt;!-- 模板 --&gt;
+&lt;script type&#x3D;&quot;text&#x2F;x-template&quot; id&#x3D;&quot;modal-template&quot;&gt;
+  &lt;transition name&#x3D;&quot;modal&quot;&gt;
+    &lt;div class&#x3D;&quot;modal-mask&quot;&gt;
+      &lt;div class&#x3D;&quot;modal-wrapper&quot;&gt;
+        &lt;div class&#x3D;&quot;modal-container&quot;&gt;
+          &lt;div class&#x3D;&quot;modal-header&quot;&gt;
+            &lt;slot name&#x3D;&quot;header&quot;&gt;default header&lt;&#x2F;slot&gt;
+          &lt;&#x2F;div&gt;
+          &lt;div class&#x3D;&quot;modal-body&quot;&gt;
+            &lt;slot name&#x3D;&quot;body&quot;&gt;default body&lt;&#x2F;slot&gt;
+          &lt;&#x2F;div&gt;
+          &lt;div class&#x3D;&quot;modal-footer&quot;&gt;
+            &lt;slot name&#x3D;&quot;footer&quot;&gt;default footer
+              &lt;button class&#x3D;&quot;modal-default-button&quot; @click&#x3D;&quot;$emit(&#39;close&#39;)&quot;&gt;OK&lt;&#x2F;button&gt;
+            &lt;&#x2F;slot&gt;
+          &lt;&#x2F;div&gt;
+        &lt;&#x2F;div&gt;
+      &lt;&#x2F;div&gt;
+    &lt;&#x2F;div&gt;
+  &lt;&#x2F;transition&gt;
+&lt;&#x2F;script&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>&lt;script&gt;</code> 标签的 <em>id</em> 属性用于定义模板的名称，在同一页面中可以创建多个模态窗口模板，以实现不同需求。</p>
+<p>第三步，在模板的基础上添加具体内容。</p>
+<pre class="line-numbers language-xhtml" data-language="xhtml"><code class="language-xhtml">&lt;!-- 容器 --&gt;
+&lt;div id&#x3D;&quot;app&quot;&gt;
+  &lt;button id&#x3D;&quot;show-modal&quot; @click&#x3D;&quot;showModal &#x3D; true&quot;&gt;Show Modal&lt;&#x2F;button&gt;
+  &lt;modal v-if&#x3D;&quot;showModal&quot; @close&#x3D;&quot;showModal &#x3D; false&quot;&gt;
+    &lt;!-- 在此覆写模板内容 --&gt;
+    &lt;h3 slot&#x3D;&quot;header&quot;&gt;custom header&lt;&#x2F;h3&gt;
+  &lt;&#x2F;modal&gt;
+&lt;&#x2F;div&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>给任意标签加上 <em>slot</em> 属性，即可用于覆盖模板中对应名称的 <code>&lt;slot&gt;</code> 标签。在上面的代码中，<code>h3</code> 标签的 <em>slot</em> 属性值等于 header ，所以它覆盖了模板中的 <code>&lt;slot name=&quot;header&quot;&gt;default header&lt;/slot&gt;</code> 。</p>
+<p>第四步，注册一个模态窗口组件。</p>
+<pre class="line-numbers language-none"><code class="language-none">Vue.component(&#39;modal&#39;, &#123;
+  template: &#39;#modal-template&#39;
+&#125;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p><code>Vue.component</code> 方法的第一个参数是该组件在容器中的标签，第二个参数是一个对象，定义了使用的模板 id 为 modal-template 。</p>
+<p>如果页面中存在多个模态窗口，并且分别绑定不同的模板，应该定义不同的标签，例如 <code>&lt;modal-dialog&gt;</code> 、<code>&lt;modal-login&gt;</code> 等。</p>
+<p>第五步，创建视图模型对象。el 是容器的 id , showModal 是一个布尔值，用于控制窗口的打开和关闭。</p>
+<pre class="line-numbers language-none"><code class="language-none">new Vue(&#123;
+  el: &#39;#app&#39;,
+  data: &#123;
+    showModal: false
+  &#125;
+&#125;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>好了，现在回头再看一遍之前的代码，尝试理解 Vue.js 的一些逻辑。</p>
+<p><code>v-if=&quot;showModal&quot;</code> 表示监听 showModal 参数，当值为 <code>false</code> 时移除容器 div 中的代码（关闭窗口），当值为 <code>true</code> 时往容器 div 中填充代码（显示窗口）。</p>
+<p><code>@click=&quot;showModal = true&quot;</code> 表示点击该元素时修改 <code>showModal</code> 值为 <code>true</code> ，类似 JavaScript 的 onclick 事件。</p>
+<p><code>@click=&quot;$emit(&#39;close&#39;)</code> 表示点击该元素时当前元素的 <code>@close</code> 中的代码。</p>
+<p>本例样式表：</p>
+<pre class="line-numbers language-css" data-language="css"><code class="language-css"><span class="token selector">.modal-mask</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">position</span><span class="token punctuation">:</span> fixed<span class="token punctuation">;</span>
+  <span class="token property">z-index</span><span class="token punctuation">:</span> 9998<span class="token punctuation">;</span>
+  <span class="token property">top</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+  <span class="token property">left</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span>
+  <span class="token property">height</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span>
+  <span class="token property">background-color</span><span class="token punctuation">:</span> <span class="token function">rgba</span><span class="token punctuation">(</span>0<span class="token punctuation">,</span> 0<span class="token punctuation">,</span> 0<span class="token punctuation">,</span> .5<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> table<span class="token punctuation">;</span>
+  <span class="token property">transition</span><span class="token punctuation">:</span> opacity .3s ease<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token selector">.modal-wrapper</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">display</span><span class="token punctuation">:</span> table-cell<span class="token punctuation">;</span>
+  <span class="token property">vertical-align</span><span class="token punctuation">:</span> middle<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token selector">.modal-container</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span>
+  <span class="token property">margin</span><span class="token punctuation">:</span> 0px auto<span class="token punctuation">;</span>
+  <span class="token property">padding</span><span class="token punctuation">:</span> 20px 30px<span class="token punctuation">;</span>
+  <span class="token property">background-color</span><span class="token punctuation">:</span> #fff<span class="token punctuation">;</span>
+  <span class="token property">border-radius</span><span class="token punctuation">:</span> 2px<span class="token punctuation">;</span>
+  <span class="token property">box-shadow</span><span class="token punctuation">:</span> 0 2px 8px <span class="token function">rgba</span><span class="token punctuation">(</span>0<span class="token punctuation">,</span> 0<span class="token punctuation">,</span> 0<span class="token punctuation">,</span> .33<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token property">transition</span><span class="token punctuation">:</span> all .3s ease<span class="token punctuation">;</span>
+  <span class="token property">font-family</span><span class="token punctuation">:</span> Helvetica<span class="token punctuation">,</span> Arial<span class="token punctuation">,</span> sans-serif<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token selector">.modal-header h3</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">margin-top</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+  <span class="token property">color</span><span class="token punctuation">:</span> #42b983<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token selector">.modal-body</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">margin</span><span class="token punctuation">:</span> 20px 0<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token selector">.modal-default-button</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">float</span><span class="token punctuation">:</span> right<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token selector">.modal-enter</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">opacity</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token selector">.modal-leave-active</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">opacity</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token selector">.modal-enter .modal-container,
+.modal-leave-active .modal-container</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">-webkit-transform</span><span class="token punctuation">:</span> <span class="token function">scale</span><span class="token punctuation">(</span>1.1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token property">transform</span><span class="token punctuation">:</span> <span class="token function">scale</span><span class="token punctuation">(</span>1.1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>相关环境：Windows 10 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2 </p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：在 Homestead 上安装 phpMyAdmin
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Vue.js</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

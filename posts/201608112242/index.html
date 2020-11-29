@@ -1,0 +1,129 @@
+ 
+<html>
+  <head>
+    <title>使用 jQuery 实现 AJAX 异步请求</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">使用 jQuery 实现 AJAX 异步请求</h1>
+  <div class="post-meta">
+    <span>2016-08-11</span>
+    
+    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>引用 jQuery 库文件。</p>
+<pre class="line-numbers language-xhtml" data-language="xhtml"><code class="language-xhtml">&lt;script type&#x3D;&quot;text&#x2F;javascript&quot; src&#x3D;&quot;js&#x2F;jquery-3.1.0.min.js&quot;&gt;&lt;&#x2F;script&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<a id="more"></a>
+
+<p>在脚本中添加 ajax（GET方式）：</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js">$<span class="token punctuation">.</span><span class="token function">ajax</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+<span class="token number">2</span>url<span class="token operator">:</span>  <span class="token string">'target.php'</span><span class="token punctuation">,</span>  <span class="token comment">// 请求路径</span>
+<span class="token number">2</span>type<span class="token operator">:</span> <span class="token string">'get'</span><span class="token punctuation">,</span>  <span class="token comment">// 请求类型</span>
+<span class="token number">2</span>data<span class="token operator">:</span> <span class="token punctuation">&#123;</span> 
+<span class="token number">22</span><span class="token comment">// 参数</span>
+<span class="token number">22</span>username<span class="token operator">:</span> <span class="token string">"caiyiming"</span><span class="token punctuation">,</span>
+<span class="token number">22</span>password<span class="token operator">:</span> <span class="token string">"123456"</span>
+<span class="token number">2</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+<span class="token number">2</span>async <span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>  <span class="token comment">// 是否异步执行</span>
+<span class="token number">2</span><span class="token function-variable function">success</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">response</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+<span class="token number">22</span><span class="token comment">// 成功后调用的代码</span>
+<span class="token number">2</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+<span class="token number">2</span><span class="token function-variable function">error</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">result</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>  
+<span class="token number">22</span><span class="token comment">// 失败后调用的代码</span>
+<span class="token number">2</span><span class="token punctuation">&#125;</span>  
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<p>使用 POST 方式：</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js">$<span class="token punctuation">.</span><span class="token function">ajax</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
+<span class="token number">2</span>url<span class="token operator">:</span>  <span class="token string">'target.php'</span><span class="token punctuation">,</span> 
+<span class="token number">2</span>type<span class="token operator">:</span> <span class="token string">'post'</span><span class="token punctuation">,</span>
+<span class="token number">2</span>data<span class="token operator">:</span> <span class="token punctuation">&#123;</span> 
+<span class="token number">22</span>username<span class="token operator">:</span> <span class="token string">"caiyiming"</span>
+<span class="token number">2</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+<span class="token number">2</span>async <span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+<span class="token number">2</span><span class="token function-variable function">success</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">response</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+<span class="token number">2</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
+<span class="token number">2</span><span class="token function-variable function">error</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">response</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> 
+<span class="token number">2</span><span class="token punctuation">&#125;</span>  
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：JS 倒计时代码
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">JavaScript</a>
+    
+      <a class="post-tag">jQuery</a>
+    
+      <a class="post-tag">AJAX</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

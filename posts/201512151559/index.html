@@ -1,0 +1,187 @@
+ 
+<html>
+  <head>
+    <title>使用 DatePickerDialog 选择日期</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">使用 DatePickerDialog 选择日期</h1>
+  <div class="post-meta">
+    <span>2015-12-15</span>
+    
+    <a class="post-meta-category" href="/categories/android">Android</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>新建一个工程并命名为 DatePickerDialogDemo ，使用 LinearLayout 布局。</p>
+<p>在布局中分别添加一个 TextView 用于输出选择的日期、一个 Button 用于触发日期选择窗口。</p>
+<a id="more"></a>
+
+<p>MainActivity.xml:</p>
+<pre class="line-numbers language-xml" data-language="xml"><code class="language-xml">LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:padding="15dp"
+  tools:context="$&#123;relativePackage&#125;.$&#123;activityClass&#125;" >
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TextView</span>
+    <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/textviewText<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Button</span> 
+    <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/buttonPickDate<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>选择日期<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>LinearLayout</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>新建一个类，继承自 DialogFragment 并实现 DatePickerDialog 接口。</p>
+<p><code>onDateSet</code> 方法在日期选择完成后被执行，它将调用 MainActivity 中的静态方法，更新 TextView 中的内容，把日期显示出来。</p>
+<p>UtilSelectDate.java:</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UtilSelectDate</span> <span class="token keyword">extends</span> <span class="token class-name">DialogFragment</span> <span class="token keyword">implements</span> <span class="token class-name">DatePickerDialog</span><span class="token punctuation">.</span><span class="token class-name">OnDateSetListener</span> <span class="token punctuation">&#123;</span>
+
+  <span class="token comment">// 初始化变量</span>
+  <span class="token keyword">int</span> mYear<span class="token punctuation">;</span>
+  <span class="token keyword">int</span> mMonth<span class="token punctuation">;</span>
+  <span class="token keyword">int</span> mDay<span class="token punctuation">;</span>
+
+  <span class="token comment">// 初始化日期选择对话框</span>
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">public</span> <span class="token class-name">Dialog</span> <span class="token function">onCreateDialog</span><span class="token punctuation">(</span><span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// 设置初始日期为本年本月本日</span>
+    <span class="token keyword">final</span> <span class="token class-name">Calendar</span> mCal<span class="token operator">=</span><span class="token class-name">Calendar</span><span class="token punctuation">.</span><span class="token function">getInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> year <span class="token operator">=</span> mCal<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token class-name">Calendar</span><span class="token punctuation">.</span>YEAR<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> month <span class="token operator">=</span> mCal<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token class-name">Calendar</span><span class="token punctuation">.</span>MONTH<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">int</span> day <span class="token operator">=</span> mCal<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token class-name">Calendar</span><span class="token punctuation">.</span>DAY_OF_MONTH<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 返回日期选择对话框</span>
+    <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">DatePickerDialog</span><span class="token punctuation">(</span><span class="token function">getActivity</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">,</span> year<span class="token punctuation">,</span> month<span class="token punctuation">,</span> day<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token comment">// 日期选择完成事件</span>
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onDateSet</span><span class="token punctuation">(</span><span class="token class-name">DatePicker</span> view<span class="token punctuation">,</span> <span class="token keyword">int</span> year<span class="token punctuation">,</span> <span class="token keyword">int</span> monthOfYear<span class="token punctuation">,</span> <span class="token keyword">int</span> dayOfMonth<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  mYear <span class="token operator">=</span> year<span class="token punctuation">;</span>
+  mMonth <span class="token operator">=</span> monthOfYear<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">;</span>
+  mDay <span class="token operator">=</span> dayOfMonth<span class="token punctuation">;</span>
+  <span class="token comment">// 调用 MainActivity 中的方法更新日期</span>
+  <span class="token class-name">MainActivity</span><span class="token punctuation">.</span><span class="token function">updateText</span><span class="token punctuation">(</span>mYear<span class="token punctuation">,</span> mMonth<span class="token punctuation">,</span> mDay<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>MainActivity 继承自 FragmentActivity ，点击按钮后，实例化一个日期选择窗口并显示。</p>
+<p><code>updateText</code> 方法在 UtilSelectDate 类的 <code>onDateSet</code> 方法中调用，实现日期选择完成后的屏幕输出。</p>
+<p>MainActivity.java:</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainActivity</span> <span class="token keyword">extends</span> <span class="token class-name">FragmentActivity</span> <span class="token punctuation">&#123;</span>
+
+  <span class="token keyword">private</span> <span class="token class-name">Button</span> mPickDate<span class="token punctuation">;</span>
+  <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token class-name">TextView</span> mText<span class="token punctuation">;</span>
+
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span><span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">setContentView</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>layout<span class="token punctuation">.</span>activity_main<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 实例化控件</span>
+    mText <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">TextView</span><span class="token punctuation">)</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>textviewText<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mPickDate <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">Button</span><span class="token punctuation">)</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>buttonPickDate<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 按钮点击事件</span>
+    mPickDate<span class="token punctuation">.</span><span class="token function">setOnClickListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">OnClickListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onClick</span><span class="token punctuation">(</span><span class="token class-name">View</span> arg0<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name">DialogFragment</span> mFragment<span class="token operator">=</span><span class="token keyword">new</span> <span class="token class-name">UtilSelectDate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mFragment<span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token class-name">MainActivity</span><span class="token punctuation">.</span><span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">getSupportFragmentManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token comment">// 屏幕输出日期</span>
+  <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">updateText</span><span class="token punctuation">(</span><span class="token keyword">int</span> year<span class="token punctuation">,</span> <span class="token keyword">int</span> month<span class="token punctuation">,</span> <span class="token keyword">int</span> day<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    mText<span class="token punctuation">.</span><span class="token function">setText</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>year<span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">"年"</span><span class="token operator">+</span><span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>month<span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">"月"</span><span class="token operator">+</span><span class="token class-name">String</span><span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>day<span class="token punctuation">)</span><span class="token operator">+</span><span class="token string">"日"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>需要注意的是，如果是在 Fragment（而不是 FragmentActivity ）中使用，执行<code>show</code> 方法的语句需要改为：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">mFragment<span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token function">getFragmentManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：根据系统版本设置不同的主题
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Android</a>
+    
+      <a class="post-tag">Java</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

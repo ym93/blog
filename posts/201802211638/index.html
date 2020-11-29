@@ -1,0 +1,130 @@
+ 
+<html>
+  <head>
+    <title>使用 Certbot 申请和部署 SSL 证书</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">使用 Certbot 申请和部署 SSL 证书</h1>
+  <div class="post-meta">
+    <span>2018-02-21</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>去年写过一篇文章介绍 Let’s Encrypt 免费证书，以及申请和部署的过程。最近又为站点上 HTTPS，发现官方推荐的 <a target="_blank" rel="noopener" href="https://certbot.eff.org/">Certbot</a> 客户端确实更好用，几乎全自动完成证书的申请、部署和更新。</p>
+<a id="more"></a>
+
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>首先启用 EPEL（企业版 Linux 附加软件包）源：</p>
+<pre class="line-numbers language-none"><code class="language-none">yum -y install yum-utils
+yum-config-manager --enable rhui-REGION-rhel-server-extras rhui-REGION-rhel-server-optional<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>安装 Certbot 客户端：</p>
+<pre class="line-numbers language-none"><code class="language-none">yum install certbot-nginx<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>申请和部署 SSL 证书：</p>
+<pre class="line-numbers language-none"><code class="language-none">certbot --nginx<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>Cerbot 将分析 Nginx 的配置文件（默认为 <code>/etc/nginx/nginx.conf</code> ），然后自动完成证书的申请和部署，包括修改 Nginx 配置文件并重启服务。这也是我之前一直遇到错误的问题所在：如果 Nginx 的安装目录不是 <code>/etc/nginx</code> ，Cerbot 找不到配置文件就会报错。</p>
+<p>所以，需要使用 <code>--nginx-server-root</code> 指定配置文件的路径：</p>
+<pre class="line-numbers language-none"><code class="language-none">certbot --nginx --nginx-server-root&#x3D;&#x2F;usr&#x2F;local&#x2F;nginx&#x2F;conf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>然后根据提示选择你要启用 HTTPS 的站点，等待证书部署完成。</p>
+<p>如果只希望 Cerbot 申请证书但不自动部署，使用 <code>certonly</code> 子命令：</p>
+<pre class="line-numbers language-none"><code class="language-none">certbot --nginx certonly<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="续期"><a href="#续期" class="headerlink" title="续期"></a>续期</h3><p>测试证书更新命令是否正常：</p>
+<pre class="line-numbers language-none"><code class="language-none">certbot renew --dry-run<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>执行 <code>crontab -e</code> 编辑任务调度文件，添加一个任务，定期检测证书的有效期并自动更换新的证书。</p>
+<pre class="line-numbers language-none"><code class="language-none">0 5 * * * certbot renew<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>相关环境：Aliyun ECS / CentOS 7 x64 / Python 2.7 / Nginx 1.12</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：使用 apiDoc 自动生成 API 文档
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Nginx</a>
+    
+      <a class="post-tag">SSL</a>
+    
+      <a class="post-tag">HTTPS</a>
+    
+      <a class="post-tag">Let's Encrypt</a>
+    
+      <a class="post-tag">ACME</a>
+    
+      <a class="post-tag">Certbot</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

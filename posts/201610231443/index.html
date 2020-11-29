@@ -1,0 +1,157 @@
+ 
+<html>
+  <head>
+    <title>Homestead 开发环境配置</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">Homestead 开发环境配置</h1>
+  <div class="post-meta">
+    <span>2016-10-23</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>Laravel Homestead 是一套完整的 PHP 开发环境，类似 WampServer 。不同的是，Homestead 运行于虚拟机之中，而 WampServer 则直接将服务端软件安装在本机上。</p>
+<a id="more"></a>
+
+<p>Homestead 的安装依赖于虚拟机软件和 Vagrant 。Vagrant 是一个快速搭建开发环境的工具，类似装系统用的 Ghost ，可以直接把别人打包好的开发环境（包括系统和服务端软件），Copy/Paste 到一台设备中，省去逐一安装服务端软件的麻烦。</p>
+<p>接下来的实践完全基于官方文档，并且已成功在 Win7 64bit 下安装了 Homestead 。</p>
+<h3 id="安装虚拟机软件"><a href="#安装虚拟机软件" class="headerlink" title="安装虚拟机软件"></a>安装虚拟机软件</h3><p>虚拟机软件可选择 VirtualBox 或 VMware ，虽然官方推荐使用效率更高的 VMware ，但为了节约时间我安装了开源且免费的 <a target="_blank" rel="noopener" href="https://www.virtualbox.org/">VirtualBox</a> ，版本5.1.8。</p>
+<h3 id="安装-Vagrant"><a href="#安装-Vagrant" class="headerlink" title="安装 Vagrant"></a>安装 Vagrant</h3><p>访问<a target="_blank" rel="noopener" href="https://www.vagrantup.com/">官网</a>下载并安装 Vagrant 。</p>
+<h3 id="添加-Vagrant-Box"><a href="#添加-Vagrant-Box" class="headerlink" title="添加 Vagrant Box"></a>添加 Vagrant Box</h3><p>Vagrant Box 是使用 Vagrant 将一整套开发环境打包成的 .box 镜像文件。在命令行工具中执行以下命令即可添加 Homestead 镜像，等待下载/安装完毕。如果下载失败，可参考<a target="_blank" rel="noopener" href="http://www.caiyiming.com/article/20161024.html">解决方案</a>。</p>
+<pre class="line-numbers language-none"><code class="language-none">vagrant box add laravel&#x2F;homestead<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+
+<h3 id="安装-Homestead"><a href="#安装-Homestead" class="headerlink" title="安装 Homestead"></a>安装 Homestead</h3><p>使用 Git 命令拷贝 Homestead 的代码并保存到 Home 目录的 Homestead 文件夹下。命令行中的 ~ 目录即为 Home 目录，如果你不知道 Home 目录的路径，尝试在“计算机”的地址栏输入 <code>%homepath%</code> 访问。</p>
+<pre class="line-numbers language-none"><code class="language-none">cd ~
+git clone https:&#x2F;&#x2F;github.com&#x2F;laravel&#x2F;homestead.git Homestead<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>定位到 Homestead 文件夹，创建 Homestead 配置文件。</p>
+<pre class="line-numbers language-none"><code class="language-none">cd ~&#x2F;Homestead
+bash init.sh<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h3 id="配置-Homestead"><a href="#配置-Homestead" class="headerlink" title="配置 Homestead"></a>配置 Homestead</h3><p>用编辑器打开 Home 目录下的隐藏文件夹 .homestead 中的 Homestead.yaml 文件，该文件为 Homestead 的配置文件。</p>
+<pre class="line-numbers language-none"><code class="language-none"># 服务器的局域网 IP 地址
+ip: &quot;192.168.10.10&quot;
+
+# 服务器可用内存
+memory: 2048
+
+# 服务器可用 CPU 核心数
+cpus: 1
+
+# 虚拟机软件
+provider: virtualbox
+
+# SSH 公钥
+authorize: ~&#x2F;.ssh&#x2F;id_rsa.pub
+
+# SSH 私钥
+keys:
+  - ~&#x2F;.ssh&#x2F;id_rsa
+
+# 本机与虚拟机的路径关联
+folders:
+  - map: ~&#x2F;Code
+    to: &#x2F;home&#x2F;vagrant&#x2F;Code
+
+# 域名绑定
+sites:
+    - map: 192.168.10.10
+      to: &#x2F;home&#x2F;vagrant&#x2F;Code
+
+# 默认数据库名称
+databases:
+    - homestead<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><em>provider</em> 应该根据本机已安装的虚拟机软件，设为 <code>virtualbox</code> 、 <code>vmware_fusion</code> 或 <code>vmware_workstation</code> 。<em>authorize/keys</em> 必须与 ~/.ssh 下的对应的密钥文件名称一致。<em>folders</em> 用于关联本机与虚拟机目录，即本机 ~/Code 路径下的文件，相当于也存在于虚拟机的代码根目录 /home/vagrant/Code 路径下，map 路径必须存在。<em>sites</em> 关联域名与虚拟机目录，可设置多站点，此处直接关联了 IP 访问根目录。</p>
+<p>运行虚拟机</p>
+<p>在 ~\Homestead 目录下，执行该命令。</p>
+<pre class="line-numbers language-none"><code class="language-none">vagrant up<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+
+<p>测试开发环境</p>
+<p>写一个 PHP 文件放到 ~\Code 路径下。</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">echo</span> <span class="token single-quoted-string string">'Hello World!'</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>打开浏览器，访问192.168.10.10，看看浏览器是否打印出了 <em>Hello World!</em> 。</p>
+<p>相关环境：Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Git、Shell、Git Shell、Git Bash
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Homestead</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

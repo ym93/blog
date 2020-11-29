@@ -1,0 +1,300 @@
+ 
+<html>
+  <head>
+    <title>Android 存储和解析 JSON 数据</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">Android 存储和解析 JSON 数据</h1>
+  <div class="post-meta">
+    <span>2015-11-10</span>
+    
+    <a class="post-meta-category" href="/categories/android">Android</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <blockquote>
+<p>JSON是一种轻量级的数据交换格式。JSON 采用完全独立于语言的文本格式，易于阅读和编写，同时也易于机器解析和生成（一般用于提升网络传输速率）。</p>
+</blockquote>
+<p>JSON 中的数据以键值对（key-value）的形式存在的。</p>
+<a id="more"></a>
+
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token punctuation">&#123;</span>
+  <span class="token string">"用户"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
+    <span class="token string">"姓氏"</span><span class="token operator">:</span> <span class="token string">"唐"</span><span class="token punctuation">,</span>
+    <span class="token string">"名字"</span><span class="token operator">:</span> <span class="token string">"三藏"</span><span class="token punctuation">,</span>
+    <span class="token string">"邮箱"</span><span class="token operator">:</span> <span class="token string">"email@example.com"</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>新建一个 demo 应用并命名为 <em>JSONPractice</em> ，生成默认的 Activity 。</p>
+<p>修改 activity_main.xml ，添加一个 TextView 控件。</p>
+<pre class="line-numbers language-xml" data-language="xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RelativeLayout</span> <span class="token attr-name"><span class="token namespace">xmlns:</span>android</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://schemas.android.com/apk/res/android<span class="token punctuation">"</span></span>
+  <span class="token attr-name"><span class="token namespace">xmlns:</span>tools</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://schemas.android.com/tools<span class="token punctuation">"</span></span>
+  <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
+  <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
+  <span class="token attr-name"><span class="token namespace">android:</span>padding</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>10dp<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TextView</span>
+    <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/textView<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>singleLine</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>false<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>RelativeLayout</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在 MainActivity 类中新建一个 TextView ，并在 <code>onCreate</code> 方法中将其实例化。它将用于显示解析后的信息。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">private</span> <span class="token class-name">TextView</span> mTextView<span class="token punctuation">;</span>
+
+<span class="token annotation punctuation">@Override</span>
+<span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span><span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">setContentView</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>layout<span class="token punctuation">.</span>activity_main<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  mTextView <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">TextView</span><span class="token punctuation">)</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>textView<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+<p>在 MainActivity 类中添加 <code>JSONWrite</code> 方法，用于以 JSON 格式将数据保存到文本文件，然后在日志中打印数据。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token class-name">JSONWrite</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token comment">// 待存储的信息</span>
+  <span class="token class-name">String</span> mCompany <span class="token operator">=</span> <span class="token string">"蔡一鸣博客 CAIYIMING BLOG"</span><span class="token punctuation">;</span>
+  <span class="token class-name">String</span> mAddress <span class="token operator">=</span> <span class="token string">"中国 福建省 厦门市"</span><span class="token punctuation">;</span>
+  <span class="token class-name">String</span> mTelephone <span class="token operator">=</span> <span class="token string">"0592-1234567"</span><span class="token punctuation">;</span>
+  <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> mDataName <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">"孙悟空"</span><span class="token punctuation">,</span> <span class="token string">"猪悟能"</span><span class="token punctuation">,</span> <span class="token string">"沙悟净"</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+  <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> mDataAge <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token string">"20"</span><span class="token punctuation">,</span> <span class="token string">"19"</span><span class="token punctuation">,</span> <span class="token string">"21"</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+  <span class="token keyword">double</span><span class="token punctuation">[</span><span class="token punctuation">]</span> mDataSalary <span class="token operator">=</span> <span class="token punctuation">&#123;</span> <span class="token number">3500.0</span><span class="token punctuation">,</span> <span class="token number">2900.0</span><span class="token punctuation">,</span> <span class="token number">4000.0</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+  <span class="token class-name">Date</span><span class="token punctuation">[</span><span class="token punctuation">]</span> mDataTime <span class="token operator">=</span> <span class="token punctuation">&#123;</span><span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+  <span class="token comment">// 创建外层 JSON 对象</span>
+  <span class="token class-name">JSONObject</span> mAllData <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">JSONObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 创建 JSON 数组</span>
+  <span class="token class-name">JSONArray</span> mArray <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">JSONArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 创建单个员工的 JSON 对象</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span>mDataName<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name">JSONObject</span> mTemp <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">JSONObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+      mTemp<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Name"</span><span class="token punctuation">,</span> mDataName<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mTemp<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Age"</span><span class="token punctuation">,</span> mDataAge<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mTemp<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Salary"</span><span class="token punctuation">,</span> mDataSalary<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mTemp<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Time"</span><span class="token punctuation">,</span> mDataTime<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span><span class="token punctuation">(</span><span class="token class-name">JSONException</span> e<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">// 将单个员工的 JSON 对象放进 JSON 数组</span>
+    mArray<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>mTemp<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 将所有数据存入外层 JSON 对象</span>
+    mAllData<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Employees"</span><span class="token punctuation">,</span> mArray<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mAllData<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Company"</span><span class="token punctuation">,</span> mCompany<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mAllData<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Address"</span><span class="token punctuation">,</span> mAddress<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mAllData<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Telephone"</span><span class="token punctuation">,</span> mTelephone<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span><span class="token punctuation">(</span><span class="token class-name">JSONException</span> e<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token comment">// 若存储介质不存在则终止操作</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token class-name">Environment</span><span class="token punctuation">.</span><span class="token function">getExternalStorageState</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token class-name">Environment</span><span class="token punctuation">.</span>MEDIA_MOUNTED<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token comment">// 新建文件对象 路径为 JSONPractice\JSON.txt（File.separator 等于 \ 符号）</span>
+  <span class="token class-name">File</span> mFile <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">(</span><span class="token class-name">Environment</span><span class="token punctuation">.</span><span class="token function">getExternalStorageDirectory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token class-name">File</span><span class="token punctuation">.</span>separator<span class="token operator">+</span><span class="token string">"JSONPractice"</span><span class="token operator">+</span><span class="token class-name">File</span><span class="token punctuation">.</span>separator<span class="token operator">+</span><span class="token string">"JSON.txt"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 如果不存在 JSONPractice 则新建</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>mFile<span class="token punctuation">.</span><span class="token function">getParentFile</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">exists</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    mFile<span class="token punctuation">.</span><span class="token function">getParentFile</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">mkdirs</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token comment">// 新建打印流并打印数据</span>
+  <span class="token class-name">PrintStream</span> mOut <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+  <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+    mOut <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">PrintStream</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">FileOutputStream</span><span class="token punctuation">(</span>mFile<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mOut<span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span>mAllData<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"JSON.txt保存成功！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span><span class="token punctuation">(</span><span class="token class-name">FileNotFoundException</span> e<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token comment">// 若文件不存在则打印日志</span>
+    <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"JSON.txt保存失败！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span> <span class="token keyword">finally</span><span class="token punctuation">&#123;</span>
+    <span class="token comment">// 若打印流非空则关闭打印流</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mOut<span class="token operator">!=</span><span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      mOut<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token comment">// 检查文件是否存在并打印日志</span>
+  <span class="token class-name">String</span> mContent <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>mFile<span class="token punctuation">.</span><span class="token function">exists</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+      <span class="token class-name">InputStream</span> mInputStream <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileInputStream</span><span class="token punctuation">(</span>mFile<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+      <span class="token class-name">InputStreamReader</span> mInputReader <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">InputStreamReader</span><span class="token punctuation">(</span>mInputStream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">BufferedReader</span> mBufferReader <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">BufferedReader</span><span class="token punctuation">(</span>mInputReader<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">String</span> mLine<span class="token punctuation">;</span>
+      <span class="token comment">// 分行读取并打印</span>
+      <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token punctuation">(</span> mLine <span class="token operator">=</span> mBufferReader<span class="token punctuation">.</span><span class="token function">readLine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        mContent <span class="token operator">+=</span> mLine<span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span>  mContent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mInputStream<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>java<span class="token punctuation">.</span>io<span class="token punctuation">.</span><span class="token class-name">FileNotFoundException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>添加 <code>JSONRead</code> 方法，用于读取 <code>JSONWrite</code> 方法保存的文件，并将 JSON 数据解析出来，然后以其他格式在屏幕上输出。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token class-name">JSONRead</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+  <span class="token class-name">File</span> mFile <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">(</span><span class="token class-name">Environment</span><span class="token punctuation">.</span><span class="token function">getExternalStorageDirectory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token class-name">File</span><span class="token punctuation">.</span>separator<span class="token operator">+</span><span class="token string">"JSONPractice"</span><span class="token operator">+</span><span class="token class-name">File</span><span class="token punctuation">.</span>separator<span class="token operator">+</span><span class="token string">"JSON.txt"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token class-name">String</span> mContent <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>mFile<span class="token punctuation">.</span><span class="token function">exists</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 读取数据</span>
+    <span class="token class-name">InputStream</span> mInputStream <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FileInputStream</span><span class="token punctuation">(</span>mFile<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+    <span class="token class-name">InputStreamReader</span> mInputReader <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">InputStreamReader</span><span class="token punctuation">(</span>mInputStream<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">BufferedReader</span> mBufferReader <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">BufferedReader</span><span class="token punctuation">(</span>mInputReader<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> mLine<span class="token punctuation">;</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token punctuation">(</span> mLine <span class="token operator">=</span> mBufferReader<span class="token punctuation">.</span><span class="token function">readLine</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      mContent <span class="token operator">+=</span> mLine<span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    mInputStream<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 解析数据</span>
+    <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+      <span class="token class-name">JSONTokener</span> mJT <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">JSONTokener</span><span class="token punctuation">(</span>mContent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">JSONObject</span> mJO <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">JSONObject</span><span class="token punctuation">)</span> mJT<span class="token punctuation">.</span><span class="token function">nextValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">// 解析单位信息</span>
+      <span class="token class-name">String</span> mCompany <span class="token operator">=</span> mJO<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"Company"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">String</span> mTelephone <span class="token operator">=</span> mJO<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"Telephone"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">String</span> mAddress <span class="token operator">=</span> mJO<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"Address"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">// 解析员工信息</span>
+      <span class="token class-name">JSONArray</span> mEmployees <span class="token operator">=</span> mJO<span class="token punctuation">.</span><span class="token function">getJSONArray</span><span class="token punctuation">(</span><span class="token string">"Employees"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token comment">// 员工一</span>
+      <span class="token class-name">JSONObject</span> mEmployeeOne <span class="token operator">=</span> mEmployees<span class="token punctuation">.</span><span class="token function">getJSONObject</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> mEmOneInfo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+      mEmOneInfo<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> mEmployeeOne<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"Name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mEmOneInfo<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> mEmployeeOne<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"Age"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mEmOneInfo<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> mEmployeeOne<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"Salary"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mEmOneInfo<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> mEmployeeOne<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"Time"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">String</span> mEmOne <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span>
+      <span class="token keyword">for</span> <span class="token punctuation">(</span> <span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;=</span><span class="token number">3</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      mEmOne <span class="token operator">=</span> mEmOne <span class="token operator">+</span> mEmOneInfo<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">" "</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+      <span class="token comment">// 员工二</span>
+      <span class="token class-name">JSONObject</span> mEmployeeTwo <span class="token operator">=</span> mEmployees<span class="token punctuation">.</span><span class="token function">getJSONObject</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> mEmTwoInfo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+      mEmTwoInfo<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> mEmployeeTwo<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"Name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mEmTwoInfo<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> mEmployeeTwo<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"Age"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mEmTwoInfo<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> mEmployeeTwo<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"Salary"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mEmTwoInfo<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> mEmployeeTwo<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"Time"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">String</span> mEmTwo <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span>
+      <span class="token keyword">for</span> <span class="token punctuation">(</span> <span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;=</span><span class="token number">3</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      mEmTwo <span class="token operator">=</span> mEmTwo <span class="token operator">+</span> mEmTwoInfo<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">" "</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+      <span class="token comment">// 员工三</span>
+      <span class="token class-name">JSONObject</span> mEmployeeThree <span class="token operator">=</span> mEmployees<span class="token punctuation">.</span><span class="token function">getJSONObject</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> mEmThreeInfo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+      mEmThreeInfo<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> mEmployeeThree<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"Name"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mEmThreeInfo<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">=</span> mEmployeeThree<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"Age"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mEmThreeInfo<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span> <span class="token operator">=</span> mEmployeeThree<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"Salary"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mEmThreeInfo<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token operator">=</span> mEmployeeThree<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"Time"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">String</span> mEmThree <span class="token operator">=</span> <span class="token string">""</span><span class="token punctuation">;</span>
+      <span class="token keyword">for</span> <span class="token punctuation">(</span> <span class="token keyword">int</span> i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;=</span><span class="token number">3</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+       mEmThree <span class="token operator">=</span> mEmThree <span class="token operator">+</span> mEmThreeInfo<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">+</span> <span class="token string">" "</span><span class="token punctuation">;</span>
+      <span class="token punctuation">&#125;</span>
+      <span class="token class-name">String</span> mOutput <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+      <span class="token comment">// 汇总数据并输出</span>
+      mOutput <span class="token operator">=</span> <span class="token string">"单位："</span><span class="token operator">+</span>mCompany<span class="token operator">+</span><span class="token string">"\n"</span><span class="token operator">+</span><span class="token string">"电话："</span><span class="token operator">+</span>mTelephone<span class="token operator">+</span><span class="token string">"\n"</span><span class="token operator">+</span><span class="token string">"地址："</span><span class="token operator">+</span>mAddress<span class="token operator">+</span>
+        <span class="token string">"\n\n员工信息\n\n"</span><span class="token operator">+</span>mEmOne<span class="token operator">+</span><span class="token string">"\n"</span><span class="token operator">+</span>mEmTwo<span class="token operator">+</span><span class="token string">"\n"</span><span class="token operator">+</span>mEmThree<span class="token punctuation">;</span>
+      mTextView<span class="token punctuation">.</span><span class="token function">setText</span><span class="token punctuation">(</span>mOutput<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">JSONException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span> <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>java<span class="token punctuation">.</span>io<span class="token punctuation">.</span><span class="token class-name">FileNotFoundException</span> e<span class="token punctuation">)</span><span class="token punctuation">&#123;</span> <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span><span class="token punctuation">&#123;</span> <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>修改 <code>onCreate</code> 方法，在声明周期中执行 JSONWrite 、JSONRead 方法。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span><span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">setContentView</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>layout<span class="token punctuation">.</span>activity_main<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  mTextView <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">TextView</span><span class="token punctuation">)</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>textView<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 将信息以 JSON 格式保存到本地</span>
+  <span class="token class-name">JSONWrite</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 读取并解析文件中的 JSON 数据</span>
+  <span class="token class-name">JSONRead</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>运行应用，LogCat 中打印了 JSON 数据，说明 <code>JSONWrite</code> 方法执行成功，Activity 输出格式化的内容，说明 <code>JSONRead</code> 方法执行成功。</p>
+<img src="/img/posts/2015/11/android_json_1.png" class="" width="480" title="控制台日志">
+
+<img src="/img/posts/2015/11/android_json_2.png" class="" width="240" title="屏幕输出内容">
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：原生 SQL 语句操作 SQLite 数据库
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Android</a>
+    
+      <a class="post-tag">Java</a>
+    
+      <a class="post-tag">JSON</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

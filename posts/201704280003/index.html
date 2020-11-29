@@ -1,0 +1,106 @@
+ 
+<html>
+  <head>
+    <title>使用 JavaScript 清空上传控件的值</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">使用 JavaScript 清空上传控件的值</h1>
+  <div class="post-meta">
+    <span>2017-04-28</span>
+    
+    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>有时候我们可能希望在某个时间点帮用户清空上传控件（即 file 类型的 input 元素）的值，让交互更加友好。不过，上传控件本身并未提供一个简单的方法用于清除已选中的文件。</p>
+<a id="more"></a>
+
+<pre class="line-numbers language-xhtml" data-language="xhtml"><code class="language-xhtml">&lt;input type&#x3D;&quot;file&quot;&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>网上普遍存在两种方案：用 JavaScript 拷贝一个相同的 input 元素替换掉原来的元素，或者用 jQuery 的 val() 方法将元素的值设为空字符串。</p>
+<p>前者对我的页面没有奏效，后者似乎在 IE 下不能正常工作。更何况我也不想为解决一个小问题而引用 jQuery 库。其实，使用表单的 reset 方法可以很容易地清空上传控件的内容。</p>
+<p>首先，在 input 标签外包一个 form 标签。</p>
+<pre class="line-numbers language-xhtml" data-language="xhtml"><code class="language-xhtml">&lt;form id&#x3D;&quot;my-form&quot;&gt;
+  &lt;input type&#x3D;&quot;file&quot;&gt;
+&lt;&#x2F;form&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>然后，获得 form 元素并调用 reset 方法，该方法将清除表单中已输入的全部内容，当然也包括上传控件中已选中的文件。</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token keyword">let</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'my-form'</span><span class="token punctuation">)</span>
+form<span class="token punctuation">.</span><span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Git 使用命令方式实现免密码操作
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">JavaScript</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

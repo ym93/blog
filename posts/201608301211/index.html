@@ -1,0 +1,122 @@
+ 
+<html>
+  <head>
+    <title>WampServer 局域网访问配置</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">WampServer 局域网访问配置</h1>
+  <div class="post-meta">
+    <span>2016-08-30</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>让局域网内的其他设备（如 Pad 、手机）可以访问 WampServer 上的内容，将会非常便于测试不同设备的浏览效果。要做到这点，需要修改 Apache 配置文件，使服务器允许被局域网内的设备访问。</p>
+<a id="more"></a>
+
+<p>1、如果未在 WampServer 中配置虚拟主机过的情况下，直接在 http.conf 中找以下字段，一般在 <code>&lt;Directory&gt;</code> 标签内。将 Require local 修改为 Require all granted 即可。重启服务器后，局域网内的其他设备通过 IP 地址（如 192.168.1.1 ）访问。由于我的 WampSever 已配置过虚拟主机，未测试实际效果。</p>
+<pre class="line-numbers language-none"><code class="language-none"># onlineoffline tag - don&#39;t remove
+  Require all granted<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>2、如果 WampServer 已经配置了虚拟主机，在 httpd-vhosts.conf 中修改虚拟主机的配置。同样是将 Require local 修改为 Require all granted ，如果没有 <code>&lt;Directory&gt;</code> 标签就自己写一个。另外，修改端口号。重启服务器后，其他设备通过IP+端口号（如 192.168.1.1:8080 ）访问。</p>
+<pre class="line-numbers language-none"><code class="language-none">&lt;VirtualHost *:8080&gt;
+  ServerName example.com
+  DocumentRoot C:&#x2F;vhost&#x2F;example.com
+  &lt;Directory  &quot;C:&#x2F;vhost&#x2F;example.com&quot;&gt;
+    Options +Indexes +FollowSymLinks +MultiViews
+    AllowOverride All
+    Require all granted
+  &lt;&#x2F;Directory&gt;
+&lt;&#x2F;VirtualHost&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>此时局域网内的所有设备都可以通过IP+端口号访问这个项目，但服务器本机反而无法通过 hosts 绑定域名访问了。即使在 hosts 中添加相应端口号也无效。</p>
+<pre class="line-numbers language-none"><code class="language-none">&#x2F;&#x2F; 这是无效的
+127.0.0.1:8080 example.com<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>解决方法是在 httpd-vhosts.conf 中添加一个80端口的虚拟主机，仍然指向同一个项目路径。然后在 hosts 中做正常的域名绑定。PC 端就可以正常使用域名访问这个项目了。</p>
+<pre class="line-numbers language-none"><code class="language-none">&lt;VirtualHost *:80&gt;
+  ServerName example.com
+  DocumentRoot C:&#x2F;vhost&#x2F;example.com
+&lt;&#x2F;VirtualHost&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-none"><code class="language-none">127.0.0.1    example.com<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Canvas 不支持使用 CSS 设置尺寸
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Apache</a>
+    
+      <a class="post-tag">WampServer</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

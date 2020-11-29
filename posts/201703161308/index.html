@@ -1,0 +1,274 @@
+ 
+<html>
+  <head>
+    <title>Sass 快速入门</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">Sass 快速入门</h1>
+  <div class="post-meta">
+    <span>2017-03-16</span>
+    
+    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>第一次听说 Sass/Less 是在刚毕业时的面试，当时全然不知存在 CSS 预处理器这种东西，感到很羞愧。后来学了一点，发现确实蛮有意思，有不少特性可以提高效率或者让代码显得更优雅。</p>
+<a id="more"></a>
+
+<h3 id="安装-Sass"><a href="#安装-Sass" class="headerlink" title="安装 Sass"></a>安装 Sass</h3><p>由于 Sass 使用 Ruby 语言开发，在安装 Sass 之前，需要先安装 Ruby 。Win 系统可以下载 <a target="_blank" rel="noopener" href="http://rubyinstaller.org/downloads/">RubyInstaller </a>安装，安装时勾选 <em>Add Ruby executable to your PATH</em> 添加环境变量。</p>
+<p>安装后执行 Ruby 的命令行工具 <em>Start Command Prompt with Ruby</em> ，执行以下代码安装 Sass 。</p>
+<pre class="line-numbers language-rb" data-language="rb"><code class="language-rb">gem install sass<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>默认情况下 Sass 编译到中文会报错，解决该问题需要在配置文件中增加一句代码，指定编码为 utf-8 。</p>
+<pre class="line-numbers language-rb" data-language="rb"><code class="language-rb"># 配置文件参考路径
+# C:\Ruby23-x64\lib\ruby\gems\2.3.0\gems\sass-3.4.23\lib\sass.rb
+Encoding.default_external &#x3D; Encoding.find(&#39;utf-8&#39;)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="编译文件"><a href="#编译文件" class="headerlink" title="编译文件"></a>编译文件</h3><p>编译当前目录下的 style.scss 文件并输出 style.css 。</p>
+<pre class="line-numbers language-rb" data-language="rb"><code class="language-rb">sass style.scss style.css<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>编译 sass 目录下的文件并在 css 目录下输出 css 文件。</p>
+<pre class="line-numbers language-rb" data-language="rb"><code class="language-rb">sass sass&#x2F;:css&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>监听文件的修改并自动编译为 css 文件。</p>
+<pre class="line-numbers language-rb" data-language="rb"><code class="language-rb">sass –watch style.scss style.css<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="代码风格"><a href="#代码风格" class="headerlink" title="代码风格"></a>代码风格</h3><p>Sass 允许以指定的代码风格输出样式，只需在输出时带上 <code>--style</code> 参数。如果没有指定代码风格，默认使用嵌套（nested）风格输出。</p>
+<pre class="line-numbers language-rb" data-language="rb"><code class="language-rb">sass style.scss style.css --style nested
+sass style.scss style.css --style expanded
+sass style.scss style.css --style compact
+sass style.scss style.css --style compressed<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-scss" data-language="scss"><code class="language-scss"><span class="token comment">/* 嵌套 nested */</span>
+<span class="token selector">div </span><span class="token punctuation">&#123;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
+
+<span class="token comment">/* 膨胀 expanded */</span>
+<span class="token selector">div </span><span class="token punctuation">&#123;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">/* 紧凑 compact */</span>
+<span class="token selector">div </span><span class="token punctuation">&#123;</span> <span class="token property">width</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
+
+<span class="token comment">/* 压缩 compressed */</span>
+<span class="token selector">div</span><span class="token punctuation">&#123;</span><span class="token property">width</span><span class="token punctuation">:</span>100%<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p>使用 <code>$</code> 符号声明和调用变量。全局变量可在任何位置调用，局部变量只能在它的作用域内调用。</p>
+<pre class="line-numbers language-scss" data-language="scss"><code class="language-scss"><span class="token comment">/* 全局变量 */</span>
+<span class="token property"><span class="token variable">$small</span></span><span class="token punctuation">:</span> 14px<span class="token punctuation">;</span>
+<span class="token selector">div </span><span class="token punctuation">&#123;</span>
+  <span class="token property">font-size</span><span class="token punctuation">:</span> <span class="token variable">$small</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">/* 局部变量 */</span>
+<span class="token selector">div </span><span class="token punctuation">&#123;</span>
+  <span class="token property"><span class="token variable">$black</span></span><span class="token punctuation">:</span> #000<span class="token punctuation">;</span>
+  <span class="token property">color</span><span class="token punctuation">:</span> <span class="token variable">$black</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>相同类型的变量可以进行运算。需要注意的是，除法运算必须加括号才会被编译，这是因为 <code>/</code> 符号本身在 css 中已有其他含义。</p>
+<pre class="line-numbers language-scss" data-language="scss"><code class="language-scss"><span class="token selector">div </span><span class="token punctuation">&#123;</span>
+  <span class="token property">content</span><span class="token punctuation">:</span> <span class="token string">'一段'</span> <span class="token operator">+</span> <span class="token string">'文字'</span><span class="token punctuation">;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 100px <span class="token operator">+</span> 100px<span class="token punctuation">;</span>
+  <span class="token property">height</span><span class="token punctuation">:</span> 100px <span class="token operator">-</span> 50px<span class="token punctuation">;</span>
+  <span class="token property">padding</span><span class="token punctuation">:</span> 5px <span class="token operator">*</span> 2<span class="token punctuation">;</span>
+  <span class="token property">margin</span><span class="token punctuation">:</span> <span class="token punctuation">(</span>20px <span class="token operator">/</span> 2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="嵌套"><a href="#嵌套" class="headerlink" title="嵌套"></a>嵌套</h3><p>使用嵌套可以更直观地描述选择器的层级关系，提高代码可读性。</p>
+<pre class="line-numbers language-scss" data-language="scss"><code class="language-scss"><span class="token comment">/* 编译前 */</span>
+<span class="token selector">div </span><span class="token punctuation">&#123;</span>
+  <span class="token selector">img </span><span class="token punctuation">&#123;</span>
+    <span class="token property">width</span><span class="token punctuation">:</span> 100<span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">/* 编译后 */</span>
+<span class="token selector">div img </span><span class="token punctuation">&#123;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 100<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>使用嵌套可以更直观地描述具有相同前缀的属性。个人认为这项特性的意义不大，既不能有效减少代码，又不利于阅读代码。</p>
+<pre class="line-numbers language-scss" data-language="scss"><code class="language-scss"><span class="token comment">/* 编译前 */</span>
+<span class="token selector">div </span><span class="token punctuation">&#123;</span>
+  <span class="token selector">padding: </span><span class="token punctuation">&#123;</span>
+    <span class="token property">left</span><span class="token punctuation">:</span> 10px<span class="token punctuation">;</span>
+    <span class="token property">right</span><span class="token punctuation">:</span> 15px<span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">/* 编译后 */</span>
+<span class="token selector">div </span><span class="token punctuation">&#123;</span>
+  <span class="token property">padding-left</span><span class="token punctuation">:</span> 10px<span class="token punctuation">;</span>
+  <span class="token property">padding-right</span><span class="token punctuation">:</span> 15px<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在嵌套中使用 <code>&amp;</code> 可以引用上一级选择器，一般用于处理伪类。</p>
+<pre class="line-numbers language-scss" data-language="scss"><code class="language-scss"><span class="token comment">/* 编译前 */</span>
+<span class="token selector">div </span><span class="token punctuation">&#123;</span>
+  <span class="token selector"><span class="token parent important">&amp;</span>:before </span><span class="token punctuation">&#123;</span>
+    <span class="token property">content</span><span class="token punctuation">:</span> <span class="token string">"example"</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">/* 编译后 */</span>
+<span class="token selector">div:before </span><span class="token punctuation">&#123;</span>
+  <span class="token property">content</span><span class="token punctuation">:</span> <span class="token string">"example"</span><span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="混合"><a href="#混合" class="headerlink" title="混合"></a>混合</h3><p>使用 Mixin（混合）可以声明一个带参数的代码块，它很像一个方法，调用时将输出其中的声明。Mixin 的参数可以设置默认值。</p>
+<pre class="line-numbers language-scss" data-language="scss"><code class="language-scss"><span class="token comment">/* 声明一个Mixin */</span>
+<span class="token keyword">@mixin</span> my-mixin <span class="token punctuation">(</span><span class="token property"><span class="token variable">$color</span></span><span class="token punctuation">:</span> #000<span class="token punctuation">,</span> <span class="token property"><span class="token variable">$fontSize</span></span><span class="token punctuation">:</span> 14px<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token property">color</span><span class="token punctuation">:</span> <span class="token variable">$color</span><span class="token punctuation">;</span>
+  <span class="token property">font-size</span><span class="token punctuation">:</span> <span class="token variable">$fontSize</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token comment">/* 不传参数调用 */</span>
+<span class="token selector">div </span><span class="token punctuation">&#123;</span>
+  <span class="token keyword">@include</span> my-mixin<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token comment">/* 传参数调用 */</span>
+<span class="token selector">span </span><span class="token punctuation">&#123;</span>
+  <span class="token keyword">@include</span> <span class="token function">my-mixin</span><span class="token punctuation">(</span>#fff<span class="token punctuation">,</span> 18px<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-scss" data-language="scss"><code class="language-scss"><span class="token comment">/* 编译后 */</span>
+<span class="token selector">div </span><span class="token punctuation">&#123;</span>
+  <span class="token property">color</span><span class="token punctuation">:</span> #000<span class="token punctuation">;</span>
+  <span class="token property">font-size</span><span class="token punctuation">:</span> 14px<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
+<span class="token selector">span </span><span class="token punctuation">&#123;</span>
+  <span class="token property">color</span><span class="token punctuation">:</span> #fff<span class="token punctuation">;</span>
+  <span class="token property">font-size</span><span class="token punctuation">:</span> 18px<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在 Mixin 中可以使用 <code>if</code> 语句控制逻辑。</p>
+<pre class="line-numbers language-scss" data-language="scss"><code class="language-scss"><span class="token keyword">@mixin</span> my-mixin <span class="token punctuation">(</span><span class="token variable">$fontSize</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">@if</span> <span class="token punctuation">(</span><span class="token variable">$fontSize</span> <span class="token operator">==</span> <span class="token string">'large'</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">font-size</span><span class="token punctuation">:</span> 30px<span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token keyword">@else</span> <span class="token punctuation">&#123;</span>
+    <span class="token property">font-size</span><span class="token punctuation">:</span> 16px<span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p>使用 <code>@extend</code> 可以让一个选择器继承另一个选择器的所有声明。</p>
+<pre class="line-numbers language-scss" data-language="scss"><code class="language-scss"><span class="token comment">/* 编译前 */</span>
+<span class="token selector">.btn </span><span class="token punctuation">&#123;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span>
+  <span class="token property">padding</span><span class="token punctuation">:</span> 10px<span class="token punctuation">;</span>
+  <span class="token property">font-size</span><span class="token punctuation">:</span> 14px<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token selector">.btn-success </span><span class="token punctuation">&#123;</span>
+  <span class="token property">color</span><span class="token punctuation">:</span> #009688<span class="token punctuation">;</span>
+  <span class="token keyword">@extend</span> .btn<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">/* 编译后 */</span>
+<span class="token selector">.btn, .btn-success </span><span class="token punctuation">&#123;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span>
+  <span class="token property">padding</span><span class="token punctuation">:</span> 10px<span class="token punctuation">;</span>
+  <span class="token property">font-size</span><span class="token punctuation">:</span> 14px<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span>
+
+<span class="token selector">.btn-success </span><span class="token punctuation">&#123;</span>
+  <span class="token property">color</span><span class="token punctuation">:</span> #009688<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>一个包含 <code>%</code> 前缀的选择器被称为占位符选择器，这类选择器除非被继承，否则不会输出。</p>
+<pre class="line-numbers language-scss" data-language="scss"><code class="language-scss"><span class="token selector"><span class="token placeholder">%btn</span> </span><span class="token punctuation">&#123;</span>
+  <span class="token property">width</span><span class="token punctuation">:</span> 100%<span class="token punctuation">;</span>
+  <span class="token property">padding</span><span class="token punctuation">:</span> 10px<span class="token punctuation">;</span>
+  <span class="token property">font-size</span><span class="token punctuation">:</span> 14px<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>&lt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="插值"><a href="#插值" class="headerlink" title="插值"></a>插值</h3><p>使用 <code>#&#123;&#125;</code> 可以在选择器或属性的名称中调用变量。</p>
+<pre class="line-numbers language-scss" data-language="scss"><code class="language-scss"><span class="token comment">/* 编译前 */</span>
+<span class="token property"><span class="token variable">$type</span></span><span class="token punctuation">:</span> success<span class="token punctuation">;</span>
+<span class="token property"><span class="token variable">$side</span></span><span class="token punctuation">:</span> right<span class="token punctuation">;</span>
+<span class="token selector">.btn-<span class="token variable">#&#123;$type&#125;</span> </span><span class="token punctuation">&#123;</span>
+  <span class="token property">margin-<span class="token variable">#&#123;$side&#125;</span></span><span class="token punctuation">:</span> 10px<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">/* 编译后 */</span>
+<span class="token selector">.btn-success </span><span class="token punctuation">&#123;</span>
+  <span class="token property">margin-right</span><span class="token punctuation">:</span> 10px<span class="token punctuation">;</span> <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h3><p>Sass 中有两种注释，双斜杠开头的注释不会被输出到 css 文件中。</p>
+<pre class="line-numbers language-scss" data-language="scss"><code class="language-scss"><span class="token comment">// 这段注释不会输出</span>
+<span class="token comment">/* 这段注释将会输出 */</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>相关环境：Windows 10 x64 / Ruby 2.3 / Sass 3.4</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：将 WordPress 移动到子目录
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">CSS</a>
+    
+      <a class="post-tag">Sass</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

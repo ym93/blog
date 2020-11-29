@@ -1,0 +1,109 @@
+ 
+<html>
+  <head>
+    <title>解决无法用 localhost 连接 MySQL</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">解决无法用 localhost 连接 MySQL</h1>
+  <div class="post-meta">
+    <span>2016-12-23</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>今天尝试往云主机上迁移博客，遇到不少麻烦，其中就包括无法用 localhost 连接 MySQL 。用了一个晚上才得以解决，记录一下解决过程。</p>
+<p>第一步，检查 <code>/etc/hosts</code> 文件。确认 localhost 已映射到 127.0.0.1 ，否则添加正确的映射。经检查，确定 hosts 设置没有问题。</p>
+<a id="more"></a>
+
+<pre class="line-numbers language-none"><code class="language-none">127.0.0.1    localhost<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>第二步，尝试直接用 <code>mysql</code>命令登录。登录时指定主机为 localhost 。若无法登录，检查 MySQL 中的用户权限等设置。经测试，命令行可以登录，只是用 PHP 无法连接，基本锁定是 PHP 相关设置问题。</p>
+<pre class="line-numbers language-none"><code class="language-none">mysql -uusername -hlocalhost -ppassword<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>第三步，由于使用 localhost 和 127.0.0.1 连接数据库的机制不同，前者因使用 socket 而需要保证 .sock 文件路径配置正确。我的 php.ini 文件中设置的 socket 文件路径为空，这就是问题所在。编辑 php.ini 文件，根据使用的数据库连接拓展修改相应的设置，指向的 .sock 文件的路径应该和编译安装 MySQL 时设置的一致。</p>
+<pre class="line-numbers language-none"><code class="language-none">mysql.default_socket     &#x3D; &#x2F;usr&#x2F;local&#x2F;mysql5.6&#x2F;mysql.sock
+mysqli.default_socket    &#x3D; &#x2F;usr&#x2F;local&#x2F;mysql5.6&#x2F;mysql.sock
+pdo_mysql.default_socket &#x3D; &#x2F;usr&#x2F;local&#x2F;mysql5.6&#x2F;mysql.sock<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>相关环境：Aliyun ECS / CentOS 7 x64 / Apache 2.4 / MySQL 5.6 / PHP 7.1</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：编译安装 PHP 拓展
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">PHP</a>
+    
+      <a class="post-tag">MySQL</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

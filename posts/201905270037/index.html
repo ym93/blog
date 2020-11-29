@@ -1,0 +1,212 @@
+ 
+<html>
+  <head>
+    <title>混合开发：Android 与 JavaScript 的相互通信</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">混合开发：Android 与 JavaScript 的相互通信</h1>
+  <div class="post-meta">
+    <span>2019-05-27</span>
+    
+    <a class="post-meta-category" href="/categories/android">Android</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>现代移动应用开发已经广泛运用了 Hybrid 模式，催生了 Hybrid App（混合模式移动应用），即在原生壳中内嵌网页，部分功能由 HTML5 实现的移动应用。</p>
+<p>这种方案能大幅减少开发时间和成本，易于更新维护。因此以淘宝、京东为代表的电商 app，经常使用网页实现需灵活更新的页面。</p>
+<a id="more"></a>
+
+<p>Hybrid 的基础是原生与网页的相互通信。在 Android 平台可以认为是 Java 和 JavaScript 的相互调用。</p>
+<h2 id="Android-调用-JavaScript"><a href="#Android-调用-JavaScript" class="headerlink" title="Android 调用 JavaScript"></a>Android 调用 JavaScript</h2><h3 id="loadUrl"><a href="#loadUrl" class="headerlink" title="loadUrl"></a>loadUrl</h3><p>在 Android 中调用 JavaScript 最简单的方式是使用 <code>WebView.loadUrl</code> 方法。</p>
+<p><code>loadUrl</code> 用于加载给定的链接。在链接中使用 <code>javascript</code> 伪协议，浏览器将执行 <code>:</code> 后面的 JavaScript 代码。</p>
+<p>下面这行代码执行了 JS 中的 <code>showMessage</code> 函数：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">mWebView<span class="token punctuation">.</span><span class="token function">loadUrl</span><span class="token punctuation">(</span><span class="token string">"javascript:showMessage('Hello, Web!')"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>这种方式的缺点是无法取得返回值，适合不需要返回值的场景。</p>
+<h3 id="evaluateJavascript"><a href="#evaluateJavascript" class="headerlink" title="evaluateJavascript"></a>evaluateJavascript</h3><p>Android 4.4 以后提供了 <code>WebView.evaluateJavascript</code> 方法。它用于异步执行 JavaScript，当返回值非空时执行回调，据说有着比 <code>loadUrl</code> 更高的执行效率。</p>
+<p>下面这段代码同样执行了 JS 中的 <code>showMessage</code> 函数，并且能够在 <code>onReceiveValue</code> 方法中拿到返回值。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">mWebView<span class="token punctuation">.</span><span class="token function">evaluateJavascript</span><span class="token punctuation">(</span><span class="token string">"javascript:showMessage('Hello, Web!')"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">ValueCallback</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onReceiveValue</span><span class="token punctuation">(</span><span class="token class-name">String</span> value<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 打印返回值</span>
+    log<span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+
+<h2 id="JavaScript-调用-Android"><a href="#JavaScript-调用-Android" class="headerlink" title="JavaScript 调用 Android"></a>JavaScript 调用 Android</h2><h3 id="shouldOverrideUrlLoading"><a href="#shouldOverrideUrlLoading" class="headerlink" title="shouldOverrideUrlLoading"></a>shouldOverrideUrlLoading</h3><p><code>WebViewClient.shouldOverrideUrlLoading</code> 用于拦截即将加载的链接，重写默认行为。</p>
+<p>因此，我们可以事先约定一系列伪协议链接：</p>
+<pre class="line-numbers language-none"><code class="language-none">myapp:&#x2F;&#x2F;showToast?text&#x3D;Hello<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>然后在 Android 中拦截 WebView 加载的链接。对于符合约定格式的链接，执行相应的操作。对于其他链接，保持默认的加载行为。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token class-name">String</span> APP_SCHEME <span class="token operator">=</span> <span class="token string">"myapp:"</span><span class="token punctuation">;</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+mWebView<span class="token punctuation">.</span><span class="token function">setWebViewClient</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">WebViewClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">shouldOverrideUrlLoading</span><span class="token punctuation">(</span><span class="token class-name">WebView</span> view<span class="token punctuation">,</span> <span class="token class-name">String</span> url<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>url<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span>APP_SCHEME<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token comment">// 解析链接</span>
+            urlData <span class="token operator">=</span> <span class="token class-name">URLDecoder</span><span class="token punctuation">.</span><span class="token function">decode</span><span class="token punctuation">(</span>url<span class="token punctuation">.</span><span class="token function">substring</span><span class="token punctuation">(</span>APP_SCHEME<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"UTF-8"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">// 执行相应操作...</span>
+            <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+        <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在网页中调用时只需要当作一个重定向就够了。</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">window<span class="token punctuation">.</span>location<span class="token punctuation">.</span>href <span class="token operator">=</span> <span class="token string">'myapp://showToast?text=Hello'</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="addJavascriptInterface"><a href="#addJavascriptInterface" class="headerlink" title="addJavascriptInterface"></a>addJavascriptInterface</h3><p><code>WebView.addJavascriptInterface</code> 用于绑定接口，使 JavaScript 能够调用 Android 代码。</p>
+<p>简单地说，我们在 Android 里声明接口。接口包含我们想要暴露给网页调用的方法，它以对象的形式注入到 JavaScript 的 <code>Window</code> 对象下。最后，JavaScript 调用接口对象的方法，执行接口中的原生代码。</p>
+<p>首先创建一个接口类：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">WebAppInterface</span> <span class="token punctuation">&#123;</span>
+
+  <span class="token class-name">Context</span> mContext<span class="token punctuation">;</span>
+
+  <span class="token comment">// 初始化接口并设置上下文</span>
+  <span class="token class-name">WebAppInterface</span><span class="token punctuation">(</span><span class="token class-name">Context</span> c<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    mContext <span class="token operator">=</span> c<span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token comment">// 显示短消息的接口</span>
+  <span class="token annotation punctuation">@JavascriptInterface</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">showToast</span><span class="token punctuation">(</span><span class="token class-name">String</span> text<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name">Toast</span><span class="token punctuation">.</span><span class="token function">makeText</span><span class="token punctuation">(</span>mContext<span class="token punctuation">,</span> text<span class="token punctuation">,</span> <span class="token class-name">Toast</span><span class="token punctuation">.</span>LENGTH_SHORT<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>注意，Android 4.2 以上使用 <code>@JavascriptInterface</code> 注解的方法才会暴露给 JavaScript。</p>
+<p>然后向 WebView 添加这个接口，并将其命名为 <code>Android</code>。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">mWebView<span class="token punctuation">.</span><span class="token function">addJavascriptInterface</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">WebAppInterface</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"Android"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>当网页加载完成时，WebView 也将注入一个 <code>Window.Android</code> 对象。</p>
+<p>通过这个对象就可以调用接口中的原生方法了：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">Android<span class="token punctuation">.</span><span class="token function">showToast</span><span class="token punctuation">(</span><span class="token string">'Hello, Android!'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+
+
+<h2 id="使用-JsBridge"><a href="#使用-JsBridge" class="headerlink" title="使用 JsBridge"></a>使用 JsBridge</h2><p>JsBridge 是一个成熟的，用于原生和网页双向通信的开源库。它封装了上文提到的通信方式，并且提供包含传参、返回值和回调的完整方案。JsBridge 会向网页注入一个 <code>Window.WebViewJavascriptBridge</code>  对象。</p>
+<p>JsBridge 的使用方法非常简单。</p>
+<p>在布局文件中使用 <code>com.github.lzyzsd.jsbridge.BridgeWebView</code> 替代默认的 <code>WebView</code> 控件。</p>
+<p>接着注册一个 Java 处理器：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">webView<span class="token punctuation">.</span><span class="token function">registerHandler</span><span class="token punctuation">(</span><span class="token string">"showToast"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">BridgeHandler</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">handler</span><span class="token punctuation">(</span><span class="token class-name">String</span> data<span class="token punctuation">,</span> <span class="token class-name">CallBackFunction</span> function<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 执行原生代码...</span>
+    function<span class="token punctuation">.</span><span class="token function">onCallBack</span><span class="token punctuation">(</span><span class="token string">"return value"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在 JavaScript 中调用 Java 处理器：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">WebViewJavascriptBridge<span class="token punctuation">.</span><span class="token function">callHandler</span><span class="token punctuation">(</span><span class="token string">'showToast'</span><span class="token punctuation">,</span> <span class="token string">'Hello, Android!'</span><span class="token punctuation">,</span> <span class="token parameter">responseData</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// 打印返回值</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>responseData<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>类似的，我们也可以注册 JavaScript 处理器：</p>
+<pre class="line-numbers language-javascript" data-language="javascript"><code class="language-javascript">WebViewJavascriptBridge<span class="token punctuation">.</span><span class="token function">registerHandler</span><span class="token punctuation">(</span><span class="token string">'showMessage'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">data<span class="token punctuation">,</span> responseCallback</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// 执行网页脚本...</span>
+  <span class="token function">responseCallback</span><span class="token punctuation">(</span><span class="token string">'return value'</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>然后在 Java 中调用 JavaScript 处理器：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java">webView<span class="token punctuation">.</span><span class="token function">callHandler</span><span class="token punctuation">(</span><span class="token string">"showMessage"</span><span class="token punctuation">,</span> <span class="token string">"Hello, JavaScript!"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">CallBackFunction</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onCallBack</span><span class="token punctuation">(</span><span class="token class-name">String</span> data<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 打印返回值</span>
+    log<span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>访问 <a target="_blank" rel="noopener" href="https://github.com/lzyzsd/JsBridge">GitHub</a> 了解更多 JsBridge 的使用说明。</p>
+<p>相关环境：macOS 10.14 / Android Studio 3.3 / JsBridge 1.0</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Promise 的原理与简单实现
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Java</a>
+    
+      <a class="post-tag">JavaScript</a>
+    
+      <a class="post-tag">Hybrid App</a>
+    
+      <a class="post-tag">WebView</a>
+    
+      <a class="post-tag">JsBridge</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

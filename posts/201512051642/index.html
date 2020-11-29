@@ -1,0 +1,212 @@
+ 
+<html>
+  <head>
+    <title>Android 判断系统版本</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">Android 判断系统版本</h1>
+  <div class="post-meta">
+    <span>2015-12-05</span>
+    
+    <a class="post-meta-category" href="/categories/android">Android</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>在开发应用的过程中，有时会遇到一些匪夷所思的兼容性问题。同一个 Activity ，在不同版本的系统上，可能出现完全不一样的效果。</p>
+<p>例如：我遇到过，单边圆角形状在 Android4.0 上显示正常，但在 Android2.2 上出现 bug 。</p>
+<a id="more"></a>
+
+<img src="/img/posts/2015/12/android_system_version_1.png" class="side-by-side" width="220">
+
+<img src="/img/posts/2015/12/android_system_version_2.png" class="side-by-side" width="220">
+
+<p>这时候需要判断用户的系统版本，编写不同的代码。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token comment">// 判断系统版本是否在 Android 3.0 (Honeycomb) 以上。</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token class-name">Build</span><span class="token punctuation">.</span>VERSION<span class="token punctuation">.</span>SDK_INT <span class="token operator">>=</span> <span class="token class-name">Build</span><span class="token punctuation">.</span>VERSION_CODES<span class="token punctuation">.</span>HONEYCOMB<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+<span class="token number">2</span><span class="token comment">// Android 3.0及以上</span>
+<span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+<span class="token number">2</span><span class="token comment">// Android 3.0以下</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>Android 各系统版本对应的 SDK_INT 变量：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">class</span> VERSION_CODES <span class="token punctuation">&#123;</span>
+<span class="token number">2</span><span class="token comment">/**
+2 * Magic version number for a current development build, which has
+2 * not yet turned into an official release.
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> CUR_DEVELOPMENT <span class="token operator">=</span> <span class="token number">10000</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * October 2008: The original, first, version of Android.  Yay!
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> BASE <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * February 2009: First Android update, officially called 1.1.
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> BASE_1_1 <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * May 2009: Android 1.5.
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> CUPCAKE <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * September 2009: Android 1.6.
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> DONUT <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * November 2009: Android 2.0
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> ECLAIR <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * December 2009: Android 2.0.1
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> ECLAIR_0_1 <span class="token operator">=</span> <span class="token number">6</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * January 2010: Android 2.1
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> ECLAIR_MR1 <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * June 2010: Android 2.2
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> FROYO <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * November 2010: Android 2.3
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> GINGERBREAD <span class="token operator">=</span> <span class="token number">9</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * February 2011: Android 2.3.3.
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> GINGERBREAD_MR1 <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * February 2011: Android 3.0.
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> HONEYCOMB <span class="token operator">=</span> <span class="token number">11</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * May 2011: Android 3.1.
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> HONEYCOMB_MR1 <span class="token operator">=</span> <span class="token number">12</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * June 2011: Android 3.2.
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> HONEYCOMB_MR2 <span class="token operator">=</span> <span class="token number">13</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * October 2011: Android 4.0.
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> ICE_CREAM_SANDWICH <span class="token operator">=</span> <span class="token number">14</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * December 2011: Android 4.0.3.
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> ICE_CREAM_SANDWICH_MR1 <span class="token operator">=</span> <span class="token number">15</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * June 2012: Android 4.1.
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> JELLY_BEAN <span class="token operator">=</span> <span class="token number">16</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * Android 4.2: Moar jelly beans!
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> JELLY_BEAN_MR1 <span class="token operator">=</span> <span class="token number">17</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * Android 4.3: Jelly Bean MR2, the revenge of the beans.
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> JELLY_BEAN_MR2 <span class="token operator">=</span> <span class="token number">18</span><span class="token punctuation">;</span>
+
+<span class="token number">2</span><span class="token comment">/**
+2 * Android 4.4: KitKat, another tasty treat.
+2 */</span>
+<span class="token number">2</span>public <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> KITKAT <span class="token operator">=</span> <span class="token number">19</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Android 实现“再按一次退出程序”
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Android</a>
+    
+      <a class="post-tag">Java</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

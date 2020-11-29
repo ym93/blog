@@ -1,0 +1,105 @@
+ 
+<html>
+  <head>
+    <title>SSH 登录 VirtualBox 虚拟机</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">SSH 登录 VirtualBox 虚拟机</h1>
+  <div class="post-meta">
+    <span>2016-12-03</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>近期通过虚拟机学习服务端，感觉在 VirtualBox 窗口上操作虚拟机并不流畅，同时不能方便地从本机将文本复制到虚拟机。于是，我开始试图在本机 SSH 登录虚拟机，并直接在本机的命令行工具中操作。</p>
+<a id="more"></a>
+
+<p>查阅资料后发现可以用端口转发的方式实现。</p>
+<p>第一步，在 VirtualBox 界面中选中虚拟机，右键打开“设置”，然后切换到“网络”标签页。</p>
+<p>第二步，在网卡1的“高级”菜单中打开“端口转发”，点击加号按钮添加新的端口转发规则。将“主机端口”设为2222（本机任一未被占用的端口），“子系统端口”设为22（即默认的 SSH 端口），保存设置。</p>
+<p>第三步，打开命令行工具（如 Git Bash ），使用 SSH 命令登录到虚拟机。</p>
+<pre class="line-numbers language-none"><code class="language-none">ssh -p 2222 root@127.0.0.1<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>该命令表示使用 root 账号登录 IP 为127.0.0.1（即本机）的设备，服务端口为2222。由于本机的2222端口已被转发到虚拟机的22端口，所以实际上是登录的设备是虚拟机。此处使用的端口号可以是本机上任一未被占用的端口，只需保证与“端口转发”规则中设置的端口一致即可。</p>
+<p>相关环境：Windows 7 x64 / VirtualBox 5.1.8 / CentOS 7 / Git Bash</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：VirtualBox 创建 Linux 虚拟机
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">SSH</a>
+    
+      <a class="post-tag">虚拟机</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

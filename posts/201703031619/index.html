@@ -1,0 +1,138 @@
+ 
+<html>
+  <head>
+    <title>解决移动端 ES6 兼容问题</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">解决移动端 ES6 兼容问题</h1>
+  <div class="post-meta">
+    <span>2017-03-03</span>
+    
+    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>昨天完成了一个移动端页面，开始在不同设备上测试。结果在两部华为测试机（荣耀6、荣耀7）上出现了画面错乱的情况。开始还以为是浏览器内核太旧，不兼容部分 CSS3 特性，在增加了用于提高兼容性的语句后，问题仍未解决。</p>
+<a id="more"></a>
+
+<p>排查后发现 <strong>JavaScript 代码执行中断</strong> 了，但控制台未有任何警告或报错。</p>
+<p>原来，是因为我们现在写 JavaScript 时或多或少地用到了 ES6 语法。ES6 是2015年6月发布的 JavaScript 标准。而华为手机，至少在之前测试的两个机型上，由于无法理解新语法，索性 <strong>直接停止执行</strong> 了。</p>
+<p>值得一提的是，同事的 iPhone5s（2013年发布）竟然正确理解了新语法，可见苹果的系统更新还算良心。</p>
+<p>导致这两部设备“罢工”的 ES6 语法：</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token comment">// 对象内的方法可以简写</span>
+<span class="token keyword">var</span> object <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token function">method</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> <span class="token string">'Hello!'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 用箭头方式定义函数</span>
+<span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> b <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> <span class="token function-variable function">sum</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">a<span class="token punctuation">,</span> b</span><span class="token punctuation">)</span> <span class="token operator">=></span> a <span class="token operator">+</span> b<span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>要解决这一问题，可以使用 Google 的 <a target="_blank" rel="noopener" href="https://github.com/google/traceur-compiler">Traceur</a> 转码器，它会将新语法转成旧语法，再交给浏览器执行。</p>
+<pre class="line-numbers language-xhtml" data-language="xhtml"><code class="language-xhtml">&lt;!-- 在头部引入Traceur --&gt;
+&lt;script src&#x3D;&quot;https:&#x2F;&#x2F;google.github.io&#x2F;traceur-compiler&#x2F;bin&#x2F;traceur.js&quot;&gt;&lt;&#x2F;script&gt;
+&lt;script src&#x3D;&quot;https:&#x2F;&#x2F;google.github.io&#x2F;traceur-compiler&#x2F;bin&#x2F;BrowserSystem.js&quot;&gt;&lt;&#x2F;script&gt;
+&lt;script src&#x3D;&quot;https:&#x2F;&#x2F;google.github.io&#x2F;traceur-compiler&#x2F;src&#x2F;bootstrap.js&quot;&gt;&lt;&#x2F;script&gt;
+
+&lt;script type&#x3D;&quot;module&quot;&gt;
+  &#x2F;&#x2F; 这里的代码将被处理
+&lt;&#x2F;script&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>实际使用下来发现，虽然两部设备已经可以正常访问，但 Traceur 的体积并不小。引用这个库将使用户多耗费 2.8mb 流量，也意味着增加1秒以上的加载时间。</p>
+<p>所以，在代码量不多，且并不迫切需要使用新语法的情况下，最佳的解决方案还是把用到 ES6 语法的语句，全部改回去！</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token comment">// 传统方式声明对象的方法</span>
+<span class="token keyword">var</span> object <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+  <span class="token function-variable function">method</span><span class="token operator">:</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> <span class="token string">'Hello!'</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+
+<span class="token comment">// 传统方式定义函数</span>
+<span class="token keyword">var</span> a <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> b <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+<span class="token keyword">var</span> <span class="token function-variable function">sum</span> <span class="token operator">=</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span> <span class="token keyword">return</span> a <span class="token operator">+</span> b <span class="token punctuation">&#125;</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>相关环境：Windows 10 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：不用 JSSDK 自定义微信分享标题和缩略图
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">JavaScript</a>
+    
+      <a class="post-tag">ES6</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

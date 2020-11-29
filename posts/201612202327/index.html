@@ -1,0 +1,111 @@
+ 
+<html>
+  <head>
+    <title>编译安装 PHP 拓展</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">编译安装 PHP 拓展</h1>
+  <div class="post-meta">
+    <span>2016-12-20</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>在使用 PHP 的过程中可能用到各种拓展，包括 mbstring 等。我们可以按需安装拓展，这里以 mbstring 为例演示如何编译安装拓展。</p>
+<p>第一步，确认已安装必要依赖。</p>
+<a id="more"></a>
+
+<pre class="line-numbers language-none"><code class="language-none">yum install -y m4 autoconf<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>第二步，编译安装 mbstring 拓展。进入 PHP 源码下的 ext/mbstring 目录，使用 phpize 编译拓展。注意第二行的路径指向的是已安装好的 PHP 目录下的 bin 文件夹中的 phpize 文件。</p>
+<pre class="line-numbers language-none"><code class="language-none">cd ~&#x2F;php-7.1.0&#x2F;ext&#x2F;mbstring
+&#x2F;usr&#x2F;local&#x2F;php7.1&#x2F;bin&#x2F;phpize
+.&#x2F;configure -with-php-config&#x3D;&#x2F;usr&#x2F;local&#x2F;php7.1&#x2F;bin&#x2F;php-config
+make
+make install<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>看到以下提示说明拓展安装成功，Linux 可在拓展目录下找到新增的 mbstring.so 文件。</p>
+<pre class="line-numbers language-none"><code class="language-none">Installing shared extensions:     &#x2F;usr&#x2F;local&#x2F;php7.1&#x2F;lib&#x2F;php&#x2F;extensions&#x2F;no-debug-zts-20160303&#x2F;
+Installing header files:           &#x2F;usr&#x2F;local&#x2F;php7.1&#x2F;include&#x2F;php&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>第三步，编辑 php.ini ，启用相应的拓展，重启 Apache 。</p>
+<p>相关环境：Aliyun ECS / CentOS 7 x64 / Apache 2.4 / PHP 7.1</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Apache 禁止使用 IP 访问网站
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">PHP</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

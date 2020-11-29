@@ -1,0 +1,112 @@
+ 
+<html>
+  <head>
+    <title>在 Homestead 上安装 phpMyAdmin</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">在 Homestead 上安装 phpMyAdmin</h1>
+  <div class="post-meta">
+    <span>2016-10-29</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>近期使用 Homestead 作为开发环境，由于命令行方式操作数据库效率低（学艺不精），于是准备安装一个 GUI 工具来辅助学习/开发，首选已经熟练使用的 phpMyAdmin 。</p>
+<a id="more"></a>
+
+<p>第一步，<a target="_blank" rel="noopener" href="https://www.phpmyadmin.net/">下载</a> 最新版本的 phpMyAdmin ，解压到代码目录下。</p>
+<p>第二步，修改服务器的配置文件 <code>~\.homestead\Homestead.yaml</code> ，添加一个新的站点。</p>
+<pre class="line-numbers language-none"><code class="language-none">folders:
+  - map: ~&#x2F;Code
+    to: &#x2F;home&#x2F;vagrant&#x2F;Code
+sites:
+  - map: phpmyadmin.app
+    to: &#x2F;home&#x2F;vagrant&#x2F;Code&#x2F;phpmyadmin&#x2F;
+    ...<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>第三步，修改 hosts 文件，新增一行内容，注意 ip 需要和 Homestead 配置文件中的一致。</p>
+<pre class="line-numbers language-none"><code class="language-none">192.168.10.10 phpmyadmin.app<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>好了！现在访问 phpmyadmin.app 即可使用 phpMyAdmin 。</p>
+<p>相关环境：Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：局域网访问 Homestead 站点
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Homestead</a>
+    
+      <a class="post-tag">phpMyAdmin</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

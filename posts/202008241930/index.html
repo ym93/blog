@@ -1,0 +1,231 @@
+ 
+<html>
+  <head>
+    <title>我们如何优化移动端 web 下的数字输入体验</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">我们如何优化移动端 web 下的数字输入体验</h1>
+  <div class="post-meta">
+    <span>2020-08-24</span>
+    
+    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>做一个 H5 页面：</p>
+<ul>
+<li>让用户填写一些信息，包含验证码等数字。</li>
+<li>禁止输入数字以外的字符。</li>
+<li>限制输入长度，比如不能超过6位。</li>
+<li>最好能直接调起数字键盘，不要让用户手动切换。</li>
+</ul>
+<p>你会怎么做？</p>
+<a id="more"></a>
+
+<h2 id="Web-输入框之殇"><a href="#Web-输入框之殇" class="headerlink" title="Web 输入框之殇"></a>Web 输入框之殇</h2><h3 id="难以调起的数字键盘"><a href="#难以调起的数字键盘" class="headerlink" title="难以调起的数字键盘"></a>难以调起的数字键盘</h3><p>常规做法自然是使用 <code>&lt;input&gt;</code> 输入框。</p>
+<p>我们可以很容易实现限制字符长度，输入时移除不合法的字符：</p>
+<pre class="line-numbers language-html" data-language="html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">maxlength</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>6<span class="token punctuation">"</span></span> <span class="token attr-name">onkeyup</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>value = value.replace(/[^\d]/g, <span class="token punctuation">'</span><span class="token punctuation">'</span>)<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<img src="/img/posts/2020/08/mobile_input_text_input.png" class="round" width="600">
+
+
+<p>显然，现在还不会默认调起数字键盘，因为输入框的类型是 <code>text</code>。</p>
+<p>把输入框的类型改成 <code>number</code> 稳吗？</p>
+<img src="/img/posts/2020/08/mobile_input_number_input.png" class="round" width="600">
+
+<p>实际效果是这样的：</p>
+<ul>
+<li>Android 调起数字键盘，同时允许切换到拼音 / 英文 / 标点符号键盘。😅</li>
+<li>iOS 调起英文键盘，需手动切换到数字键盘。😨</li>
+</ul>
+<p>那么 iOS 有办法调起数字键盘吗？</p>
+<p>答案是肯定的：iOS 支持在 <code>text</code> 类型输入框，且使用 <code>pattern</code> 属性限制只能输入数字的情况下，默认调起数字键盘。</p>
+<pre class="line-numbers language-html" data-language="html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">pattern</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[0-9]*<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<img src="/img/posts/2020/08/mobile_input_with_pattern.png" class="round" width="600">
+
+
+<p>实际效果是这样的：</p>
+<ul>
+<li>Android 调起英文键盘（不支持）。😨</li>
+<li>iOS 调起数字键盘，且不能切换英文 / 拼音等键盘。😅</li>
+</ul>
+<p>有同学可能问：难道不能对 Android 和 iOS 用不同的代码实现吗？</p>
+<pre class="line-numbers language-html" data-language="html"><code class="language-html"><span class="token comment">&lt;!-- Android --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>number<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token comment">&lt;!-- iOS --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">pattern</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>[0-9]*<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>呃……虽说也就一个判断的事儿，问题是这里面其实还有不少其他副作用。</p>
+<h3 id="浏览器眼中的数字"><a href="#浏览器眼中的数字" class="headerlink" title="浏览器眼中的数字"></a>浏览器眼中的数字</h3><p>思考一个问题：验证码是一个数字吗？</p>
+<p><strong>准确地说，我们在业务中需要用户输入的，其实都是：由数字 0-9 构成的字符串</strong>。</p>
+<p>这和浏览器理解的 <code>&lt;input type=&quot;number&quot;&gt;</code> 式的数字输入，完全不是一回事儿 —— <strong>浏览器眼中的 number 是数学上有意义的数。</strong></p>
+<img src="/img/posts/2020/08/mobile_input_number_issues.png" class="round" width="600">
+
+<p>我举几个例子：</p>
+<ul>
+<li>可以输入 <code>e</code> —— 数学中的常数，约等于 2.71828，也可以输入 <code>+</code> / <code>-</code>。</li>
+<li>以 <code>0</code> 开头、包含多个 <code>.</code>、包含多个 <code>e</code> 都是非法数，值会变成空字符串。</li>
+<li>无法用  <code>maxlength</code> 限制长度，因为数没有字符长度的概念。</li>
+<li>浏览器可能在输入框的尾部提供“步进箭头”。</li>
+<li>…</li>
+</ul>
+<p>所以，对于 Android 设备来说，<code>&lt;input type=&quot;number&quot;&gt;</code> 仍不是理想方案。</p>
+<p>而另一边，面向 iOS 的 <code>&lt;input type=&quot;text&quot; pattern=&quot;[0-9]*&quot;&gt;</code> 方案问题也很明显：这个数字键盘没有小数点，也没有办法调出小数点。这就无法满足金额输入的需求。</p>
+<p>我们不得不继续探索，最好能有一个纯 web 方案，即使在无原生增强（hybrid）的情况下，也能提供较好的数字输入体验。</p>
+<h2 id="抛弃系统键盘"><a href="#抛弃系统键盘" class="headerlink" title="抛弃系统键盘"></a>抛弃系统键盘</h2><p>为了能总是“调起正确的键盘”，并在 Android 和 iOS 下表现一致，我们首先参考微信小程序的原生键盘设计，在 web 下实现了包含4种风格的键盘组件：基础数字键盘，带小数点的数字键盘，身份证键盘以及金额键盘。</p>
+<img src="/img/posts/2020/08/mobile_input_number_keyboard.png" class="round">
+
+<p>随之而来的问题是，这些键盘应该如何与 web 原生元素  <code>&lt;input&gt;</code> 联动？</p>
+<p>在用户触摸输入框时，拦截系统键盘，取而代之以在 web 侧实现的键盘 —— 这个操作的权限对网页来说过大了，纯网页恐怕无法做到。</p>
+<p><strong>必须在 web 侧实现一个接近 <code>&lt;input&gt;</code> 体验的“虚拟输入框”和数字键盘组件联动。</strong></p>
+<p>我们不可能为 <code>text</code> 类型实现一个支持中 / 英文 / 符号输入的键盘，所以 <code>text</code> 类型的输入仍会由系统键盘完成。</p>
+<p>这意味着虚拟输入框的体验必须有一个比较高的标准：</p>
+<ul>
+<li><p>虚拟输入框和 <code>&lt;input&gt;</code> 放在一个页面上不会违和，甚至能以假乱真。</p>
+</li>
+<li><p>虚拟输入框和 <code>&lt;input&gt;</code> 交替聚焦（web / 原生键盘接力弹出），要避免不协调，或者用户同一时间看见两个“键盘”的尴尬。</p>
+</li>
+<li><p>虚拟输入框过于接近页面底部时，页面要能像使用 <code>&lt;input&gt;</code> 那样被键盘“顶起”。</p>
+</li>
+</ul>
+<p>能实现吗？当时小朋友脑袋上冒了特别多的问号。</p>
+<img src="/img/posts/2020/08/mobile_input_quetion_mark_cat.jpg" class="round" width="200">
+
+<h2 id="造一个输入框"><a href="#造一个输入框" class="headerlink" title="造一个输入框"></a>造一个输入框</h2><p>最终我们完全用 web 技术再造了一个（专用于输入数字的）虚拟输入框组件。</p>
+<p>整个输入框的结构都由 <code>&lt;div&gt;</code> 和 <code>&lt;span&gt;</code> 构成。</p>
+<img src="/img/posts/2020/08/mobile_input_virtual_input.png" class="round">
+
+<h3 id="光标"><a href="#光标" class="headerlink" title="光标"></a>光标</h3><img src="/img/posts/2020/08/mobile_input_virtual_input_cursor.gif" class="round" width="600">
+
+<p>组件内部维护一个“光标位置”状态，是模拟光标移动操作的基础。</p>
+<p>虚拟输入框中的每个字符都包含左 / 右两块热区，当触摸左侧时，说明用户期望把“光标”移动到这个字符的前面，反之则是后面。</p>
+<p>外层容器负责监听滑动手势，模拟光标微调操作。</p>
+<h3 id="聚焦和失焦"><a href="#聚焦和失焦" class="headerlink" title="聚焦和失焦"></a>聚焦和失焦</h3><img src="/img/posts/2020/08/mobile_input_virtual_input_focus_blur.gif" class="round" width="600">
+
+<p>聚焦的逻辑很简单。用户触摸输入框时，根据触摸点初始化”光标“位置，弹出数字键盘与虚拟输入框联动。</p>
+<p>失焦的逻辑就会稍微复杂一些了。</p>
+<p>我们先梳理一下输入框需要在哪些情况下失去焦点：</p>
+<ul>
+<li>用户触摸输入框之外的区域时</li>
+<li>用户滚动页面时（即使触摸点落在输入框区域内）</li>
+<li>页面切换时</li>
+</ul>
+<p>首先，监听 <code>&lt;body&gt;</code> 的触摸、滑动事件，如果手势的目标元素不是虚拟输入框 / 数字键盘（及其后代元素），应该失去焦点。</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>el<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>keyboardEl<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">_blur</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>接着处理页面切换。前端路由一般使用 hash 模式实现，监听 hash 变化基本可以满足需求了。</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js">window<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'hashchange'</span><span class="token punctuation">,</span> <span class="token keyword">this</span><span class="token punctuation">.</span>_blur<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="自动上推页面"><a href="#自动上推页面" class="headerlink" title="自动上推页面"></a>自动上推页面</h3><img src="/img/posts/2020/08/mobile_input_virtual_input_adjust_position.gif" class="round" width="450">
+
+<p>如果输入框（的底边）比数字键盘（的顶边）距离视区顶部的距离更远，说明输入框下方的空间不够，需要对根元素（相当于页面）做一个向上偏移。</p>
+<p>在偏移量的计算上，还需要考虑兼容 iOS 底部安全区（数字键盘高度的变化)，以及在输入框和键盘之间留一点 buffer。</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token keyword">if</span> <span class="token punctuation">(</span>keyboardTop <span class="token operator">&lt;</span> bottom <span class="token operator">+</span> cursorSpacing <span class="token operator">+</span> safeAreaInsetBottom<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">const</span> translateY <span class="token operator">=</span> <span class="token operator">-</span><span class="token punctuation">(</span>bottom <span class="token operator">-</span> keyboardTop <span class="token operator">+</span> cursorSpacing <span class="token operator">+</span> safeAreaInsetBottom<span class="token punctuation">)</span>
+  rootEl<span class="token punctuation">.</span>style<span class="token punctuation">.</span>transition <span class="token operator">=</span> <span class="token string">'all .2s ease-out'</span>
+  rootEl<span class="token punctuation">.</span>style<span class="token punctuation">.</span>transform <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">translateY(</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>translateY<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">px)</span><span class="token template-punctuation string">`</span></span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="防止“双键盘”"><a href="#防止“双键盘”" class="headerlink" title="防止“双键盘”"></a>防止“双键盘”</h3><img src="/img/posts/2020/08/mobile_input_virtual_input_mix.gif" class="round" width="450">
+
+<p>设想这样一种场景：页面上同时存在使用系统键盘的  <code>&lt;input&gt;</code>，和使用 web 内的数字键盘的虚拟输入框。这两种输入框交替聚焦会造成同一时间存在两个键盘的问题 —— 必须想办法让 web 键盘在系统键盘收起后再弹出。</p>
+<p>不同手机的系统键盘，收起动画不尽相同，很难用一个固定的毫秒延迟解决问题。</p>
+<p>目前的解决方案是：在虚拟输入框聚焦前，轮询视窗高度和屏幕高度的比例。若视窗高度不足屏幕高度的三分之二，则认为可能有系统键盘尚未收起，延迟聚焦。不是很严谨的判断，但基本解决了问题，即使偶现视觉 bug 也不明显。</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token keyword">const</span> min <span class="token operator">=</span> window<span class="token punctuation">.</span>screen<span class="token punctuation">.</span>height <span class="token operator">*</span> <span class="token number">0.66</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>window<span class="token punctuation">.</span>innerHeight <span class="token operator">&lt;</span> min<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">let</span> time <span class="token operator">=</span> <span class="token number">0</span>
+  <span class="token keyword">let</span> interval <span class="token operator">=</span> <span class="token function">setInterval</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>window<span class="token punctuation">.</span>innerHeight <span class="token operator">></span> min <span class="token operator">||</span> time <span class="token operator">>=</span> <span class="token number">500</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token function">clearInterval</span><span class="token punctuation">(</span>interval<span class="token punctuation">)</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span><span class="token function">_focus</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+      time <span class="token operator">+=</span> <span class="token number">50</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token number">50</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="降低使用成本"><a href="#降低使用成本" class="headerlink" title="降低使用成本"></a>降低使用成本</h3><p>为了避免使用者需要费时间思考用哪个输入框，或者在需要调整样式时做重复工作，有必要再封装一下。</p>
+<p>最终，我们把 web 原生与虚拟输入框装进了同一个组件 —— Input 中，共享清除按钮、提示文本实现，提供高度一致的 Props 和自定义事件。对于“键盘”，组件也会依据不同的输入框类型（<code>type</code> 属性），切换方案。</p>
+<pre class="line-numbers language-html" data-language="html"><code class="language-html"><span class="token comment">&lt;!-- 文本类型：web 原生输入框 + 系统键盘 --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>we-input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+<span class="token comment">&lt;!-- 数字类型：web 虚拟输入框 + web 数字键盘 --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>we-input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>number<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>说了这么多优点，这个数字输入方案有缺点吗？当然有了。</p>
+<p>比方说不支持系统键盘的“短信验证码填充”能力，还有一些细节仍有优化空间…… 然而 <strong>前端实现往往做不到“我全都要”，在输入这件事上我们还是选择了：给用户一个对的键盘。</strong></p>
+<p>最近我们正在一个面向第三方 app 开发的 hybrid 项目中使用它，全面用于姓名、手机号、身份证、验证码等各种字段的输入，目前看来效果还可以。</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Chrome 扩展从入门到 HelloWorld
+      </a>
+     
+  </div>
+  <!--  -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

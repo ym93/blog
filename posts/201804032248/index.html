@@ -1,0 +1,188 @@
+ 
+<html>
+  <head>
+    <title>使用 Node.js 部署静态资源到七牛云</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">使用 Node.js 部署静态资源到七牛云</h1>
+  <div class="post-meta">
+    <span>2018-04-03</span>
+    
+    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>在最近的一个项目中，为了缩短加载时间，同时减轻服务器的压力，我们决定将前端静态资源全数放到七牛云上。更新内容时只需上传 <code>static</code> 目录下的所有文件（使用 webpack 打包），然后发布 <code>index.html</code> 到网站根目录即可。</p>
+<a id="more"></a>
+
+<p>我决定使用 Node.js 上传资源，方便之后和 webpack 的打包脚本整合到一起，优化工作流。</p>
+<p>安装七牛云 Node.js SDK：</p>
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">npm install qiniu --save<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>新建一个脚本 <code>build/deploy.js</code>，引入相关包。<code>fs</code> 用于读取文件和文件夹。</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token keyword">const</span> fs <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'fs'</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> qiniu <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'qiniu'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<p>声明常量：</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token comment">// 授权秘钥</span>
+<span class="token keyword">const</span> accessKey <span class="token operator">=</span> <span class="token string">'&#123;你的七牛云 AccessKey&#125;'</span>
+<span class="token keyword">const</span> secretKey <span class="token operator">=</span> <span class="token string">'&#123;你的七牛云 SecretKey&#125;'</span>
+
+<span class="token comment">// 存储空间名称</span>
+<span class="token keyword">const</span> bucket <span class="token operator">=</span> <span class="token string">'&#123;你的 Bucket 名称&#125;'</span>
+
+<span class="token comment">// 要上传的资源目录</span>
+<span class="token keyword">const</span> staticPath <span class="token operator">=</span> <span class="token string">'dist/static'</span>
+
+<span class="token comment">// 上传后的文件前缀</span>
+<span class="token keyword">const</span> prefix <span class="token operator">=</span> <span class="token string">'static'</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>配置 Bucket 所在的区域，然后生成上传对象 <code>formUploader</code>，同时实例化上传时需要的 <code>mac</code>、<code>putExtra</code> 对象。<code>mac</code> 用于验证身份，<code>putExtra</code> 用于在上传时传额外参数。</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token comment">// 创建鉴权对象</span>
+<span class="token keyword">const</span> mac <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">qiniu<span class="token punctuation">.</span>auth<span class="token punctuation">.</span>digest<span class="token punctuation">.</span>Mac</span><span class="token punctuation">(</span>accessKey<span class="token punctuation">,</span> secretKey<span class="token punctuation">)</span>
+
+<span class="token comment">// 创建并修改配置对象(Zone_z0=华东 Zone_z1=华北 Zone_z2=华南 Zone_na0=北美)</span>
+<span class="token keyword">const</span> config <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">qiniu<span class="token punctuation">.</span>conf<span class="token punctuation">.</span>Config</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+config<span class="token punctuation">.</span>zone <span class="token operator">=</span> qiniu<span class="token punctuation">.</span>zone<span class="token punctuation">.</span>Zone_z2
+
+<span class="token comment">// 创建额外内容对象</span>
+<span class="token keyword">const</span> putExtra <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">qiniu<span class="token punctuation">.</span>form_up<span class="token punctuation">.</span>PutExtra</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment">// 创建表单上传对象</span>
+<span class="token keyword">const</span> formUploader <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">qiniu<span class="token punctuation">.</span>form_up<span class="token punctuation">.</span>FormUploader</span><span class="token punctuation">(</span>config<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+<p>定义上传单个文件的方法：</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token comment">// 文件上传方法</span>
+<span class="token keyword">function</span> <span class="token function">uploadFile</span> <span class="token punctuation">(</span><span class="token parameter">localFile</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// 配置上传到七牛云的完整路径</span>
+  <span class="token keyword">const</span> key <span class="token operator">=</span> localFile<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span>staticPath<span class="token punctuation">,</span> prefix<span class="token punctuation">)</span>
+  <span class="token keyword">const</span> options <span class="token operator">=</span> <span class="token punctuation">&#123;</span>
+    scope<span class="token operator">:</span> bucket <span class="token operator">+</span> <span class="token string">":"</span> <span class="token operator">+</span> key
+  <span class="token punctuation">&#125;</span>
+  <span class="token keyword">const</span> putPolicy <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">qiniu<span class="token punctuation">.</span>rs<span class="token punctuation">.</span>PutPolicy</span><span class="token punctuation">(</span>options<span class="token punctuation">)</span>
+  <span class="token comment">// 生成上传凭证</span>
+  <span class="token keyword">const</span> uploadToken <span class="token operator">=</span> putPolicy<span class="token punctuation">.</span><span class="token function">uploadToken</span><span class="token punctuation">(</span>mac<span class="token punctuation">)</span>
+  <span class="token comment">// 上传文件</span>
+  formUploader<span class="token punctuation">.</span><span class="token function">putFile</span><span class="token punctuation">(</span>uploadToken<span class="token punctuation">,</span> key<span class="token punctuation">,</span> localFile<span class="token punctuation">,</span> putExtra<span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token parameter">respErr<span class="token punctuation">,</span>
+    respBody<span class="token punctuation">,</span> respInfo</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>respErr<span class="token punctuation">)</span> <span class="token keyword">throw</span> respErr
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'已上传: '</span><span class="token punctuation">,</span> respBody<span class="token punctuation">.</span>key<span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>定义上传文件夹的方法：</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token comment">// 目录上传方法</span>
+<span class="token keyword">function</span> <span class="token function">uploadDirectory</span> <span class="token punctuation">(</span><span class="token parameter">dirPath</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  fs<span class="token punctuation">.</span><span class="token function">readdir</span><span class="token punctuation">(</span>dirPath<span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> files</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token keyword">throw</span> err
+    <span class="token comment">// 遍历目录下的内容</span>
+    files<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token parameter">item</span> <span class="token operator">=></span> <span class="token punctuation">&#123;</span>
+      <span class="token keyword">let</span> path <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>dirPath<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token string">/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">$&#123;</span>item<span class="token interpolation-punctuation punctuation">&#125;</span></span><span class="token template-punctuation string">`</span></span>
+      fs<span class="token punctuation">.</span><span class="token function">stat</span><span class="token punctuation">(</span>path<span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">err<span class="token punctuation">,</span> stats</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token keyword">throw</span> err
+        <span class="token comment">// 是目录就接着遍历 否则上传</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>stats<span class="token punctuation">.</span><span class="token function">isDirectory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token function">uploadDirectory</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span>
+        <span class="token keyword">else</span> <span class="token function">uploadFile</span><span class="token punctuation">(</span>path<span class="token punctuation">,</span> item<span class="token punctuation">)</span> 
+      <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>在脚本的最后，执行 <code>uploadDirectory</code> 方法开始上传：</p>
+<pre class="line-numbers language-js" data-language="js"><code class="language-js">fs<span class="token punctuation">.</span><span class="token function">exists</span><span class="token punctuation">(</span>staticPath<span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token parameter">exists</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>exists<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'目录不存在！'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+  <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'开始上传...'</span><span class="token punctuation">)</span>
+    <span class="token function">uploadDirectory</span><span class="token punctuation">(</span>staticPath<span class="token punctuation">)</span>
+  <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>运行脚本：</p>
+<pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">node build&#x2F;deploy.js<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>相关环境：macOS 10.13 / Node.js 8.9 / npm 5.6</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：记博客更换域名并迁移至 GitHub Pages
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">JavaScript</a>
+    
+      <a class="post-tag">Node.js</a>
+    
+      <a class="post-tag">对象存储</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

@@ -1,0 +1,124 @@
+ 
+<html>
+  <head>
+    <title>Laravel 使用 SMTP 发送邮件</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">Laravel 使用 SMTP 发送邮件</h1>
+  <div class="post-meta">
+    <span>2016-11-06</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>Laravel 基于 SwiftMailer 库提供了一套邮件 API 。我在阅读文档后尝试使用 SMTP 发送邮件，并测试成功，下面简单记录一下过程。</p>
+<a id="more"></a>
+
+<p>第一步，修改 .env 文件中的邮件设置，包括邮件驱动、服务器地址、端口、用户名、密码。邮件驱动自然是 smtp ，其他选项根据你的邮箱填写。</p>
+<pre class="line-numbers language-none"><code class="language-none">MAIL_DRIVER&#x3D;smtp
+MAIL_HOST&#x3D;smtp.example.com
+MAIL_PORT&#x3D;25
+MAIL_USERNAME&#x3D;example@example.com
+MAIL_PASSWORD&#x3D;example<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>第二步，创建一个视图文件，作为邮件正文的来源。例如，我新建了 resources/views/emails/content.blade.php 并在里面添加了一些文本。</p>
+<p>第三步，在控制器中调用 Mail 门面的 <code>send</code> 方法发送邮件。</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token comment">// 导入命名空间</span>
+<span class="token keyword">use</span> <span class="token package">Mail</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<pre class="line-numbers language-php" data-language="php"><code class="language-php">Mail<span class="token punctuation">:</span><span class="token punctuation">:</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'emails.content'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token single-quoted-string string">'data'</span><span class="token operator">=</span><span class="token operator">></span><span class="token variable">$data</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token keyword">function</span><span class="token punctuation">(</span><span class="token variable">$m</span><span class="token punctuation">)</span><span class="token keyword">use</span><span class="token punctuation">(</span><span class="token variable">$email</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+  <span class="token comment">// 设置发件邮箱、发件姓名、收件邮箱</span>
+  <span class="token variable">$m</span><span class="token operator">-</span><span class="token operator">></span><span class="token function">from</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'example@example.com'</span><span class="token punctuation">,</span><span class="token single-quoted-string string">'Example'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span><span class="token function">to</span><span class="token punctuation">(</span><span class="token variable">$email</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 设置邮件标题</span>
+  <span class="token variable">$m</span><span class="token operator">-</span><span class="token operator">></span><span class="token function">subject</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'Subject'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>send</code> 方法的第一个参数是要引用的视图，第二个参数是要传给视图的参数，第三个参数是用来设置邮件的匿名函数。<code>send</code> 方法始终返回1，无论 SMTP 服务器最终是否发送成功，这点我是使用一个不可能存在的收件地址测试的，说明其返回值仅表示成功与服务器通信。</p>
+<p>对于传给视图的参数，可以这样在视图文件中输出：（参考 Blade 模板引擎用法）</p>
+<pre class="line-numbers language-none"><code class="language-none">密码重置链接：&#123;&#123; $data &#125;&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>另外，在匿名函数中设置邮件时，你可以使用 <code>env</code>方法引用 .env 文件中的参数。这样，如果以后需要更换 SMTP 账号，只需修改 .env 文件即可。</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$m</span><span class="token operator">-</span><span class="token operator">></span><span class="token function">from</span><span class="token punctuation">(</span><span class="token function">env</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'MAIL_USERNAME'</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">env</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'CUS_MAILALIAS'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>相关环境：Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：Laravel 框架操作数据库
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Laravel</a>
+    
+      <a class="post-tag">SMTP</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

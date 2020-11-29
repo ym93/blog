@@ -1,0 +1,156 @@
+ 
+<html>
+  <head>
+    <title>为你的网站开启 HTTPS</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">为你的网站开启 HTTPS</h1>
+  <div class="post-meta">
+    <span>2017-02-17</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>HTTPS 是一种网络协议，是在 HTTP 协议的基础上增加了 SSL 层，用于通信过程中的数据加密。因此我习惯把 https 开头的链接称为安全链接。国内的百度和淘宝早已实现全站开启 HTTPS ，其他大部分知名站点也至少会在用户登录时使用它。</p>
+<a id="more"></a>
+
+<p>由于众所周知的原因，包括但不限于：现代浏览器暗示用户非 http 链接不安全，电信运营商可能给页面强行植入内容，搜索引擎更愿意收录安全链接。使得为网站开启 HTTPS 显得越来越有必要。当然最主要的原因还是我（处女座）无法容忍自己的站点缺一把小锁，于是我决定在自己的服务器上启用 HTTPS 。</p>
+<img src="/img/posts/2017/02/https_installed.png" class="" width="480" title="启用 SSL 后的浏览效果">
+
+<h3 id="申请SSL证书"><a href="#申请SSL证书" class="headerlink" title="申请SSL证书"></a>申请SSL证书</h3><p>SSL 证书是由受浏览器信任的机构颁发的数字证书，申请证书的过程即是验证网站所有者身份的过程。该证书分4个等级，等级越高验证越严格、费用越昂贵，同时浏览器越认为你值得信任。申请SSL证书的渠道很多，也有不少机构签发免费证书，可以说各有优缺点，这里不加赘述。</p>
+<h3 id="服务器配置SSL"><a href="#服务器配置SSL" class="headerlink" title="服务器配置SSL"></a>服务器配置SSL</h3><p>确认你的 Web 引擎已经安装过 SSL 模块，并且已将证书和私钥上传到服务端。</p>
+<p>以 Nginx 引擎为例，编辑站点的 .conf 配置文件。由于 HTTPS 服务使用443端口，首先需要增加对443端口的监听。然后添加 SSL 的相关配置，包括配置证书及私钥的路径、使用的协议等。具体以证书颁发机构提供的示例为准。完成后重启 Web 引擎。</p>
+<pre class="line-numbers language-none"><code class="language-none">server &#123;
+  listen 80;
+  listen 443;
+  root &#x2F;web&#x2F;example;
+  server_name example.com www.example.com;
+  index  index.html index.php index.htm;
+  location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ &#123;
+    expires max;
+    log_not_found off;
+  &#125;
+  ...
+
+  ssl on;
+  ssl_certificate &#x2F;cert&#x2F;example.pem;
+  ssl_certificate_key &#x2F;cert&#x2F;example.key;
+  ssl_session_timeout 5m;
+  ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  ssl_prefer_server_ciphers on;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="开放443端口"><a href="#开放443端口" class="headerlink" title=" 开放443端口"></a> 开放443端口</h3><p>如果上一步配置正确的话，你应该已经可以使用 https 链接访问站点了。如果无法正常访问，可能是服务器没有开放相应的端口。</p>
+<p>以 CentOS7 为例：</p>
+<pre class="line-numbers language-none"><code class="language-none"># 运行防火墙
+systemctl start firewalld
+# 开放80端口
+firewall-cmd --add-port&#x3D;80&#x2F;tcp
+# 开放443端口
+firewall-cmd --add-port&#x3D;443&#x2F;tcp<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="强制使用-HTTPS"><a href="#强制使用-HTTPS" class="headerlink" title=" 强制使用 HTTPS"></a> 强制使用 HTTPS</h3><p>开放端口后，使用 <code>https://example.com</code> 和 <code>http://example.com</code> 都已可以正常访问。</p>
+<p>要让用户默认使用安全链接，需要添加重写规则，强制 http 访问重定向到 https 。以 Nginx 为例：</p>
+<pre class="line-numbers language-none"><code class="language-none">server &#123;
+  listen 80;
+  server_name example.com www.example.com;
+  return 301 https:&#x2F;&#x2F;$server_name$request_uri;
+&#125;
+server &#123;
+  listen 443;
+  root &#x2F;web&#x2F;example;
+  server_name example.com www.example.com;
+  ...
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>最后，如果网站中引用的任何资源文件（图片、样式、脚本）使用了 http 链接，都会导致浏览器降低信任等级并打印警告。你需要用 https 或自适应协议写法替换：</p>
+<pre class="line-numbers language-none"><code class="language-none">&#x2F;&#x2F; 使用https协议
+&lt;link rel&#x3D;&quot;icon&quot; href&#x3D;&quot;https:&#x2F;&#x2F;example.com&#x2F;favicon.png&quot; sizes&#x3D;&quot;32x32&quot;&gt;
+&#x2F;&#x2F; 自动使用当前页面协议
+&lt;link rel&#x3D;&quot;icon&quot; href&#x3D;&quot;&#x2F;&#x2F;example.com&#x2F;favicon.png&quot; sizes&#x3D;&quot;32x32&quot;&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>ENV: Aliyun ECS / CentOS 7 x64 / Nginx 1.8 / PHP 5.6 / WordPress 4.7</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：使用 Laravel Excel 导入导出 Excel & CSV
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Nginx</a>
+    
+      <a class="post-tag">SSL</a>
+    
+      <a class="post-tag">HTTPS</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

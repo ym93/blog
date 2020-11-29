@@ -1,0 +1,230 @@
+ 
+<html>
+  <head>
+    <title>原生 SQL 语句操作 SQLite 数据库</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">原生 SQL 语句操作 SQLite 数据库</h1>
+  <div class="post-meta">
+    <span>2015-11-08</span>
+    
+    <a class="post-meta-category" href="/categories/android">Android</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>如果你既不具备数据库基础，又对 SQLite 没有任何了解，建议你先阅读相关文章补充一下理论知识。如果你具备数据库基础、希望更直接地了解 SQLite ，那么接下来的内容可能正是你想要的。</p>
+<a id="more"></a>
+
+<p>在 Android 中操作 SQLite 数据库有两种方式：使用封装的 API 、直接执行原生 SQL 语句。</p>
+<p>在这个 demo 中我将直接使用原生 SQL 语句操作数据库。</p>
+<!-- more -->
+
+<p>新建一个应用并命名为 <em>SQLitePractice</em> ，创建默认的 Activity 。不用修改布局，使用 LogCat 输出日志来监控代码的执行。</p>
+<p>在 AndroidManifest.xml 中添加权限：</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token operator">&lt;</span>manifest xmlns<span class="token operator">:</span>android<span class="token operator">=</span><span class="token string">"http://schemas.android.com/apk/res/android"</span>
+  <span class="token keyword">package</span><span class="token operator">=</span><span class="token string">"com.caiyiming.sqlitepractice"</span>
+  android<span class="token operator">:</span>versionCode<span class="token operator">=</span><span class="token string">"1"</span>
+  android<span class="token operator">:</span>versionName<span class="token operator">=</span><span class="token string">"1.0"</span> <span class="token operator">></span>
+  <span class="token operator">&lt;</span><span class="token keyword">uses</span><span class="token operator">-</span>permission android<span class="token operator">:</span>name<span class="token operator">=</span><span class="token string">"android.permission.WRITE_EXTERNAL_STORAGE"</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span><span class="token keyword">uses</span><span class="token operator">-</span>permission<span class="token operator">></span>
+  <span class="token operator">&lt;</span><span class="token keyword">uses</span><span class="token operator">-</span>permission android<span class="token operator">:</span>name<span class="token operator">=</span><span class="token string">"android.permission.MOUNT_UNMOUNT_FILESYSTEMS"</span><span class="token operator">></span><span class="token operator">&lt;</span><span class="token operator">/</span><span class="token keyword">uses</span><span class="token operator">-</span>permission<span class="token operator">></span>
+  <span class="token operator">&lt;</span><span class="token keyword">uses</span><span class="token operator">-</span>sdk
+    android<span class="token operator">:</span>minSdkVersion<span class="token operator">=</span><span class="token string">"8"</span>
+    android<span class="token operator">:</span>targetSdkVersion<span class="token operator">=</span><span class="token string">"19"</span> <span class="token operator">/</span><span class="token operator">></span>
+  <span class="token operator">&lt;</span>application
+    android<span class="token operator">:</span>allowBackup<span class="token operator">=</span><span class="token string">"true"</span>
+    android<span class="token operator">:</span>icon<span class="token operator">=</span><span class="token string">"@drawable/ic_launcher"</span>
+    android<span class="token operator">:</span>label<span class="token operator">=</span><span class="token string">"@string/app_name"</span>
+    android<span class="token operator">:</span>theme<span class="token operator">=</span><span class="token string">"@style/AppTheme"</span> <span class="token operator">></span>
+    <span class="token operator">&lt;</span>activity
+      android<span class="token operator">:</span>name<span class="token operator">=</span><span class="token string">".MainActivity"</span>
+      android<span class="token operator">:</span>label<span class="token operator">=</span><span class="token string">"@string/app_name"</span> <span class="token operator">></span>
+      <span class="token operator">&lt;</span>intent<span class="token operator">-</span>filter<span class="token operator">></span>
+        <span class="token operator">&lt;</span>action android<span class="token operator">:</span>name<span class="token operator">=</span><span class="token string">"android.intent.action.MAIN"</span> <span class="token operator">/</span><span class="token operator">></span>
+        <span class="token operator">&lt;</span>category android<span class="token operator">:</span>name<span class="token operator">=</span><span class="token string">"android.intent.category.LAUNCHER"</span> <span class="token operator">/</span><span class="token operator">></span>
+      <span class="token operator">&lt;</span><span class="token operator">/</span>intent<span class="token operator">-</span>filter<span class="token operator">></span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>activity<span class="token operator">></span>
+  <span class="token operator">&lt;</span><span class="token operator">/</span>application<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>manifest<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>编写 MainActivity.java 文件。</p>
+<p>添加 <code>SQLitePractice</code> 方法用于执行测试代码，它将在 Activity 的 <code>onCreate</code> 方法中被执行。每执行一步操作，判断是否成功并使用 LogCat 输出日志。</p>
+<pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainActivity</span> <span class="token keyword">extends</span> <span class="token class-name">Activity</span> <span class="token punctuation">&#123;</span>
+
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span><span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">setContentView</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>layout<span class="token punctuation">.</span>activity_main<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token class-name">SQLitePractice</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">&#125;</span>
+
+  <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token class-name">SQLitePractice</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+    <span class="token class-name">String</span> mSQL<span class="token punctuation">;</span>
+    <span class="token class-name">Cursor</span> mCursor<span class="token punctuation">;</span>
+    <span class="token class-name">String</span> mId <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> mUsername <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token class-name">String</span> mPassword <span class="token operator">=</span> <span class="token keyword">null</span><span class="token punctuation">;</span>
+    <span class="token comment">// 创建文件夹</span>
+    <span class="token class-name">File</span> mFolder  <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">File</span><span class="token punctuation">(</span><span class="token string">"/data/data/com.caiyiming.sqlitepractice/databases/"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>mFolder<span class="token punctuation">.</span><span class="token function">exists</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      mFolder<span class="token punctuation">.</span><span class="token function">mkdirs</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">// 创建数据库</span>
+    <span class="token class-name">SQLiteDatabase</span> mDB<span class="token punctuation">;</span>
+    mDB <span class="token operator">=</span> <span class="token class-name">SQLiteDatabase</span><span class="token punctuation">.</span><span class="token function">openOrCreateDatabase</span><span class="token punctuation">(</span><span class="token string">"/data/data/com.caiyiming.sqlitepractice/databases/user.db"</span><span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mDB<span class="token punctuation">.</span><span class="token function">isOpen</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"数据库打开成功！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"数据库打开失败！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">// 创建数据表</span>
+    mSQL <span class="token operator">=</span> <span class="token string">"CREATE TABLE IF NOT EXISTS user(_id Integer Primary Key Autoincrement, username Text, password Text)"</span><span class="token punctuation">;</span>
+    mDB<span class="token punctuation">.</span><span class="token function">execSQL</span><span class="token punctuation">(</span>mSQL<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mSQL <span class="token operator">=</span> <span class="token string">"SELECT * FROM sqlite_master WHERE name='user'"</span><span class="token punctuation">;</span>
+    mCursor <span class="token operator">=</span> mDB<span class="token punctuation">.</span><span class="token function">rawQuery</span><span class="token punctuation">(</span>mSQL<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mCursor<span class="token punctuation">.</span><span class="token function">getCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">!=</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"数据表创建成功！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"数据表创建失败！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">// 插入数据</span>
+    mSQL <span class="token operator">=</span> <span class="token string">"SELECT * FROM user WHERE username='小蔡'"</span><span class="token punctuation">;</span>
+    mCursor <span class="token operator">=</span> mDB<span class="token punctuation">.</span><span class="token function">rawQuery</span><span class="token punctuation">(</span>mSQL<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mCursor<span class="token punctuation">.</span><span class="token function">getCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">==</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      mSQL <span class="token operator">=</span> <span class="token string">"INSERT INTO user('username','password') VALUES('小蔡', '0123456789')"</span><span class="token punctuation">;</span>
+      mDB<span class="token punctuation">.</span><span class="token function">execSQL</span><span class="token punctuation">(</span>mSQL<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mCursor<span class="token punctuation">.</span><span class="token function">getCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">!=</span><span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"数据插入成功！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"数据插入成功！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">// 查询数据</span>
+    mSQL <span class="token operator">=</span> <span class="token string">"SELECT * FROM user WHERE username='小蔡'"</span><span class="token punctuation">;</span>
+    mCursor <span class="token operator">=</span> mDB<span class="token punctuation">.</span><span class="token function">rawQuery</span><span class="token punctuation">(</span>mSQL<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mCursor<span class="token punctuation">.</span><span class="token function">moveToFirst</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      mId <span class="token operator">=</span> mCursor<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span>mCursor<span class="token punctuation">.</span><span class="token function">getColumnIndex</span><span class="token punctuation">(</span><span class="token string">"_id"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mUsername <span class="token operator">=</span> mCursor<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span>mCursor<span class="token punctuation">.</span><span class="token function">getColumnIndex</span><span class="token punctuation">(</span><span class="token string">"username"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mPassword <span class="token operator">=</span> mCursor<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span>mCursor<span class="token punctuation">.</span><span class="token function">getColumnIndex</span><span class="token punctuation">(</span><span class="token string">"password"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"查询数据成功！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"编号:"</span><span class="token operator">+</span>mId<span class="token operator">+</span><span class="token string">", 用户:"</span><span class="token operator">+</span>mUsername<span class="token operator">+</span><span class="token string">", 密码:"</span><span class="token operator">+</span>mPassword<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"查询数据失败！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">// 修改数据</span>
+    mSQL <span class="token operator">=</span> <span class="token string">"UPDATE  user SET password='9876543210' WHERE username='小蔡'"</span><span class="token punctuation">;</span>
+    mDB<span class="token punctuation">.</span><span class="token function">execSQL</span><span class="token punctuation">(</span>mSQL<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mSQL <span class="token operator">=</span> <span class="token string">"SELECT * FROM user WHERE username='小蔡'"</span><span class="token punctuation">;</span>
+    mCursor <span class="token operator">=</span> mDB<span class="token punctuation">.</span><span class="token function">rawQuery</span><span class="token punctuation">(</span>mSQL<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mCursor<span class="token punctuation">.</span><span class="token function">moveToFirst</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mUsername <span class="token operator">=</span> mCursor<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span>mCursor<span class="token punctuation">.</span><span class="token function">getColumnIndex</span><span class="token punctuation">(</span><span class="token string">"username"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mPassword <span class="token operator">=</span> mCursor<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span>mCursor<span class="token punctuation">.</span><span class="token function">getColumnIndex</span><span class="token punctuation">(</span><span class="token string">"password"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>mPassword<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"9876543210"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"数据修改成功！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"编号:"</span><span class="token operator">+</span>mId<span class="token operator">+</span><span class="token string">", 用户:"</span><span class="token operator">+</span>mUsername<span class="token operator">+</span><span class="token string">", 密码:"</span><span class="token operator">+</span>mPassword<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"修改数据失败！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"编号:"</span><span class="token operator">+</span>mId<span class="token operator">+</span><span class="token string">", 用户:"</span><span class="token operator">+</span>mUsername<span class="token operator">+</span><span class="token string">", 密码:"</span><span class="token operator">+</span>mPassword<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">// 删除数据</span>
+    mSQL <span class="token operator">=</span> <span class="token string">"DELETE FROM user WHERE username='小蔡'"</span><span class="token punctuation">;</span>
+    mDB<span class="token punctuation">.</span><span class="token function">execSQL</span><span class="token punctuation">(</span>mSQL<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    mSQL <span class="token operator">=</span> <span class="token string">"SELECT * FROM user WHERE username='小蔡'"</span><span class="token punctuation">;</span>
+    mCursor <span class="token operator">=</span> mDB<span class="token punctuation">.</span><span class="token function">rawQuery</span><span class="token punctuation">(</span>mSQL<span class="token punctuation">,</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>mCursor<span class="token punctuation">.</span><span class="token function">moveToFirst</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"删除数据成功！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">// 关闭数据库</span>
+    mDB<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>mDB<span class="token punctuation">.</span><span class="token function">isOpen</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"数据库关闭成功！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span> <span class="token keyword">else</span><span class="token punctuation">&#123;</span>
+      <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"MainActivity"</span><span class="token punctuation">,</span> <span class="token string">"数据库关闭失败！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+  <span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>执行程序，新建一个标签为”MainActivity”的筛选，观察 LogCat 输出的日志。</p>
+<img src="/img/posts/2015/11/android_sqlite.png" class="" width="480" title="控制台日志">
+
+<p>通过 LogCat 日志可以了解到，代码中对 SQLite 数据库的操作都已经执行了。</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：使用 ViewPager 实现页面滑动
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">Android</a>
+    
+      <a class="post-tag">Java</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>

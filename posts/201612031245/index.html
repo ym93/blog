@@ -1,0 +1,99 @@
+ 
+<html>
+  <head>
+    <title>VirtualBox 创建 Linux 虚拟机</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
+    <link rel="stylesheet" href="/libs/prism/prism.default.css">
+    <link rel="stylesheet" href="/css/index.css">
+  <meta name="generator" content="Hexo 5.2.0"></head>
+  <body ontouchstart="">
+    <div class="head">
+  <div class="header">
+    <div class="title">
+      <a href="./"></a>
+        ymcai
+        <!-- <img src="/img/site_title.png"> -->
+      </a>
+    </div>
+    <div class="menu">
+      <a href="/">
+        <span class="menu-item">首页</span>
+      </a>
+      <a href="/categories">
+        <span class="menu-item">分类</span>
+      </a>
+      <a href="/about">
+        <span class="menu-item">关于</span>
+      </a>
+    </div>
+  </div>
+</div>
+    <div class="body">
+  <div class="container">
+     
+
+<div class="post-header">
+  <h1 class="post-title">VirtualBox 创建 Linux 虚拟机</h1>
+  <div class="post-meta">
+    <span>2016-12-03</span>
+    
+    <a class="post-meta-category" href="/categories/back-end">后端</a>
+    
+  </div>
+</div>
+<div class="post-body">
+  <p>第一步，下载 CentOS 镜像。<a target="_blank" rel="noopener" href="http://www.centos.org/">访问</a> CentOS 官方网站，下载 ISO 镜像文件。</p>
+<p>第二步，新建虚拟机。在 VittualBox 中点击“新建”，设置名称为“CentOS”。可以看到类型和版本已被 VirtualBox 自动改成了“Linux”和“Red Hat (64-bit)”。一路继续直到创建完成即可。</p>
+<a id="more"></a>
+
+<p>第三步，安装 CentOS 系统。在 VittualBox 中点击“启动”，选中本地镜像文件并启动，在字符界面中使用方向键选中“Install CentOS 7”后回车。在随后出现的图形界面中，设置语言为简体中文，在安装位置中选择本地标准磁盘，在网络和主机名中开启以太网，然后开始安装。</p>
+<p>第四步，完成 CentOS 配置。设置 ROOT 密码并创建用户，然后点击“完成配置”，等待 CentOS 配置完成后重启即可。</p>
+<p>相关环境：Windows 7 x64 / VirtualBox 5.1.8</p>
+
+</div>
+
+<div class="page-footer">
+  <div class="page-footer-links">
+    <a class="page-footer-link" href="javascript:history.back()">返回</a>
+    
+      <a class="page-footer-link" href="">
+        下一篇：使用 CSS 实现 DIV 垂直居中
+      </a>
+     
+  </div>
+  <!-- 
+    <div class="post-tags">
+    
+      <a class="post-tag">虚拟机</a>
+    
+  </div>
+   -->
+</div>
+
+  </div>
+</div>
+    <div class="foot">
+  <div class="footer">
+    <span class="copyright">©️2020 ymcai.xyz</span>
+    <a href="http://www.beian.miit.gov.cn" target="_blank">粤ICP备20041235 </a>
+  </div>
+</div>
+
+<script type="text/javascript">
+function wrapTables() {
+  var nodes = document.body.querySelectorAll('table');
+  for (var i = 0; i < nodes.length; i++) {
+    var table = nodes[i];
+    var wrapEl = document.createElement('div');
+    wrapEl.className = 'table-wrap';
+    table.parentNode.replaceChild(wrapEl, table);
+    wrapEl.appendChild(table)
+  }
+};
+wrapTables();
+</script>
+  </body>
+</html>
