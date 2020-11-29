@@ -1,7 +1,7 @@
 ---
 title: Laravel 使用 SMTP 发送邮件
 categories:
-  - Web Back-end
+  - back-end
 date: 2016-11-06 16:01:44
 tags:
   - Laravel

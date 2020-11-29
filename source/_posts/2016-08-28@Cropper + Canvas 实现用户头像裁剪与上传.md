@@ -1,7 +1,7 @@
 ---
 title: Cropper + Canvas 实现用户头像裁剪与上传
 categories:
-  - Web Front-end
+  - web-front-end
 date: 2016-08-28 23:14:24
 tags:
   - Canvas

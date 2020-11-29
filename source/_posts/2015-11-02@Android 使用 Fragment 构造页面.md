@@ -1,7 +1,7 @@
 ---
 title: Android 使用 Fragment 构造页面
 categories:
-  - Android
+  - android
 date: 2015-11-02 22:34:33
 tags:
   - Android

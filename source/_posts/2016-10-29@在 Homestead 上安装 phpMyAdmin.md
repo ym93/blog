@@ -1,7 +1,7 @@
 ---
 title: 在 Homestead 上安装 phpMyAdmin
 categories:
-  - Web Back-end
+  - back-end
 date: 2016-10-29 12:36:39
 tags:
   - Homestead

@@ -1,7 +1,7 @@
 ---
 title: 解决 json_encode 中文乱码
 categories:
-  - Web Back-end
+  - back-end
 date: 2016-09-10 17:29:00
 tags:
   - PHP

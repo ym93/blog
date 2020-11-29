@@ -1,7 +1,7 @@
 ---
 title: VirtualBox 创建 Linux 虚拟机
 categories:
-  - Web Back-end
+  - back-end
 date: 2016-12-03 12:45:17
 tags:
   - 虚拟机

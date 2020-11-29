@@ -2,7 +2,7 @@
 title: Serverless 上车指南
 date: 2019-11-24 13:01:51
 categories:
-  - Web Back-end
+  - back-end
 tags:
   - Serverless
   - FaaS

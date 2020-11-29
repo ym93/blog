@@ -2,7 +2,7 @@
 title: Laravel 使用 JWT 实现用户认证
 date: 2017-06-11 13:00:33
 categories:
-  - Web Back-end
+  - back-end
 tags:
   - Laravel
   - JWT

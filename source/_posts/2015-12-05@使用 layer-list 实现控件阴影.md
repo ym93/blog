@@ -1,7 +1,7 @@
 ---
 title: 使用 layer-list 实现控件阴影
 categories:
-  - Android
+  - android
 date: 2015-12-05 21:05:56
 tags:
   - Android

@@ -1,7 +1,7 @@
 ---
 title: Fragment onResume 方法无效问题
 categories:
-  - Android
+  - android
 date: 2016-02-07 13:17:22
 tags:
   - Android

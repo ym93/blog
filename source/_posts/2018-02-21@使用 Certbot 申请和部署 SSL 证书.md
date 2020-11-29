@@ -2,7 +2,7 @@
 title: 使用 Certbot 申请和部署 SSL 证书
 date: 2018-02-21 16:38:45
 categories:
-  - Web Back-end
+  - back-end
 tags:
   - SSL
   - HTTPS

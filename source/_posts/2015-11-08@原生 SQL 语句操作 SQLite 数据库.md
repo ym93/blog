@@ -1,7 +1,7 @@
 ---
 title: 原生 SQL 语句操作 SQLite 数据库
 categories:
-  - Android
+  - android
 date: 2015-11-08 12:15:40
 tags:
   - Android

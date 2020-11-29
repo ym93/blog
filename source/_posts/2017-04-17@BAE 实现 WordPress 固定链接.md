@@ -1,7 +1,7 @@
 ---
 title: BAE 实现 WordPress 固定链接
 categories:
-  - Web Back-end
+  - back-end
 date: 2017-04-17 00:54:05
 tags:
   - WordPress

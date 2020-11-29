@@ -7,7 +7,7 @@ tags:
   - Java
   - JavaScript
 categories:
-  - Android
+  - android
 date: 2019-05-27 00:37:22
 ---
 

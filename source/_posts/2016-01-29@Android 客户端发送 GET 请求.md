@@ -1,7 +1,7 @@
 ---
 title: Android 客户端发送 GET 请求
 categories:
-  - Android
+  - android
 date: 2016-01-29 22:10:47
 tags:
   - Android

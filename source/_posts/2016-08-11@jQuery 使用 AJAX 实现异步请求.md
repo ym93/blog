@@ -1,7 +1,7 @@
 ---
 title: 使用 jQuery 实现 AJAX 异步请求
 categories:
-  - Web Front-end
+  - web-front-end
 date: 2016-08-11 22:42:09
 tags:
   - jQuery

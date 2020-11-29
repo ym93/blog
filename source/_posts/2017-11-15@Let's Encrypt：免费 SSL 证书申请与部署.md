@@ -2,7 +2,7 @@
 title: Let's Encrypt：免费 SSL 证书申请与部署
 date: 2017-11-15 14:32:17
 categories:
-  - Web Back-end
+  - back-end
 tags:
   - SSL
   - HTTPS

@@ -4,7 +4,7 @@ tags:
   - Chrome
   - WebComponents
 categories:
-  - Web Front-end
+  - web-front-end
 date: 2019-12-21 01:26:05
 ---
 

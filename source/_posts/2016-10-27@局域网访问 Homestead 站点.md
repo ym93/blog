@@ -1,7 +1,7 @@
 ---
 title: 局域网访问 Homestead 站点
 categories:
-  - Web Back-end
+  - back-end
 date: 2016-10-27 14:24:26
 tags:
   - Homestead

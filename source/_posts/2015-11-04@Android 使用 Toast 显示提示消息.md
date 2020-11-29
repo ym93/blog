@@ -1,7 +1,7 @@
 ---
 title: Android 使用 Toast 显示提示消息
 categories:
-  - Android
+  - android
 date: 2015-11-04 10:34:38
 tags:
   - Android

@@ -1,7 +1,7 @@
 ---
 title: Canvas 不支持使用 CSS 设置尺寸
 categories:
-  - Web Front-end
+  - web-front-end
 date: 2016-08-28 23:47:11
 tags:
   - HTML

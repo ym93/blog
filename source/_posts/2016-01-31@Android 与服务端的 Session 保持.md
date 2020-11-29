@@ -1,7 +1,7 @@
 ---
 title: Android 与服务端的 Session 保持
 categories:
-  - Android
+  - android
 date: 2016-01-31 20:07:54
 tags:
   - Android
