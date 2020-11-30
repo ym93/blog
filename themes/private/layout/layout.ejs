@@ -1,7 +1,23 @@
-<% // 布局 %> 
+<%
+  let isPost = Boolean(page.categories)
+  if (page.archive) {
+    page.title = '归档'
+    if (page.year) page.title = page.year
+    if (page.month) page.title += '-' + page.month
+  }
+  else if (page.category) {
+    const category = theme.categories.find(item => item.id === page.category)
+    page.title = category.title
+  }
+  else if (page.tag) page.title = page.tag
+%> 
 <html build-time="<%- moment().format('YYYY-MM-DD HH:mm') %>">
   <head>
-    <title><%- page.title || config.title %></title>
+    <% if (isPost) { %>
+      <title><%- page.title %></title>
+    <% } else { %>
+      <title><%- page.title ? page.title + ' | ' + config.title : config.title %></title>
+    <% } %>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">

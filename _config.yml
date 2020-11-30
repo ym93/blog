@@ -104,6 +104,8 @@ theme: private
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
-  repo: https://github.com/ym93/blog.git
-  branch: dist
+  repo: https://gitee.com/caiyiming/ymcai.xyz-dist.git
+  branch: master
+  # repo: https://github.com/ymcai-sz/blog.git
+  # branch: dist
 
