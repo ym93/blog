@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
     <link rel="stylesheet" href="/libs/prism/prism.default.css">
     <link rel="stylesheet" href="/css/index.css">
@@ -13,10 +14,7 @@
     <div class="head">
   <div class="header">
     <div class="title">
-      <a href="./"></a>
-        ymcai
-        <!-- <img src="/img/site_title.png"> -->
-      </a>
+      <a href="/"></a>ymcai</a>
     </div>
     <div class="menu">
       <a href="/">
@@ -40,11 +38,12 @@
   <div class="post-meta">
     <span>2016-09-12</span>
     
-    <a class="post-meta-category" href="/categories/back-end">后端</a>
+      
+      <a class="post-meta-category" href="/categories/categories/back-end">后端</a>
     
   </div>
 </div>
-<div class="post-body">
+<div class="post-body main-body">
   <p>在 Apache Rewrite 中，如果定义的规则中包含了自定义 GET 参数，原有的 GET 参数就会消失。</p>
 <p>例如，下面这条规则生效后，访问 <a target="_blank" rel="noopener" href="http://www.example.com/mike">www.example.com/mike</a> 实际上是访问 <a target="_blank" rel="noopener" href="http://www.example.com/index.php?url=mike">www.example.com/index.php?url=mike</a> ，index.php 可以接收到参数 url ，这个 GET 参数实际上是我们在重写时自定义的。</p>
 <a id="more"></a>
@@ -54,8 +53,15 @@
 <p>如果访问的时候加上其他参数（如 <a target="_blank" rel="noopener" href="http://www.example.com/mike?param=1%EF%BC%89">www.example.com/mike?param=1）</a> ，index.php 仍旧只能接收到参数 url ，无法接收链接中的其他参数。</p>
 <p>要解决这个问题，只要在重写规则里加上参数 %{QUERY_STRING} ，处理请求的页面即可收到原有链接中的所有参数，重写规则示例如下。</p>
 <pre class="line-numbers language-none"><code class="language-none">RewriteRule ^([a-zA-Z\d]+)$ index.php?url&#x3D;$1&amp;%&#123;QUERY_STRING&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+  
+    <div class="post-tags">
+    
+      
+      <a class="post-tag" href="/tags/Apache">Apache</a>
+    
+  </div>
+  
 </div>
-
 <div class="page-footer">
   <div class="page-footer-links">
     <a class="page-footer-link" href="javascript:history.back()">返回</a>
@@ -65,13 +71,6 @@
       </a>
      
   </div>
-  <!-- 
-    <div class="post-tags">
-    
-      <a class="post-tag">Apache</a>
-    
-  </div>
-   -->
 </div>
 
   </div>

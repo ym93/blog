@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
     <link rel="stylesheet" href="/libs/prism/prism.default.css">
     <link rel="stylesheet" href="/css/index.css">
@@ -13,10 +14,7 @@
     <div class="head">
   <div class="header">
     <div class="title">
-      <a href="./"></a>
-        ymcai
-        <!-- <img src="/img/site_title.png"> -->
-      </a>
+      <a href="/"></a>ymcai</a>
     </div>
     <div class="menu">
       <a href="/">
@@ -40,11 +38,12 @@
   <div class="post-meta">
     <span>2017-01-23</span>
     
-    <a class="post-meta-category" href="/categories/others">其他</a>
+      
+      <a class="post-meta-category" href="/categories/categories/others">其他</a>
     
   </div>
 </div>
-<div class="post-body">
+<div class="post-body main-body">
   <p>在使用 Git 的过程中经常需要用到 SSH Key 进行身份验证，即一组公钥、私钥文件，避免每次 Push 代码都需要输入密码。通常将公钥提供给 Github/OSChina 等代码托管平台，之后在使用 Git 提交代码时便会自动将云端的公钥与本地的私钥进行比对。无论是 Windows 还是 Linux 系统，SSH Key 都存放在 <code>~\.ssh</code> 目录下。</p>
 <a id="more"></a>
 
@@ -64,8 +63,18 @@ Host git.oschina.net
   HostName git.oschina.net
   User your_name
   IdentityFile ~&#x2F;.ssh&#x2F;id_rsa_oschina<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+  
+    <div class="post-tags">
+    
+      
+      <a class="post-tag" href="/tags/Git">Git</a>
+    
+      
+      <a class="post-tag" href="/tags/SSH">SSH</a>
+    
+  </div>
+  
 </div>
-
 <div class="page-footer">
   <div class="page-footer-links">
     <a class="page-footer-link" href="javascript:history.back()">返回</a>
@@ -75,15 +84,6 @@ Host git.oschina.net
       </a>
      
   </div>
-  <!-- 
-    <div class="post-tags">
-    
-      <a class="post-tag">Git</a>
-    
-      <a class="post-tag">SSH</a>
-    
-  </div>
-   -->
 </div>
 
   </div>

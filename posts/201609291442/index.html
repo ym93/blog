@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
     <link rel="stylesheet" href="/libs/prism/prism.default.css">
     <link rel="stylesheet" href="/css/index.css">
@@ -13,10 +14,7 @@
     <div class="head">
   <div class="header">
     <div class="title">
-      <a href="./"></a>
-        ymcai
-        <!-- <img src="/img/site_title.png"> -->
-      </a>
+      <a href="/"></a>ymcai</a>
     </div>
     <div class="menu">
       <a href="/">
@@ -40,18 +38,19 @@
   <div class="post-meta">
     <span>2016-09-29</span>
     
-    <a class="post-meta-category" href="/categories/back-end">后端</a>
+      
+      <a class="post-meta-category" href="/categories/categories/back-end">后端</a>
     
   </div>
 </div>
-<div class="post-body">
+<div class="post-body main-body">
   <p>近期使用 Cookie 实现网站的登陆保持功能，期间也遇到一些问题。</p>
 <p>1、新建</p>
 <pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token function">setcookie</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span>value<span class="token punctuation">,</span>expire<span class="token punctuation">,</span>path<span class="token punctuation">,</span>domain<span class="token punctuation">,</span>secure<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <a id="more"></a>
 
 <p>使用 <code>setcookie</code> 方法新建 cookie 。必需参数：name ，Cookie 的名称；value ，Cookie值。可选参数：expire ，Cookie 的过期时间；path ，Cookie 的服务器路径；domain ，Cookie 的域名；secure ，是否使用安全链接。</p>
-<p>例如，创建一个名称为 email ，值为 <a href="mailto:&#x65;&#120;&#x61;&#112;&#108;&#x65;&#64;&#101;&#x78;&#97;&#x6d;&#112;&#108;&#x65;&#46;&#99;&#111;&#109;">&#x65;&#120;&#x61;&#112;&#108;&#x65;&#64;&#101;&#x78;&#97;&#x6d;&#112;&#108;&#x65;&#46;&#99;&#111;&#109;</a> ，两星期后过期的 Cookie ，网上普遍的写法是这样的：</p>
+<p>例如，创建一个名称为 email ，值为 <a href="mailto:&#101;&#x78;&#97;&#x70;&#x6c;&#x65;&#64;&#101;&#x78;&#x61;&#109;&#112;&#x6c;&#x65;&#x2e;&#99;&#111;&#109;">&#101;&#x78;&#97;&#x70;&#x6c;&#x65;&#64;&#101;&#x78;&#x61;&#109;&#112;&#x6c;&#x65;&#x2e;&#99;&#111;&#109;</a> ，两星期后过期的 Cookie ，网上普遍的写法是这样的：</p>
 <pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token function">setcookie</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'email'</span><span class="token punctuation">,</span><span class="token single-quoted-string string">'exaple@example.com'</span><span class="token punctuation">,</span><span class="token function">time</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token number">2</span><span class="token operator">*</span><span class="token number">7</span><span class="token operator">*</span><span class="token number">24</span><span class="token operator">*</span><span class="token number">3600</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>但我在本地服务器测试时，出现 Cookie 跨页丢失问题，即同一网站A页面创建的 Cookie 只在A页面有效，在B页面无法读取值。于是我增加了第四个参数，解决了该问题。</p>
 <pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token function">setcookie</span><span class="token punctuation">(</span><span class="token single-quoted-string string">'email'</span><span class="token punctuation">,</span><span class="token single-quoted-string string">'exaple@example.com'</span><span class="token punctuation">,</span><span class="token function">time</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">+</span><span class="token number">2</span><span class="token operator">*</span><span class="token number">7</span><span class="token operator">*</span><span class="token number">24</span><span class="token operator">*</span><span class="token number">3600</span><span class="token punctuation">,</span><span class="token single-quoted-string string">'/'</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
@@ -64,8 +63,18 @@
 
 <p>要删除一个 Cookie ，设置其过期时间早于当前时间即可。</p>
 
+  
+    <div class="post-tags">
+    
+      
+      <a class="post-tag" href="/tags/PHP">PHP</a>
+    
+      
+      <a class="post-tag" href="/tags/Cookie">Cookie</a>
+    
+  </div>
+  
 </div>
-
 <div class="page-footer">
   <div class="page-footer-links">
     <a class="page-footer-link" href="javascript:history.back()">返回</a>
@@ -75,15 +84,6 @@
       </a>
      
   </div>
-  <!-- 
-    <div class="post-tags">
-    
-      <a class="post-tag">PHP</a>
-    
-      <a class="post-tag">Cookie</a>
-    
-  </div>
-   -->
 </div>
 
   </div>

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
     <link rel="stylesheet" href="/libs/prism/prism.default.css">
     <link rel="stylesheet" href="/css/index.css">
@@ -13,10 +14,7 @@
     <div class="head">
   <div class="header">
     <div class="title">
-      <a href="./"></a>
-        ymcai
-        <!-- <img src="/img/site_title.png"> -->
-      </a>
+      <a href="/"></a>ymcai</a>
     </div>
     <div class="menu">
       <a href="/">
@@ -40,11 +38,12 @@
   <div class="post-meta">
     <span>2017-09-28</span>
     
-    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+      
+      <a class="post-meta-category" href="/categories/categories/web-front-end">Web 前端</a>
     
   </div>
 </div>
-<div class="post-body">
+<div class="post-body main-body">
   <p>JavaScript 中的 Date 对象用于处理日期和时间，对前端开发而言几乎是每天都要打交道的一个东西，但它存在着一个奇葩、不易被注意到的兼容性问题。这是今天在处理产品经理提出的 bug 时偶然发现的。</p>
 <a id="more"></a>
 
@@ -59,8 +58,15 @@
 <p>由于存储在数据库中的日期通常使用 <code>-</code> 分隔年月日，为避免出现兼容问题，前端渲染时应该默认使用 <code>replace</code> 方法批量替换。</p>
 <pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token keyword">const</span> str <span class="token operator">=</span> <span class="token string">'2017-09-28'</span>
 <span class="token keyword">new</span> <span class="token class-name">Date</span><span class="token punctuation">(</span>str<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">-</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">'/'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+  
+    <div class="post-tags">
+    
+      
+      <a class="post-tag" href="/tags/JavaScript">JavaScript</a>
+    
+  </div>
+  
 </div>
-
 <div class="page-footer">
   <div class="page-footer-links">
     <a class="page-footer-link" href="javascript:history.back()">返回</a>
@@ -70,13 +76,6 @@
       </a>
      
   </div>
-  <!-- 
-    <div class="post-tags">
-    
-      <a class="post-tag">JavaScript</a>
-    
-  </div>
-   -->
 </div>
 
   </div>

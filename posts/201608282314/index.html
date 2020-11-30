@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
     <link rel="stylesheet" href="/libs/prism/prism.default.css">
     <link rel="stylesheet" href="/css/index.css">
@@ -13,10 +14,7 @@
     <div class="head">
   <div class="header">
     <div class="title">
-      <a href="./"></a>
-        ymcai
-        <!-- <img src="/img/site_title.png"> -->
-      </a>
+      <a href="/"></a>ymcai</a>
     </div>
     <div class="menu">
       <a href="/">
@@ -40,11 +38,12 @@
   <div class="post-meta">
     <span>2016-08-28</span>
     
-    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+      
+      <a class="post-meta-category" href="/categories/categories/web-front-end">Web 前端</a>
     
   </div>
 </div>
-<div class="post-body">
+<div class="post-body main-body">
   <p>第一步：使用 Github 上的开源项目 <a target="_blank" rel="noopener" href="https://github.com/fengyuanchen/cropper">cropper</a> 实现选择被裁剪图片、裁剪操作和不同大小头像的预览，这个项目可以返回（被裁减图片上）需要裁出的部分的坐标和尺寸。</p>
 <a id="more"></a>
 
@@ -70,8 +69,18 @@ reader<span class="token punctuation">.</span><span class="token function-variab
 <p>这里用到的 <code>drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh)</code> 方法，参数含义如下，sx、sy 是目标矩形的起始（左上端）坐标，sw、sh 是目标矩形的宽高，dx、dy 是目标矩形绘制在 Cavans 画布上的起始位置的坐标（一般取0），dw、dh 是目标矩形绘制后的宽高（可以通过这2个参数标准化头像尺寸）。此外 <code>toDataURL</code> 方法的第1个参数表示要生成的图片格式，默认是 png ，第2个参数是可选的，表示图片压缩等级，可以取0-1之间的值。</p>
 <p>第四步：至此已经得到了图片的 DataURL ，通过 POST 方式提交，服务端接收保存图片即可。</p>
 
+  
+    <div class="post-tags">
+    
+      
+      <a class="post-tag" href="/tags/JavaScript">JavaScript</a>
+    
+      
+      <a class="post-tag" href="/tags/Canvas">Canvas</a>
+    
+  </div>
+  
 </div>
-
 <div class="page-footer">
   <div class="page-footer-links">
     <a class="page-footer-link" href="javascript:history.back()">返回</a>
@@ -81,15 +90,6 @@ reader<span class="token punctuation">.</span><span class="token function-variab
       </a>
      
   </div>
-  <!-- 
-    <div class="post-tags">
-    
-      <a class="post-tag">JavaScript</a>
-    
-      <a class="post-tag">Canvas</a>
-    
-  </div>
-   -->
 </div>
 
   </div>

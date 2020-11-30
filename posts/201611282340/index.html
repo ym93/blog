@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
     <link rel="stylesheet" href="/libs/prism/prism.default.css">
     <link rel="stylesheet" href="/css/index.css">
@@ -13,10 +14,7 @@
     <div class="head">
   <div class="header">
     <div class="title">
-      <a href="./"></a>
-        ymcai
-        <!-- <img src="/img/site_title.png"> -->
-      </a>
+      <a href="/"></a>ymcai</a>
     </div>
     <div class="menu">
       <a href="/">
@@ -40,11 +38,12 @@
   <div class="post-meta">
     <span>2016-11-28</span>
     
-    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+      
+      <a class="post-meta-category" href="/categories/categories/web-front-end">Web 前端</a>
     
   </div>
 </div>
-<div class="post-body">
+<div class="post-body main-body">
   <p>前段时间在写一个 Web 小游戏，使用了 jQuery 绑定元素的点击事件。测试后发现，在 PC 和 Android 上均正常运行，但是在 iOS 上需要多次触摸才勉强响应一次点击。</p>
 <a id="more"></a>
 
@@ -52,8 +51,18 @@
 <p>在不断地尝试后，终于在使用了 <code>on(&#39;touchend&#39;, function)</code> 方法后解决了这个问题。</p>
 <p>据说出现这个问题是因为 click 事件在 iOS 上存在延迟，所以需要用 touchstart / touchmove / touchend 事件替代传统的点击事件。当然代价是存在的，PC 端可能不会响应 touch 事件。如果需要同时兼容 PC ，只能判断设备并采用不同的绑定方式。</p>
 
+  
+    <div class="post-tags">
+    
+      
+      <a class="post-tag" href="/tags/JavaScript">JavaScript</a>
+    
+      
+      <a class="post-tag" href="/tags/jQuery">jQuery</a>
+    
+  </div>
+  
 </div>
-
 <div class="page-footer">
   <div class="page-footer-links">
     <a class="page-footer-link" href="javascript:history.back()">返回</a>
@@ -63,15 +72,6 @@
       </a>
      
   </div>
-  <!-- 
-    <div class="post-tags">
-    
-      <a class="post-tag">JavaScript</a>
-    
-      <a class="post-tag">jQuery</a>
-    
-  </div>
-   -->
 </div>
 
   </div>

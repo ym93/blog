@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
     <link rel="stylesheet" href="/libs/prism/prism.default.css">
     <link rel="stylesheet" href="/css/index.css">
@@ -13,10 +14,7 @@
     <div class="head">
   <div class="header">
     <div class="title">
-      <a href="./"></a>
-        ymcai
-        <!-- <img src="/img/site_title.png"> -->
-      </a>
+      <a href="/"></a>ymcai</a>
     </div>
     <div class="menu">
       <a href="/">
@@ -40,11 +38,12 @@
   <div class="post-meta">
     <span>2016-12-03</span>
     
-    <a class="post-meta-category" href="/categories/back-end">后端</a>
+      
+      <a class="post-meta-category" href="/categories/categories/back-end">后端</a>
     
   </div>
 </div>
-<div class="post-body">
+<div class="post-body main-body">
   <p>近期通过虚拟机学习服务端，感觉在 VirtualBox 窗口上操作虚拟机并不流畅，同时不能方便地从本机将文本复制到虚拟机。于是，我开始试图在本机 SSH 登录虚拟机，并直接在本机的命令行工具中操作。</p>
 <a id="more"></a>
 
@@ -57,8 +56,18 @@
 <p>该命令表示使用 root 账号登录 IP 为127.0.0.1（即本机）的设备，服务端口为2222。由于本机的2222端口已被转发到虚拟机的22端口，所以实际上是登录的设备是虚拟机。此处使用的端口号可以是本机上任一未被占用的端口，只需保证与“端口转发”规则中设置的端口一致即可。</p>
 <p>相关环境：Windows 7 x64 / VirtualBox 5.1.8 / CentOS 7 / Git Bash</p>
 
+  
+    <div class="post-tags">
+    
+      
+      <a class="post-tag" href="/tags/SSH">SSH</a>
+    
+      
+      <a class="post-tag" href="/tags/%E8%99%9A%E6%8B%9F%E6%9C%BA">虚拟机</a>
+    
+  </div>
+  
 </div>
-
 <div class="page-footer">
   <div class="page-footer-links">
     <a class="page-footer-link" href="javascript:history.back()">返回</a>
@@ -68,15 +77,6 @@
       </a>
      
   </div>
-  <!-- 
-    <div class="post-tags">
-    
-      <a class="post-tag">SSH</a>
-    
-      <a class="post-tag">虚拟机</a>
-    
-  </div>
-   -->
 </div>
 
   </div>

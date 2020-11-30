@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
     <link rel="stylesheet" href="/libs/prism/prism.default.css">
     <link rel="stylesheet" href="/css/index.css">
@@ -13,10 +14,7 @@
     <div class="head">
   <div class="header">
     <div class="title">
-      <a href="./"></a>
-        ymcai
-        <!-- <img src="/img/site_title.png"> -->
-      </a>
+      <a href="/"></a>ymcai</a>
     </div>
     <div class="menu">
       <a href="/">
@@ -40,11 +38,12 @@
   <div class="post-meta">
     <span>2017-04-28</span>
     
-    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+      
+      <a class="post-meta-category" href="/categories/categories/web-front-end">Web 前端</a>
     
   </div>
 </div>
-<div class="post-body">
+<div class="post-body main-body">
   <p>有时候我们可能希望在某个时间点帮用户清空上传控件（即 file 类型的 input 元素）的值，让交互更加友好。不过，上传控件本身并未提供一个简单的方法用于清除已选中的文件。</p>
 <a id="more"></a>
 
@@ -60,8 +59,15 @@
 <p>然后，获得 form 元素并调用 reset 方法，该方法将清除表单中已输入的全部内容，当然也包括上传控件中已选中的文件。</p>
 <pre class="line-numbers language-js" data-language="js"><code class="language-js"><span class="token keyword">let</span> form <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'my-form'</span><span class="token punctuation">)</span>
 form<span class="token punctuation">.</span><span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+  
+    <div class="post-tags">
+    
+      
+      <a class="post-tag" href="/tags/JavaScript">JavaScript</a>
+    
+  </div>
+  
 </div>
-
 <div class="page-footer">
   <div class="page-footer-links">
     <a class="page-footer-link" href="javascript:history.back()">返回</a>
@@ -71,13 +77,6 @@ form<span class="token punctuation">.</span><span class="token function">reset</
       </a>
      
   </div>
-  <!-- 
-    <div class="post-tags">
-    
-      <a class="post-tag">JavaScript</a>
-    
-  </div>
-   -->
 </div>
 
   </div>

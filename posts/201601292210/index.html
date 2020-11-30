@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
     <link rel="stylesheet" href="/libs/prism/prism.default.css">
     <link rel="stylesheet" href="/css/index.css">
@@ -13,10 +14,7 @@
     <div class="head">
   <div class="header">
     <div class="title">
-      <a href="./"></a>
-        ymcai
-        <!-- <img src="/img/site_title.png"> -->
-      </a>
+      <a href="/"></a>ymcai</a>
     </div>
     <div class="menu">
       <a href="/">
@@ -40,11 +38,12 @@
   <div class="post-meta">
     <span>2016-01-29</span>
     
-    <a class="post-meta-category" href="/categories/android">Android</a>
+      
+      <a class="post-meta-category" href="/categories/categories/android">Android</a>
     
   </div>
 </div>
-<div class="post-body">
+<div class="post-body main-body">
   <p>最近在开发涉及服务端的工程，预感到将会频繁使用客户端向服务端发送 GET 请求、服务端向客户端返回内容。</p>
 <p>于是 review 了以前写的一个雏形天气应用，重新理顺了使用方法，在此总结以备后用。</p>
 <a id="more"></a>
@@ -101,8 +100,18 @@ thread<span class="token punctuation">.</span><span class="token function">start
 <p>为什么我们不在子线程中直接显示提示呢？因为 UI 的变化只能由主线程来执行，在子线程中改变界面会导致程序崩溃。这一点我也是在经历过多次崩溃的教训后才终于理解了。</p>
 <p>在这个例子中我只让服务端输出了简短的字符串，实际使用时也可以采用 JSON 格式输出大量信息，可参考 JSON 的解析方法实现。</p>
 
+  
+    <div class="post-tags">
+    
+      
+      <a class="post-tag" href="/tags/Android">Android</a>
+    
+      
+      <a class="post-tag" href="/tags/Java">Java</a>
+    
+  </div>
+  
 </div>
-
 <div class="page-footer">
   <div class="page-footer-links">
     <a class="page-footer-link" href="javascript:history.back()">返回</a>
@@ -112,15 +121,6 @@ thread<span class="token punctuation">.</span><span class="token function">start
       </a>
      
   </div>
-  <!-- 
-    <div class="post-tags">
-    
-      <a class="post-tag">Android</a>
-    
-      <a class="post-tag">Java</a>
-    
-  </div>
-   -->
 </div>
 
   </div>

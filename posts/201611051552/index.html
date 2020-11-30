@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
     <link rel="stylesheet" href="/libs/prism/prism.default.css">
     <link rel="stylesheet" href="/css/index.css">
@@ -13,10 +14,7 @@
     <div class="head">
   <div class="header">
     <div class="title">
-      <a href="./"></a>
-        ymcai
-        <!-- <img src="/img/site_title.png"> -->
-      </a>
+      <a href="/"></a>ymcai</a>
     </div>
     <div class="menu">
       <a href="/">
@@ -40,11 +38,12 @@
   <div class="post-meta">
     <span>2016-11-05</span>
     
-    <a class="post-meta-category" href="/categories/back-end">后端</a>
+      
+      <a class="post-meta-category" href="/categories/categories/back-end">后端</a>
     
   </div>
 </div>
-<div class="post-body">
+<div class="post-body main-body">
   <p>Laravel 提供 DB Facade 、Query Builder 和 Eloquent ORM 三种操作数据库的方式。</p>
 <h3 id="原始查找"><a href="#原始查找" class="headerlink" title="原始查找"></a>原始查找</h3><p>原始查找（DB Facade）直接使用 SQL 语句操作数据库。</p>
 <a id="more"></a>
@@ -203,8 +202,18 @@ User<span class="token punctuation">:</span><span class="token punctuation">:</s
 <p>实际上，无论使用何种方式操作数据库，最终都是在执行 SQL 语句。相较于 DB Facade ，后两者把构造 SQL 语句的工作交给了 Laravel 。另外，我感觉 Eloquent ORM 和 Query Builder 是很接近的，只不过多了模型的概念，不过后者的代码确实要更加简洁、一目了然。</p>
 <p>相关环境：Windows 7 x64 / VirtualBox 5.1.8 / Laravel Homestead / Laravel 5.2</p>
 
+  
+    <div class="post-tags">
+    
+      
+      <a class="post-tag" href="/tags/Laravel">Laravel</a>
+    
+      
+      <a class="post-tag" href="/tags/MySQL">MySQL</a>
+    
+  </div>
+  
 </div>
-
 <div class="page-footer">
   <div class="page-footer-links">
     <a class="page-footer-link" href="javascript:history.back()">返回</a>
@@ -214,15 +223,6 @@ User<span class="token punctuation">:</span><span class="token punctuation">:</s
       </a>
      
   </div>
-  <!-- 
-    <div class="post-tags">
-    
-      <a class="post-tag">Laravel</a>
-    
-      <a class="post-tag">MySQL</a>
-    
-  </div>
-   -->
 </div>
 
   </div>

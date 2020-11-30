@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
     <link rel="stylesheet" href="/libs/prism/prism.default.css">
     <link rel="stylesheet" href="/css/index.css">
@@ -13,10 +14,7 @@
     <div class="head">
   <div class="header">
     <div class="title">
-      <a href="./"></a>
-        ymcai
-        <!-- <img src="/img/site_title.png"> -->
-      </a>
+      <a href="/"></a>ymcai</a>
     </div>
     <div class="menu">
       <a href="/">
@@ -40,11 +38,12 @@
   <div class="post-meta">
     <span>2016-02-06</span>
     
-    <a class="post-meta-category" href="/categories/android">Android</a>
+      
+      <a class="post-meta-category" href="/categories/categories/android">Android</a>
     
   </div>
 </div>
-<div class="post-body">
+<div class="post-body main-body">
   <p>遇到一个非常诡异的问题。</p>
 <p>当服务端通过 <code>json_encode</code> 方法输出 JSON 格式数据，空值会被以明文形式输出。</p>
 <a id="more"></a>
@@ -69,8 +68,21 @@
 <p>注意，不能使用 <code>string = null</code> ，这样做的结果还是会被 SQLite 存为字符串“null”。</p>
 <p>以后从数据库里取值的时候，可以用 <code>isEmpty</code> 方法判断是否为空。</p>
 <pre class="line-numbers language-java" data-language="java"><code class="language-java"><span class="token keyword">if</span><span class="token punctuation">(</span> <span class="token operator">!</span>name<span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+  
+    <div class="post-tags">
+    
+      
+      <a class="post-tag" href="/tags/Android">Android</a>
+    
+      
+      <a class="post-tag" href="/tags/Java">Java</a>
+    
+      
+      <a class="post-tag" href="/tags/SQLite">SQLite</a>
+    
+  </div>
+  
 </div>
-
 <div class="page-footer">
   <div class="page-footer-links">
     <a class="page-footer-link" href="javascript:history.back()">返回</a>
@@ -80,17 +92,6 @@
       </a>
      
   </div>
-  <!-- 
-    <div class="post-tags">
-    
-      <a class="post-tag">Android</a>
-    
-      <a class="post-tag">Java</a>
-    
-      <a class="post-tag">SQLite</a>
-    
-  </div>
-   -->
 </div>
 
   </div>

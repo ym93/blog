@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
     <link rel="stylesheet" href="/libs/prism/prism.default.css">
     <link rel="stylesheet" href="/css/index.css">
@@ -13,10 +14,7 @@
     <div class="head">
   <div class="header">
     <div class="title">
-      <a href="./"></a>
-        ymcai
-        <!-- <img src="/img/site_title.png"> -->
-      </a>
+      <a href="/"></a>ymcai</a>
     </div>
     <div class="menu">
       <a href="/">
@@ -40,11 +38,12 @@
   <div class="post-meta">
     <span>2016-12-02</span>
     
-    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+      
+      <a class="post-meta-category" href="/categories/categories/web-front-end">Web 前端</a>
     
   </div>
 </div>
-<div class="post-body">
+<div class="post-body main-body">
   <p>项目中经常会用到内容相对屏幕完全居中的布局。水平居中通常写一句代码即可实现，而垂直居中就稍微麻烦一些。其实，让 DIV 垂直居中的方法有很多，我个人常用两种 DIV+CSS 的方式实现。</p>
 <a id="more"></a>
 
@@ -103,8 +102,15 @@
 <p>首先将 outer-wrap 设为相对布局 <code>position: relative</code> ，同时将 inner-wrap 、content 设为绝对布局 <code>position: absolute</code> 。此时，inner-wrap 将根据 outer-wrap 的位置定位，content 将相对于 inner-wrap 的位置定位。然后为 inner-wrap 添加 <code>top: 50%</code> 、 <code>left: 50%</code> ，使其（左上角）定位到 outer-wrap 的中点位置，实现大致的居中定位。最后为 content 添加 <code>top: -50%</code> 、 <code>left: -50%</code> ，实现精确的居中定位。</p>
 <p>此方法仅适用于内容容器 DIV 的宽度、高度固定的情况。</p>
 
+  
+    <div class="post-tags">
+    
+      
+      <a class="post-tag" href="/tags/CSS">CSS</a>
+    
+  </div>
+  
 </div>
-
 <div class="page-footer">
   <div class="page-footer-links">
     <a class="page-footer-link" href="javascript:history.back()">返回</a>
@@ -114,13 +120,6 @@
       </a>
      
   </div>
-  <!-- 
-    <div class="post-tags">
-    
-      <a class="post-tag">CSS</a>
-    
-  </div>
-   -->
 </div>
 
   </div>

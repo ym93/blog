@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
     <link rel="stylesheet" href="/libs/prism/prism.default.css">
     <link rel="stylesheet" href="/css/index.css">
@@ -13,10 +14,7 @@
     <div class="head">
   <div class="header">
     <div class="title">
-      <a href="./"></a>
-        ymcai
-        <!-- <img src="/img/site_title.png"> -->
-      </a>
+      <a href="/"></a>ymcai</a>
     </div>
     <div class="menu">
       <a href="/">
@@ -40,11 +38,12 @@
   <div class="post-meta">
     <span>2016-02-07</span>
     
-    <a class="post-meta-category" href="/categories/android">Android</a>
+      
+      <a class="post-meta-category" href="/categories/categories/android">Android</a>
     
   </div>
 </div>
-<div class="post-body">
+<div class="post-body main-body">
   <p><code>onResume</code> 在 Activity 中是个非常常用的生命周期方法，它在 Activity 每次显示时都被执行，可用于刷新 UI 等操作。</p>
 <p>Fragment 和 Activity 一样存在 <code>onResume</code> 方法，但我发现直接覆写 <code>onResume</code> 方法后，当 Fragment 显示到前台时不会执行这个方法。网上有人推荐使用 <code>setUserVisibleHint</code> 方法。</p>
 <a id="more"></a>
@@ -81,8 +80,15 @@
   <span class="token comment">// Fragment 中的静态方法</span>
   fragment<span class="token punctuation">.</span><span class="token function">refreshProfile</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+  
+    <div class="post-tags">
+    
+      
+      <a class="post-tag" href="/tags/Android">Android</a>
+    
+  </div>
+  
 </div>
-
 <div class="page-footer">
   <div class="page-footer-links">
     <a class="page-footer-link" href="javascript:history.back()">返回</a>
@@ -92,13 +98,6 @@
       </a>
      
   </div>
-  <!-- 
-    <div class="post-tags">
-    
-      <a class="post-tag">Android</a>
-    
-  </div>
-   -->
 </div>
 
   </div>

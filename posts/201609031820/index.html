@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="icon" href="/img/favicon.png">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
     <link rel="stylesheet" href="/libs/prism/prism.default.css">
     <link rel="stylesheet" href="/css/index.css">
@@ -13,10 +14,7 @@
     <div class="head">
   <div class="header">
     <div class="title">
-      <a href="./"></a>
-        ymcai
-        <!-- <img src="/img/site_title.png"> -->
-      </a>
+      <a href="/"></a>ymcai</a>
     </div>
     <div class="menu">
       <a href="/">
@@ -40,11 +38,12 @@
   <div class="post-meta">
     <span>2016-09-03</span>
     
-    <a class="post-meta-category" href="/categories/web-front-end">Web 前端</a>
+      
+      <a class="post-meta-category" href="/categories/categories/web-front-end">Web 前端</a>
     
   </div>
 </div>
-<div class="post-body">
+<div class="post-body main-body">
   <p>在服务器上的图片文件发生改变，但 img 的 src 保持不变的情况下，浏览器会直接读取缓存的图片文件，而不会重新加载图片。</p>
 <p>虽然缓存有利于减少页面打开时间，但这在一些场景下是不适用的。比如用户修改了自己的头像，同一用户的头像文件的路径是固定的，由于浏览器使用了缓存，此时用户仍然只能看到之前的头像。那么该如何强制浏览器重新加载图片呢？</p>
 <a id="more"></a>
@@ -52,8 +51,15 @@
 <p>很简单，在图片发生改变时修改 src ，给图片的链接加一个随机参数即可。</p>
 <pre class="line-numbers language-js" data-language="js"><code class="language-js">image<span class="token punctuation">.</span>src <span class="token operator">=</span> <span class="token string">'/img/example.jpg?t='</span> <span class="token operator">+</span> Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
+  
+    <div class="post-tags">
+    
+      
+      <a class="post-tag" href="/tags/JavaScript">JavaScript</a>
+    
+  </div>
+  
 </div>
-
 <div class="page-footer">
   <div class="page-footer-links">
     <a class="page-footer-link" href="javascript:history.back()">返回</a>
@@ -63,13 +69,6 @@
       </a>
      
   </div>
-  <!-- 
-    <div class="post-tags">
-    
-      <a class="post-tag">JavaScript</a>
-    
-  </div>
-   -->
 </div>
 
   </div>
