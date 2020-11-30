@@ -1,7 +1,7 @@
 ---
 title: Git、Shell、Git Shell、Git Bash
 categories:
-  - Other
+  - others
 date: 2016-10-23 10:47:47
 tags:
   - Git

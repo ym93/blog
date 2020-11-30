@@ -202,7 +202,5 @@ Orz...
 部分参考资料如下：
 
 - [Google Chrome Extensions - Wikipedia](https://en.wikipedia.org/wiki/Google_Chrome#Extensions)
-
 - [Extend the Browser - Google Chrome](https://developer.chrome.com/extensions)
-
 - [Extension APIs - Google Chrome](https://developer.chrome.com/extensions/api_index)

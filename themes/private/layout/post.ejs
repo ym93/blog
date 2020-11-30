@@ -1,19 +1,31 @@
 <%
-  const categoryId = page.categories.data[0].name
-  const category = theme.categories.find(item => item.id === categoryId)
+  let category
+  if (page.categories.data.length) {
+    category = theme.categories.find(item => item.id === page.categories.data[0].name)
+  }
 %> 
 
 <div class="post-header">
   <h1 class="post-title"><%- page.title %></h1>
   <div class="post-meta">
     <span><%- page.date.format('YYYY-MM-DD') %></span>
-    <a class="post-meta-category" href="<%- url_for('/categories/' + category.id) %>"><%- category.title %></a>
+    <% if (category) { %>
+      <% let categoryPath = 'categories/' + '/categories/' + category.id %>
+      <a class="post-meta-category" href="<%- url_for(categoryPath) %>"><%- category.title %></a>
+    <% } %>
   </div>
 </div>
-<div class="post-body">
+<div class="post-body main-body">
   <%- page.content %>
+  <% if (page.tags.length) { %>
+    <div class="post-tags">
+    <% page.tags.forEach(tag => { %>
+      <% let tagPath = 'tags/' + tag.name.replace(/ /g, '-') %>
+      <a class="post-tag" href="<%- url_for(tagPath) %>"><%- tag.name %></a>
+    <% }) %>
+  </div>
+  <% } %>
 </div>
-
 <div class="page-footer">
   <div class="page-footer-links">
     <a class="page-footer-link" href="javascript:history.back()">返回</a>
@@ -23,11 +35,4 @@
       </a>
     <% } %> 
   </div>
-  <!-- <% if (page.tags.length) { %>
-    <div class="post-tags">
-    <% page.tags.forEach(tag => { %>
-      <a class="post-tag"><%- tag.name %></a>
-    <% }) %>
-  </div>
-  <% } %> -->
 </div>

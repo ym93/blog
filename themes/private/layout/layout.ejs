@@ -1,10 +1,11 @@
 <% // 布局 %> 
 <html>
   <head>
-    <title><%- page.title || 'ym' %></title>
+    <title><%- page.title || config.title %></title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <link rel="icon" href="<%- url_for(theme.favicon) %>">
     <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
     <link rel="stylesheet" href="<%- config.root %>libs/prism/prism.default.css">
     <link rel="stylesheet" href="<%- config.root %>css/index.css">

@@ -1,7 +1,7 @@
 ---
 title: WordPress 创建子主题
 categories:
-  - Other
+  - others
 date: 2016-10-22 16:06:26
 tags:
   - WordPress

@@ -10,6 +10,8 @@
   .post-list-title
     padding-left 1rem
     letter-spacing .2rem
+    position relative
+  .post-list-title:not(.post-list-title--is-tag)
     slim-border(
       position: left,
       width: .3rem,
@@ -17,6 +19,18 @@
       color: color-accent,
       scale: 1
     )
+  .post-list-title--is-tag
+    padding-left 1.5rem
+    &::before
+      display inline-block
+      content '#'
+      font-size font-size-xl
+      font-weight 700
+      color color-accent
+      position absolute
+      top 50%
+      left 0
+      transform translateY(-50%)
 
 .post-item
   padding 1.5rem 0
