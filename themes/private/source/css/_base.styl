@@ -19,7 +19,7 @@ h1
   letter-spacing .1rem
 h2
   font-size font-size-md
-  font-weight 400
+  font-weight 700
 h3
   font-size font-size-bs
   font-weight 700
@@ -39,7 +39,7 @@ p
 img
   display block
   max-width 100%
-  margin 0 auto
+  margin 1.5rem auto
   border-radius .3rem
   // TODO: 后续移除文章内 center 引用
   // &.center
@@ -47,8 +47,6 @@ img
   //   margin: 0 auto
   // &.round
   //   border-radius 4px
-pre + img
-  margin-top: 1.5rem
 .image--has-shadow
   margin-bottom: 1em
   box-shadow .5em .5em 1.5em rgba(0, 0, 0, .3)
@@ -58,6 +56,7 @@ a
   text-decoration none
   color color-text
 .main-body
+  letter-spacing: .02rem;
   p a, li a, .link
     underline-color = mix(#ffffff, color-accent, 70%)
     display inline-block
@@ -101,7 +100,7 @@ code[class*="language-"], pre[class*="language-"]
   color color-text
 code, code[class*="language-"]
   font-family Menlo, Monaco, 'Courier New', monospace
-  font-size font-size-sm
+  font-size font-size-xs
   letter-spacing .02rem
 pre[class*="language-"]
   border-radius .3rem
@@ -111,7 +110,6 @@ p code
   display inline-block
   padding .3em .4em
   background-color #f5f2f0
-  font-size font-size-sm
   line-height 1
   border-radius .3rem
 
