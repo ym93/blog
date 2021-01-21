@@ -1,0 +1,250 @@
+@import './variables';
+@import '../libs/iconfont';
+@import '../libs/prism/prism.default';
+
+html {
+  width: 100%;
+  font-size: 16px;
+}
+body {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-height: 100%;
+  margin: 0;
+  color: $color-text;
+  font-family: PingFang SC, sans-serif;
+  line-height: 1.8;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+// 基本元素
+div, span, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+// 粗文本
+strong {
+  font-weight: 700;
+}
+
+// 标题
+h1, h2, h3, h4, h5 {
+  margin: .8rem 0;
+  color: $color-text-title;
+}
+h2, h3, h4, h5 {
+  letter-spacing: .05rem;
+}
+h1 {
+  font-size: $font-size-lg;
+  font-weight: 400;
+  letter-spacing: .1rem;
+}
+h2 {
+  font-size: $font-size-md;
+  font-weight: 700;
+}
+h3 {
+  font-size: $font-size-bs;
+  font-weight: 700;
+}
+h4 {
+  font-size: $font-size-sm;
+  font-weight: 700;
+}
+h5 {
+  font-size: $font-size-sm;
+  font-weight: 700;
+  color: $color-text-secondary;
+}
+
+// 段落
+p {
+  margin: 1em 0;
+}
+
+// 图片
+img {
+  display: block;
+  max-width: 100%;
+  margin: 1.5rem auto;
+  border-radius: .3rem;
+  // TODO: 后续移除文章内 center 引用
+  // &.center
+  //   display: block
+  //   margin: 0 auto
+  // &.round
+  //   border-radius 4px
+}
+.image--has-shadow {
+  margin-bottom: 1em;
+  box-shadow: .5em .5em 1.5em rgba(0, 0, 0, .3);
+}
+
+// 超链接
+a {
+  text-decoration: none;
+  color: $color-text;
+}
+.main-body {
+  letter-spacing: .02rem;
+  p a, li a, .link {
+    $underline-color: mix(#ffffff, $color-accent, 70%);
+    display: inline-block;
+    vertical-align: top;
+    padding: 0 .1rem;
+    position: relative;
+    &::after {
+      display: inline-block;
+      content: '';
+      width: calc(100%);
+      height: 100%;
+      background-image: linear-gradient(to bottom, #ffffff 58%, $underline-color 58%, $underline-color 90%, #ffffff 90%, #ffffff);
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: -1;
+    }
+  }
+  li a {
+    max-width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
+// 列表
+ul, ol {
+  margin: 1em 0;
+  padding-inline-start: 2.5em;
+  li {
+    margin-top: .2em;
+    p {
+      margin: 0;
+    }
+  }
+}
+
+// 引言
+blockquote {
+  margin: 0;
+  padding-left: .5em;
+  border-left: 5px solid #eaeaea;
+}
+
+// 代码
+code[class*="language-"], pre[class*="language-"] {
+  color: $color-text;
+}
+code, code[class*="language-"] {
+  font-family: Menlo, Monaco, 'Courier New', monospace;
+  font-size: $font-size-xs;
+  letter-spacing: .02rem;
+}
+pre[class*="language-"] {
+  border-radius: .3rem;
+}
+code[class*="language-"] {
+  filter: saturate(.8);
+}
+p code {
+  display: inline-block;
+  padding: .3em .4em;
+  background-color: #f5f2f0;
+  line-height: 1;
+  border-radius: .3rem;
+}
+
+// 表格
+.table-wrap {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid $color-border;
+  overflow-x: auto;
+}
+table {
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  tr {
+    border-top: 1px solid $color-border;
+  }
+  thead tr {
+    border-top-width: 0;
+  }
+  th {
+    min-width: 5rem;
+    text-align: left;
+  }
+  th, td {
+    padding: .5rem;
+  }
+  th + th, td + td {
+    border-left: 1px solid $color-border;
+  }
+}
+
+// 图标
+.icon {
+  line-height: 1;
+}
+
+// 通用页面布局
+.site-head {
+  flex: 0 0 auto;
+}
+.site-body {
+  flex: 1 1;
+}
+.foot {
+  flex: 0 0 auto;
+}
+.site-head-header, .container, .footer {
+  box-sizing: border-box;
+  max-width: $max-width-container;
+  margin: 0 auto;
+}
+.container {
+  padding: $space-md $space-md $space-lg $space-md;
+}
+.site-head-header {
+  padding: 2rem 0;
+  text-align: center;
+}
+.site-head-title {
+  display: inline-block;
+  margin-right: -0.6rem;
+  font-size: $font-size-lg;
+  font-weight: 300;
+  text-transform: uppercase;
+  letter-spacing: 1rem;
+  transform: scaleY(.8);
+}
+.site-head-menu {
+  transform: scale(.9);
+}
+.site-head-menu-item {
+  display: inline-block;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+.site-head-menu-item + .site-head-menu-item {
+  margin-left: .5rem;
+}
+.site-foot-footer {
+  padding: 2rem 1rem 1rem;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
+  text-align: center;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  letter-spacing: .02rem;
+  transform: scale(.9);
+  a {
+    color: $color-text-secondary;
+  }
+}

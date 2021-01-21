@@ -1,34 +1,52 @@
 <%
-  let isPost = Boolean(page.categories)
+  let pageTitle = page.title || config.title
+
   if (page.archive) {
-    page.title = '归档'
-    if (page.year) page.title = page.year
-    if (page.month) page.title += '-' + page.month
+    pageTitle = '归档'
+    if (page.year) pageTitle = page.year
+    if (page.month) pageTitle += '-' + page.month
   }
   else if (page.category) {
     const category = theme.categories.find(item => item.id === page.category)
-    page.title = category.title
+    pageTitle = category.title
   }
-  else if (page.tag) page.title = page.tag
+  else if (page.tag) pageTitle = page.tag
+
+  if (!is_home() && !is_post()) {
+    pageTitle += ' | ' + config.title
+  }
 %> 
 <html build-time="<%- moment().format('YYYY-MM-DD HH:mm') %>">
   <head>
-    <% if (isPost) { %>
-      <title><%- page.title %></title>
-    <% } else { %>
-      <title><%- page.title ? page.title + ' | ' + config.title : config.title %></title>
-    <% } %>
+    <title><%- pageTitle %></title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
     <link rel="icon" href="<%- url_for(theme.favicon) %>">
-    <link rel="stylesheet" href="//at.alicdn.com/t/font_2235676_71rm12z746w.css">
-    <link rel="stylesheet" href="<%- config.root %>libs/prism/prism.default.css">
-    <link rel="stylesheet" href="<%- config.root %>css/index.css?t=<%- moment().format('YYYYMMDDHHmm') %>">
   </head>
   <body ontouchstart="">
-    <%- include('./_partials/layout/head') %>
-    <%- include('./_partials/layout/body') %>
-    <%- include('./_partials/layout/foot') %>
+    <div class="site-head">
+      <div class="site-head-header">
+        <div class="site-head-title">
+          <a href="<%- url_for('/') %>"></a>ymcai</a>
+        </div>
+        <div class="site-head-menu">
+          <a class="site-head-menu-item" href="<%- url_for('/') %>">首页</a>
+          <a class="site-head-menu-item" href="<%- url_for('categories') %>">分类</a>
+          <a class="site-head-menu-item" href="<%- url_for('about') %>">关于</a>
+        </div>
+      </div>
+    </div>
+    <div class="site-body">
+      <div class="container">
+        <%- body %>
+      </div>
+    </div>
+    <div class="site-foot">
+      <div class="site-foot-footer">
+        <span class="site-foot-copyright">©️<%- (new Date()).getFullYear() %> ymcai.xyz</span>
+        <a href="http://www.beian.miit.gov.cn" target="_blank"><%- theme.beian %> </a>
+      </div>
+    </div>    
   </body>
 </html>

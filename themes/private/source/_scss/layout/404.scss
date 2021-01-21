@@ -1,0 +1,13 @@
+@import '../common/variables';
+@import '../common/base';
+
+.page-404 {
+  text-align: center;
+  .image {
+    width: 100%;
+  }
+  .content {
+    color: $color-text;
+    font-size: $font-size-bs;
+  }
+}
