@@ -4,10 +4,7 @@ const fs = require('fs')
 const path = require('path')
 const { compileScss, } = require('../utils')
 
-// hexo.extend.injector.register('head_end', () => {
-//   const css = compileScss({ file: path.join(__dirname, '../source/_css/index.scss') })
-//   return `<style>${css}</style>`
-// })
+const baseCss = compileScss({ file: path.join(__dirname, '../source/_scss/common/_base.scss') })
 
 hexo.extend.injector.register('head_end', () => {
   const css = compileScss({ file: path.join(__dirname, '../source/_scss/layout/home.scss') })
@@ -20,14 +17,25 @@ hexo.extend.injector.register('head_end', () => {
 }, '404')
 
 hexo.extend.injector.register('head_end', () => {
-  const css = compileScss({ file: path.join(__dirname, '../source/_scss/layout/page.scss') })
-  return `<style>${css}</style>`
-}, 'page')
-
-hexo.extend.injector.register('head_end', () => {
   const css = compileScss({ file: path.join(__dirname, '../source/_scss/layout/post.scss') })
   return `<style>${css}</style>`
 }, 'post')
+
+hexo.extend.injector.register('head_end', () => {
+  return `<style>${baseCss}</style>`
+}, 'page')
+
+hexo.extend.injector.register('head_end', () => {
+  return `<style>${baseCss}</style>`
+}, 'category')
+
+hexo.extend.injector.register('head_end', () => {
+  return `<style>${baseCss}</style>`
+}, 'archive')
+
+hexo.extend.injector.register('head_end', () => {
+  return `<style>${baseCss}</style>`
+}, 'tag')
 
 hexo.extend.injector.register('head_end', () => {
   const css = compileScss({ file: path.join(__dirname, '../source/_scss/layout/categories.scss') })
