@@ -1,16 +1,16 @@
 <%
   let pageTitle = page.title || config.title
 
-  if (page.archive) {
+  if (is_archive()) {
     pageTitle = '归档'
     if (page.year) pageTitle = page.year
     if (page.month) pageTitle += '-' + page.month
   }
-  else if (page.category) {
+  if (is_category()) {
     const category = theme.categories.find(item => item.id === page.category)
     pageTitle = category.title
   }
-  else if (page.tag) pageTitle = page.tag
+  if (is_tag()) pageTitle = page.tag
 
   if (!is_home() && !is_post()) {
     pageTitle += ' | ' + config.title

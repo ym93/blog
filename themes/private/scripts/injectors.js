@@ -1,55 +1,37 @@
 const babel = require('@babel/core')
 const css = hexo.extend.helper.get('css').bind(hexo)
 const fs = require('fs')
+const js = hexo.extend.helper.get('js').bind(hexo)
 const path = require('path')
-const { compileScss, } = require('../utils')
+const urlFor = hexo.extend.helper.get('url_for').bind(hexo)
 
-const baseCss = compileScss({ file: path.join(__dirname, '../source/_scss/common/_base.scss') })
-
+// 注入页面样式
 hexo.extend.injector.register('head_end', () => {
-  const css = compileScss({ file: path.join(__dirname, '../source/_scss/layout/home.scss') })
-  return `<style>${css}</style>`
+  return css('css/home.css')
 }, 'home')
-
 hexo.extend.injector.register('head_end', () => {
-  const css = compileScss({ file: path.join(__dirname, '../source/_scss/layout/404.scss') })
-  return `<style>${css}</style>`
+  return css('css/404.css')
 }, '404')
-
 hexo.extend.injector.register('head_end', () => {
-  const css = compileScss({ file: path.join(__dirname, '../source/_scss/layout/post.scss') })
-  return `<style>${css}</style>`
+  return css('css/post.css')
 }, 'post')
-
 hexo.extend.injector.register('head_end', () => {
-  return `<style>${baseCss}</style>`
-}, 'page')
-
-hexo.extend.injector.register('head_end', () => {
-  return `<style>${baseCss}</style>`
+  return css('css/category.css')
 }, 'category')
-
 hexo.extend.injector.register('head_end', () => {
-  return `<style>${baseCss}</style>`
+  return css('css/archive.css')
 }, 'archive')
-
 hexo.extend.injector.register('head_end', () => {
-  return `<style>${baseCss}</style>`
+  return css('css/tag.css')
 }, 'tag')
-
 hexo.extend.injector.register('head_end', () => {
-  const css = compileScss({ file: path.join(__dirname, '../source/_scss/layout/categories.scss') })
-  return `<style>${css}</style>`
+  return css('css/categories.css')
 }, 'categories')
-
 hexo.extend.injector.register('head_end', () => {
-  const css = compileScss({ file: path.join(__dirname, '../source/_scss/layout/about.scss') })
-  return `<style>${css}</style>`
+  return css('css/about.css')
 }, 'about')
 
-
+// 注入文章脚本
 hexo.extend.injector.register('body_end', () => {
-  const rawCode = fs.readFileSync(path.join(__dirname, '../source/js', '_post.js'), 'utf8')
-  const { code } = babel.transformSync(rawCode)
-  return `<script>${code}</script>`
+  return js('js/post.js')
 }, 'post')
