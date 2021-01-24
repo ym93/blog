@@ -1,11 +1,6 @@
-const babel = require('@babel/core')
 const css = hexo.extend.helper.get('css').bind(hexo)
-const fs = require('fs')
-const js = hexo.extend.helper.get('js').bind(hexo)
-const path = require('path')
-const urlFor = hexo.extend.helper.get('url_for').bind(hexo)
 
-// 注入页面样式
+// 页面样式
 hexo.extend.injector.register('head_end', () => {
   return css('css/home.css')
 }, 'home')
@@ -30,8 +25,3 @@ hexo.extend.injector.register('head_end', () => {
 hexo.extend.injector.register('head_end', () => {
   return css('css/about.css')
 }, 'about')
-
-// 注入文章脚本
-hexo.extend.injector.register('body_end', () => {
-  return js('js/post.js')
-}, 'post')

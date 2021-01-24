@@ -1,4 +1,5 @@
 favicon: img/favicon.png
+cdn_base_url: //cdn.ymcai.xyz/site/
 
 categories:
   - 
@@ -26,6 +27,23 @@ categories:
     id: others
     title: 其他
     icon: more
-    icon_colro: '#9e9e9e'
+    icon_color: '#9e9e9e'
+  
+about:
+  intro: 
+    "Hi~ 我叫 YM，福建人，现居深圳，从事前端开发工作%s年。\n我主要负责开发网页应用和小程序，同时沉淀工具帮助团队成员更高效地工作。\n业余时间我喜欢吃喝，看剧，爬山。"
+  experiences:
+    -
+      time: 2019-至今
+      city: 深圳
+      organization: 微众银行
+    -
+      time: 2018-2019
+      city: 厦门
+      organization: 美图公司
+    -
+      time: 2016-2018
+      city: 厦门
+      organization: 文杉科技
 
 beian: 粤ICP备20041235

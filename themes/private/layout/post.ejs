@@ -30,9 +30,9 @@
   <div class="post-footer-links">
     <a class="post-footer-link" href="javascript:history.back()">返回</a>
     <% if (page.next) { %>
-      <a class="post-footer-link" href="<%- page.next_link %>">
+      <a class="post-footer-link" href="<%- url_for(page.next.path) %>">
         下一篇：<%- page.next.title %>
       </a>
-    <% } %> 
+    <% } %>
   </div>
 </div>
